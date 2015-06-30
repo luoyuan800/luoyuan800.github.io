@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://luoyuan800.github.io/2015/06/30/Hexo-GitHub/index.html">
 <meta property="og:site_name" content="Yuan">
 <meta property="og:description" content="一个简单的Hexo构建博客的入门资料">
-<meta property="og:updated_time" content="2015-06-30T00:50:03.024Z">
+<meta property="og:updated_time" content="2015-06-30T01:02:33.794Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于Hexo构建博客并且部署到Github上">
 <meta name="twitter:description" content="一个简单的Hexo构建博客的入门资料">
@@ -87,7 +87,7 @@
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-30T00:50:03.024Z" itemprop="datePublished"> 发表于 2015-06-30</time>
+    <time datetime="2015-06-30T01:02:33.794Z" itemprop="datePublished"> 发表于 2015-06-30</time>
     
   </p>
 </header>
@@ -96,47 +96,77 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境准备"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建博客页面"><span class="toc-number">2.</span> <span class="toc-text">构建博客页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#博客风格设置"><span class="toc-number">3.</span> <span class="toc-text">博客风格设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#拷贝别人已经设计好的风格"><span class="toc-number">3.1.</span> <span class="toc-text">拷贝别人已经设计好的风格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改博客的theme"><span class="toc-number">3.2.</span> <span class="toc-text">修改博客的theme</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发表或者编辑文章"><span class="toc-number">4.</span> <span class="toc-text">发表或者编辑文章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署博客到网络上"><span class="toc-number">5.</span> <span class="toc-text">部署博客到网络上</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境准备"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建博客页面"><span class="toc-number">2.</span> <span class="toc-text">构建博客页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#博客风格设置"><span class="toc-number">3.</span> <span class="toc-text">博客风格设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#拷贝别人已经设计好的风格"><span class="toc-number">3.1.</span> <span class="toc-text">拷贝别人已经设计好的风格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改博客的theme"><span class="toc-number">3.2.</span> <span class="toc-text">修改博客的theme</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发表或者编辑文章"><span class="toc-number">4.</span> <span class="toc-text">发表或者编辑文章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署博客到网络上"><span class="toc-number">5.</span> <span class="toc-text">部署博客到网络上</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置评论系统"><span class="toc-number">6.</span> <span class="toc-text">配置评论系统</span></a></li></ol>
 		
 		</div>
 		
 		<p>一个简单的Hexo构建博客的入门资料<a id="more"></a></p>
 <h2 id="环境准备">环境准备</h2><ol>
-<li><p>注册一个Github账号<br> 这一步就忽略不说了</p>
-</li>
-<li><p>下载Node安装（如果有需要可以配置path路径）<br> Node可以下载对应操作系统的安装版本，安装后会自动设置path</p>
-</li>
-<li><p>安装hexo<br> 执行命令</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo</span><br></pre></td></tr></table></figure>
-</li>
+<li>注册一个Github账号</li>
 </ol>
+<p>这一步就忽略不说了</p>
 <ol>
-<li>初始化hexo<br> 创建自定义目录用来存放hexo项目，在这个目录下执行命令： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init</span><br></pre></td></tr></table></figure>
+<li>下载Node安装（如果有需要可以配置path路径）</li>
+</ol>
+<p>Node可以下载对应操作系统的安装版本，安装后会自动设置path</p>
+<ol>
+<li>安装hexo</li>
+</ol>
+<p>执行命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ npm install -g hexo</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>初始化hexo</p>
+<p> 创建自定义目录用来存放hexo项目，在这个目录下执行命令：</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ hexo init</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <h2 id="构建博客页面">构建博客页面</h2><ol>
-<li><p>在之前生成的hexo项目的目录下执行命令：</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo g  <span class="comment"># 这个是命令 hexo generate 的简写</span></span><br></pre></td></tr></table></figure>
-</li>
+<li>在之前生成的hexo项目的目录下执行命令：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ hexo g  <span class="comment"># 这个是命令 hexo generate 的简写</span></span><br></pre></td></tr></table></figure>
+<ol>
 <li><p>可以看到在当前目录下生成了一个public的目录，这个目录就是你博客页面</p>
 </li>
 <li><p>启动本地server查看页面 执行命令： </p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s  <span class="comment"># 这个命令是hexo server的简写</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>在浏览器输入 localhost:4000查看效果</p>
 </li>
 </ol>
-<h2 id="博客风格设置">博客风格设置</h2><h3 id="拷贝别人已经设计好的风格">拷贝别人已经设计好的风格</h3><p>1.1 下载别人写好的风格文件夹并且放到项目目录的themes 目录下面<br>1.2 然后更改项目根目录下的_config.yml的文件中的 theme: thems_name</p>
-<h3 id="修改博客的theme">修改博客的theme</h3><p>2.1 找到你当前使用的theme的文件夹，在其中有一个_config.yml文件。<br>2.2 打开这个文件进行编辑即可以修改页面布局和一些其他的内容。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">hexo s  <span class="comment"># 这个命令是hexo server的简写</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>在浏览器输入 localhost:4000查看效果</li>
+</ol>
+<h2 id="博客风格设置">博客风格设置</h2><h3 id="拷贝别人已经设计好的风格">拷贝别人已经设计好的风格</h3><p>1.1 下载别人写好的风格文件夹并且放到项目目录的themes 目录下面</p>
+<p>1.2 然后更改项目根目录下的_config.yml的文件中的 theme: thems_name</p>
+<h3 id="修改博客的theme">修改博客的theme</h3><p>2.1 找到你当前使用的theme的文件夹，在其中有一个_config.yml文件。</p>
+<p>2.2 打开这个文件进行编辑即可以修改页面布局和一些其他的内容。</p>
 <h2 id="发表或者编辑文章">发表或者编辑文章</h2><ol>
-<li>在项目目录的 ./source/_posts 目录下的 *.md文件就是文章内容，可以是用文本编辑器打开编辑</li>
-<li><p>文件的格式：（注意所有冒号后面都要有一个空格）</p>
-<p> title: postName #文章页面上的显示名称，可以任意修改，不会出现在URL中<br> date: 2013-12-02 15:30:16 #文章生成时间，一般不改，当然也可以任意修改<br> categories: example #分类 可选，设置了的会自动归类<br> tags: [tag1,tag2,tag3] #文章标签，可空，多标签请用格式，注意:后面有个空格<br> ---<br> 这里是正文</p>
+<li><p>在项目目录的 ./source/_posts 目录下的 *.md文件就是文章内容，可以是用文本编辑器打开编辑</p>
 </li>
-<li><p>摘要显示可以是用&lt;!--more-->放在作为摘要的文字后面：<br> title: Hello<br> ---<br> 这里是摘要&lt;!--more--><br> 这里是正文</p>
+<li><p>文件的格式：（注意所有冒号后面都要有一个空格）</p>
 </li>
 </ol>
-<h2 id="部署博客到网络上">部署博客到网络上</h2><p>使用github提供的空间可以部署刚刚用hexo构建的博客：<br>在github上创建衣和用户名相关的项目（名字格式是固定的）, 例如：luoyuan800.github.io<br>将刚刚构建的hexo项目下的public文件夹中的都push到git项目中（拷贝后push）<br>访问 <a href="http://luoyuan800.github.io">http://luoyuan800.github.io</a> 即可以查看博客。（将其中的luoyuan800换成你的用户名）<br>如果发现不能访问的话，确认名称的格式，还有git用户中要配置一个已经verify的邮箱。</p>
+<p>title: postName #文章页面上的显示名称，可以任意修改，不会出现在URL中</p>
+<p>date: 2013-12-02 15:30:16 #文章生成时间，一般不改，当然也可以任意修改</p>
+<p>categories: example #分类 可选，设置了的会自动归类</p>
+<p>tags: [tag1,tag2,tag3] #文章标签，可空，多标签请用格式，注意:后面有个空格</p>
+<p>---</p>
+<p>这里是正文</p>
+<ol>
+<li>摘要显示可以是用&lt;!--more-->放在作为摘要的文字后面：</li>
+</ol>
+<p>title: Hello</p>
+<p>---</p>
+<p>这里是摘要&lt;!--more--></p>
+<p>这里是正文</p>
+<h2 id="部署博客到网络上">部署博客到网络上</h2><p>使用github提供的空间可以部署刚刚用hexo构建的博客：</p>
+<p>在github上创建衣和用户名相关的项目（名字格式是固定的）, 例如：luoyuan800.github.io</p>
+<p>将刚刚构建的hexo项目下的public文件夹中的都push到git项目中（拷贝后push）</p>
+<p>访问 <a href="http://luoyuan800.github.io">http://luoyuan800.github.io</a> 即可以查看博客。（将其中的luoyuan800换成你的用户名）</p>
+<p>如果发现不能访问的话，确认名称的格式，还有git用户中要配置一个已经verify的邮箱。</p>
+<h2 id="配置评论系统">配置评论系统</h2><p>默认的静态网页是不提供评论的，而Hexo这个框架搭建的博客默认是可以简单设置使用disqus搭建评论<br>而国内用户没办法是用disqus，可以选择使用多说（duoshuo）。</p>
+<ol>
+<li>去多说的网站<a href="http://duoshuo.com/" target="_blank" rel="external">http://duoshuo.com/</a> 注册一个账号（可以使用第三方QQ微博之类的登录）然后注册一个shortname</li>
+<li>我是使用Jacman（Theme）的模块搭建博客的，那么只需要打开这个Theme的文件下面的_config.yml文件，找到其中的#### Comment这一段，然后在对应的duoshuo_shortname后面添加你的shortname就可以加载评论模块了</li>
+</ol>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -166,6 +196,10 @@
 	</article>
 	
 	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/06/30/Hexo-GitHub/" data-title="基于Hexo构建博客并且部署到Github上" data-url="http://luoyuan800.github.io/2015/06/30/Hexo-GitHub/"></div>
+</section>
+
 
 </div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
@@ -173,7 +207,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境准备"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建博客页面"><span class="toc-number">2.</span> <span class="toc-text">构建博客页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#博客风格设置"><span class="toc-number">3.</span> <span class="toc-text">博客风格设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#拷贝别人已经设计好的风格"><span class="toc-number">3.1.</span> <span class="toc-text">拷贝别人已经设计好的风格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改博客的theme"><span class="toc-number">3.2.</span> <span class="toc-text">修改博客的theme</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发表或者编辑文章"><span class="toc-number">4.</span> <span class="toc-text">发表或者编辑文章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署博客到网络上"><span class="toc-number">5.</span> <span class="toc-text">部署博客到网络上</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境准备"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建博客页面"><span class="toc-number">2.</span> <span class="toc-text">构建博客页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#博客风格设置"><span class="toc-number">3.</span> <span class="toc-text">博客风格设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#拷贝别人已经设计好的风格"><span class="toc-number">3.1.</span> <span class="toc-text">拷贝别人已经设计好的风格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改博客的theme"><span class="toc-number">3.2.</span> <span class="toc-text">修改博客的theme</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发表或者编辑文章"><span class="toc-number">4.</span> <span class="toc-text">发表或者编辑文章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署博客到网络上"><span class="toc-number">5.</span> <span class="toc-text">部署博客到网络上</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置评论系统"><span class="toc-number">6.</span> <span class="toc-text">配置评论系统</span></a></li></ol>
  
   </div>
 
@@ -185,8 +219,6 @@
 <div class="categorieslist">
 	<p class="asidetitle">分类</p>
 		<ul>
-		
-		  
 		
 		  
 			<li><a href="/categories/网站-工具/" title="网站-工具">网站-工具<sup>1</sup></a></li>
@@ -372,6 +404,18 @@ $(document).ready(function(){
 </script>
 
 
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"luoyuan800"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
 
 
 
