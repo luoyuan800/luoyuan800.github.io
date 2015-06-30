@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://luoyuan800.github.io/2015/06/30/Hexo-GitHub/index.html">
 <meta property="og:site_name" content="Yuan">
 <meta property="og:description" content="一个简单的Hexo构建博客的入门资料">
-<meta property="og:updated_time" content="2015-06-30T04:58:41.559Z">
+<meta property="og:updated_time" content="2015-06-30T09:53:29.192Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于Hexo构建博客并且部署到Github上">
 <meta name="twitter:description" content="一个简单的Hexo构建博客的入门资料">
@@ -86,7 +86,7 @@
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-30T04:58:41.559Z" itemprop="datePublished"> 发表于 2015-06-30</time>
+    <time datetime="2015-06-30T09:53:29.192Z" itemprop="datePublished"> 发表于 2015-06-30</time>
     
   </p>
 </header>
@@ -95,7 +95,7 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境准备"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建博客页面"><span class="toc-number">2.</span> <span class="toc-text">构建博客页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#博客风格设置"><span class="toc-number">3.</span> <span class="toc-text">博客风格设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#拷贝别人已经设计好的风格"><span class="toc-number">3.1.</span> <span class="toc-text">拷贝别人已经设计好的风格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改博客的theme"><span class="toc-number">3.2.</span> <span class="toc-text">修改博客的theme</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发表或者编辑文章"><span class="toc-number">4.</span> <span class="toc-text">发表或者编辑文章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署博客到网络上"><span class="toc-number">5.</span> <span class="toc-text">部署博客到网络上</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置评论系统"><span class="toc-number">6.</span> <span class="toc-text">配置评论系统</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境准备"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建博客页面"><span class="toc-number">2.</span> <span class="toc-text">构建博客页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#博客风格设置"><span class="toc-number">3.</span> <span class="toc-text">博客风格设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#拷贝别人已经设计好的风格"><span class="toc-number">3.1.</span> <span class="toc-text">拷贝别人已经设计好的风格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改博客的theme"><span class="toc-number">3.2.</span> <span class="toc-text">修改博客的theme</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发表或者编辑文章"><span class="toc-number">4.</span> <span class="toc-text">发表或者编辑文章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署博客到网络上"><span class="toc-number">5.</span> <span class="toc-text">部署博客到网络上</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置评论系统"><span class="toc-number">6.</span> <span class="toc-text">配置评论系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置站内搜索"><span class="toc-number">7.</span> <span class="toc-text">配置站内搜索</span></a></li></ol>
 		
 		</div>
 		
@@ -157,6 +157,22 @@
 <li>去多说的网站<a href="http://duoshuo.com/" target="_blank" rel="external">http://duoshuo.com/</a> 注册一个账号（可以使用第三方QQ微博之类的登录）然后注册一个shortname</li>
 <li>我是使用Jacman（Theme）的模块搭建博客的，那么只需要打开这个Theme的文件下面的_config.yml文件，找到其中的#### Comment这一段，然后在对应的duoshuo_shortname后面添加你的shortname就可以加载评论模块了</li>
 </ol>
+<h2 id="配置站内搜索">配置站内搜索</h2><p>我使用的是jacman主题，这个主题可以简单的配置基于Google，百度， tinysou这个三种站内搜索工具。<br>因为Google访问比较麻烦，百度检索的收录速度超级慢，我选择了tinysou这个工具。</p>
+<ul>
+<li>打开<a href="http://tinysou.com/plan.html" target="_blank" rel="external">tinysou</a></li>
+<li>选择立即注册（免费版），用邮箱注册一个账号并且验证</li>
+<li>进入控制台创建一个Engines</li>
+<li>进入你创建的Engines的管理页面，点击爬虫选项卡，在其中添加博客的域名（luoyuan800.github.io)</li>
+<li>打开hexo项目中themes文件夹中的jacman文件夹中的_config.yml文件， 修改一下内容：<pre><code><span class="string">tinysou_search:</span>     ## <span class="string">http:</span><span class="comment">//tinysou.com/</span>
+<span class="label">  enable:</span> <span class="literal">true</span>
+<span class="label">  id:</span> engine key ## e.g. <span class="string">"4ac092ad8d749fdc6293"</span> <span class="keyword">for</span> your tiny search id
+</code></pre></li>
+<li>在Hexo项目目录下的sources文件夹下面创建一个search文件夹</li>
+<li>在刚刚创建的文件夹下面创建一个index.md文件，其中填写内容<pre><code>layout: search 
+<span class="header">title: search
+---</span>
+</code></pre></li>
+</ul>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -210,7 +226,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境准备"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建博客页面"><span class="toc-number">2.</span> <span class="toc-text">构建博客页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#博客风格设置"><span class="toc-number">3.</span> <span class="toc-text">博客风格设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#拷贝别人已经设计好的风格"><span class="toc-number">3.1.</span> <span class="toc-text">拷贝别人已经设计好的风格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改博客的theme"><span class="toc-number">3.2.</span> <span class="toc-text">修改博客的theme</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发表或者编辑文章"><span class="toc-number">4.</span> <span class="toc-text">发表或者编辑文章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署博客到网络上"><span class="toc-number">5.</span> <span class="toc-text">部署博客到网络上</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置评论系统"><span class="toc-number">6.</span> <span class="toc-text">配置评论系统</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境准备"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建博客页面"><span class="toc-number">2.</span> <span class="toc-text">构建博客页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#博客风格设置"><span class="toc-number">3.</span> <span class="toc-text">博客风格设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#拷贝别人已经设计好的风格"><span class="toc-number">3.1.</span> <span class="toc-text">拷贝别人已经设计好的风格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改博客的theme"><span class="toc-number">3.2.</span> <span class="toc-text">修改博客的theme</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发表或者编辑文章"><span class="toc-number">4.</span> <span class="toc-text">发表或者编辑文章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署博客到网络上"><span class="toc-number">5.</span> <span class="toc-text">部署博客到网络上</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置评论系统"><span class="toc-number">6.</span> <span class="toc-text">配置评论系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置站内搜索"><span class="toc-number">7.</span> <span class="toc-text">配置站内搜索</span></a></li></ol>
  
   </div>
 
