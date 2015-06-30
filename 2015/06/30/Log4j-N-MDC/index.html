@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>About the Cron Expression | Yuan</title>
+    <title>Log4j中的NDC和MDC | Yuan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Luo Yuan">
     
 
     
-    <meta name="description" content="Cron is use in Linux for the time schedule">
+    <meta name="description" content="Log4j中的NDC和MDC两个功能类似，都是用于存储上下文的信息。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="About the Cron Expression">
-<meta property="og:url" content="http://luoyuan800.github.io/2015/06/30/Cron-English/index.html">
+<meta property="og:title" content="Log4j中的NDC和MDC">
+<meta property="og:url" content="http://luoyuan800.github.io/2015/06/30/Log4j-N-MDC/index.html">
 <meta property="og:site_name" content="Yuan">
-<meta property="og:description" content="Cron is use in Linux for the time schedule">
-<meta property="og:updated_time" content="2015-06-30T03:52:34.173Z">
+<meta property="og:description" content="Log4j中的NDC和MDC两个功能类似，都是用于存储上下文的信息。">
+<meta property="og:updated_time" content="2015-06-30T04:52:27.606Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="About the Cron Expression">
-<meta name="twitter:description" content="Cron is use in Linux for the time schedule">
+<meta name="twitter:title" content="Log4j中的NDC和MDC">
+<meta name="twitter:description" content="Log4j中的NDC和MDC两个功能类似，都是用于存储上下文的信息。">
 
     
     <link rel="alternative" href="/about" title="Yuan" type="application/atom+xml">
@@ -80,14 +80,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/06/30/Cron-English/" title="About the Cron Expression" itemprop="url">About the Cron Expression</a>
+      <a href="/2015/06/30/Log4j-N-MDC/" title="Log4j中的NDC和MDC" itemprop="url">Log4j中的NDC和MDC</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-30T03:44:14.000Z" itemprop="datePublished"> 发表于 2015-06-30</time>
+    <time datetime="2015-06-30T04:08:35.000Z" itemprop="datePublished"> 发表于 2015-06-30</time>
     
   </p>
 </header>
@@ -96,51 +96,36 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Format"><span class="toc-number">1.</span> <span class="toc-text">Format</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Special_character:"><span class="toc-number">2.</span> <span class="toc-text">Special character:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Sample"><span class="toc-number">3.</span> <span class="toc-text">Sample</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chinese_version_for_this_blog"><span class="toc-number">4.</span> <span class="toc-text">Chinese version for this blog</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本概念"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NDC与MDC的区别"><span class="toc-number">2.</span> <span class="toc-text">NDC与MDC的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用方式"><span class="toc-number">3.</span> <span class="toc-text">使用方式</span></a></li></ol>
 		
 		</div>
 		
-		<p>Cron is use in Linux for the time schedule <a id="more"></a></p>
-<h2 id="Format">Format</h2><p>Seconds Minutes Hours DayofMonth DayofWeek [Year]<br>The value of each row </p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Second</th>
-<th style="text-align:center">Minute</th>
-<th style="text-align:center">Hours</th>
-<th style="text-align:center">DayofMonth</th>
-<th style="text-align:center">DayofWeek</th>
-<th style="text-align:center">Year</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">, - * / 0-59</td>
-<td style="text-align:center">, - * / 0-59</td>
-<td style="text-align:center">, - * / 0-23</td>
-<td style="text-align:center">, - * / 1-12 JAN-DEc</td>
-<td style="text-align:center">, - * / ? L C # 1-7 SUN-SAT</td>
-<td style="text-align:center">, - * / 1970-2099</td>
-</tr>
-</tbody>
-</table>
-<h2 id="Special_character:">Special character:</h2><pre><code>1. \* every
-2. ? If the DayofMonth <span class="operator"><span class="keyword">use</span> \*, the <span class="keyword">DayofWeek</span> must <span class="keyword">use</span> ? <span class="keyword">to</span> <span class="keyword">match</span> <span class="keyword">any</span>
-<span class="number">3.</span> \- Rang <span class="number">5</span>\-<span class="number">7</span> means5, <span class="number">6</span>, <span class="number">7</span> <span class="keyword">match</span>
-<span class="number">4.</span> / <span class="built_in">interval</span> <span class="keyword">for</span> <span class="keyword">each</span>, <span class="number">0</span>/<span class="number">30</span> means <span class="keyword">start</span> <span class="keyword">when</span> <span class="number">0</span> <span class="keyword">and</span> <span class="keyword">each</span> <span class="number">30</span> will <span class="keyword">match</span>.
-<span class="number">5.</span> , It <span class="keyword">use</span> <span class="keyword">for</span> list
-<span class="number">6.</span> L Means <span class="keyword">Last</span>
-<span class="number">7.</span> W <span class="keyword">Work</span> <span class="keyword">day</span></span>
-</code></pre><h2 id="Sample">Sample</h2><p>0 5,15, * * * ? every week every month each hours 5 and 15 minute match.<br>0 0 10,14,16 * * ? Every day 10am, 2pm, 4 pm match.<br>0 15 10 L * ? The last day of each month at 10:15 am </p>
-<h2 id="Chinese_version_for_this_blog">Chinese version for this blog</h2><p><a href="../QuartZ-Cron">中文版</a></p>
-  
+		<p>Log4j中的NDC和MDC两个功能类似，都是用于存储上下文的信息。<a id="more"></a></p>
+<h2 id="基本概念">基本概念</h2><p>NDC（Nested Diagnostic Context）MDC（Mapped Diagnostic Context）是一种嵌套诊断环境的机制。这种机制的提出，主要为了减少多线程的系统为每个客户单独记录日志的系统开销。就是说在多线程和多并发系统中年，这个模式可以只使用一个logger实例，记录每个线程的日志信息，并且会带上各个线程独特的标识信息。更多的时候这两张机制是作用在一个网络应用上，特别是一个服务平台要同时提过服务给多个客户的时候，需要追踪每个客户的信息并且记录日志的时候，使用客户的唯一标识放入到NDC或者MDC中，从而使得在log信息中更容易查看到哪一个客户触发了log事件。个人理解这个两个功能是存储额外的信息，并且可以在新版本的log4j是用MDCFilter或者NDCFilter来级能进行log文本的过滤。</p>
+<h2 id="NDC与MDC的区别">NDC与MDC的区别</h2><p>NDC与MDC的区别在于存储方式的不同。<br>NDC是使用 栈的机制来存储信息，而MDC使用map的机制来存储信息。所以NDC可以通过%x来进行获取，而MDC需要通过%x{key}来获取</p>
+<h2 id="使用方式">使用方式</h2><p>在log的pattern的配置中使用%x来 显示NDC 或者MDC信息。<br>在代码中设定NDC或者MDC必须在调用logger的记录方法之前，而且要保证在退出当前环境（当前代码段）的时候将信息移除，以免造成内存溢出</p>
+<pre><code>……
+NDC.push<span class="params">(message)</span>;
+……
+logger.info<span class="params">()</span>;
+NDC.pop<span class="params">()</span>;
+……
+NDC.remove<span class="params">()</span>;<span class="comment">//在结束当前线程执行的时候要调用这个方法</span>
+</code></pre><p>使用MDC的方式大致相同，只不过是需要提供key来作为信息的映射。</p>
+<pre><code>……
+<span class="tag">MDC</span><span class="class">.put</span>(<span class="tag">key</span>,<span class="tag">message</span>);
+……
+<span class="tag">logger</span><span class="class">.infog</span>();
+……
+<span class="tag">MDC</span><span class="class">.remove</span>(<span class="tag">key</span>);
+</code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程-Linux/">编程-Linux</a>
+  <a class="article-category-link" href="/categories/编程-Java/">编程-Java</a>
 </div>
 
 
@@ -150,7 +135,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://luoyuan800.github.io/2015/06/30/Cron-English/" data-title="About the Cron Expression | Yuan" data-tsina="null" class="share clearfix">
+	  <div data-url="http://luoyuan800.github.io/2015/06/30/Log4j-N-MDC/" data-title="Log4j中的NDC和MDC | Yuan" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -164,18 +149,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/06/30/Log4j-N-MDC/" title="Log4j中的NDC和MDC">
+ <a href="/2015/06/30/Hexo-GitHub/" title="基于Hexo构建博客并且部署到Github上">
   <strong>上一篇：</strong><br/>
   <span>
-  Log4j中的NDC和MDC</span>
+  基于Hexo构建博客并且部署到Github上</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/06/30/QuartZ-Cron/"  title="Cron 表达式入门">
+<a href="/2015/06/30/Cron-English/"  title="About the Cron Expression">
  <strong>下一篇：</strong><br/> 
- <span>Cron 表达式入门
+ <span>About the Cron Expression
 </span>
 </a>
 </div>
@@ -184,7 +169,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/06/30/Cron-English/" data-title="About the Cron Expression" data-url="http://luoyuan800.github.io/2015/06/30/Cron-English/"></div>
+	<div class="ds-thread" data-thread-key="2015/06/30/Log4j-N-MDC/" data-title="Log4j中的NDC和MDC" data-url="http://luoyuan800.github.io/2015/06/30/Log4j-N-MDC/"></div>
 </section>
 
 
@@ -194,7 +179,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Format"><span class="toc-number">1.</span> <span class="toc-text">Format</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Special_character:"><span class="toc-number">2.</span> <span class="toc-text">Special character:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Sample"><span class="toc-number">3.</span> <span class="toc-text">Sample</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chinese_version_for_this_blog"><span class="toc-number">4.</span> <span class="toc-text">Chinese version for this blog</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本概念"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NDC与MDC的区别"><span class="toc-number">2.</span> <span class="toc-text">NDC与MDC的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用方式"><span class="toc-number">3.</span> <span class="toc-text">使用方式</span></a></li></ol>
  
   </div>
 
