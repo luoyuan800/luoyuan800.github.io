@@ -17,13 +17,13 @@
 <meta property="og:url" content="http://luoyuan800.github.io/2015/06/30/Hexo-GitHub/index.html">
 <meta property="og:site_name" content="Yuan">
 <meta property="og:description" content="一个简单的Hexo构建博客的入门资料">
-<meta property="og:updated_time" content="2015-06-30T09:53:29.192Z">
+<meta property="og:updated_time" content="2015-07-01T07:20:08.489Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于Hexo构建博客并且部署到Github上">
 <meta name="twitter:description" content="一个简单的Hexo构建博客的入门资料">
 
     
-    <link rel="alternative" href="/about" title="Yuan" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
     
     
     <link rel="icon" href="/img/favicon.ico">
@@ -86,7 +86,7 @@
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-30T09:53:29.192Z" itemprop="datePublished"> 发表于 2015-06-30</time>
+    <time datetime="2015-06-30T00:53:00.000Z" itemprop="datePublished"> 发表于 2015-06-30</time>
     
   </p>
 </header>
@@ -95,7 +95,7 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境准备"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建博客页面"><span class="toc-number">2.</span> <span class="toc-text">构建博客页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#博客风格设置"><span class="toc-number">3.</span> <span class="toc-text">博客风格设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#拷贝别人已经设计好的风格"><span class="toc-number">3.1.</span> <span class="toc-text">拷贝别人已经设计好的风格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改博客的theme"><span class="toc-number">3.2.</span> <span class="toc-text">修改博客的theme</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发表或者编辑文章"><span class="toc-number">4.</span> <span class="toc-text">发表或者编辑文章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署博客到网络上"><span class="toc-number">5.</span> <span class="toc-text">部署博客到网络上</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置评论系统"><span class="toc-number">6.</span> <span class="toc-text">配置评论系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置站内搜索"><span class="toc-number">7.</span> <span class="toc-text">配置站内搜索</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境准备"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建博客页面"><span class="toc-number">2.</span> <span class="toc-text">构建博客页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#博客风格设置"><span class="toc-number">3.</span> <span class="toc-text">博客风格设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#拷贝别人已经设计好的风格"><span class="toc-number">3.1.</span> <span class="toc-text">拷贝别人已经设计好的风格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改博客的theme"><span class="toc-number">3.2.</span> <span class="toc-text">修改博客的theme</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发表或者编辑文章"><span class="toc-number">4.</span> <span class="toc-text">发表或者编辑文章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署博客到网络上"><span class="toc-number">5.</span> <span class="toc-text">部署博客到网络上</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置评论系统"><span class="toc-number">6.</span> <span class="toc-text">配置评论系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置站内搜索"><span class="toc-number">7.</span> <span class="toc-text">配置站内搜索</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加RSS功能"><span class="toc-number">8.</span> <span class="toc-text">添加RSS功能</span></a></li></ol>
 		
 		</div>
 		
@@ -173,6 +173,20 @@
 ---</span>
 </code></pre></li>
 </ul>
+<h2 id="添加RSS功能">添加RSS功能</h2><p>jacman主题漠然开启RSS模块，不过如果你直接使用点击RSS只会返回404。因为HEXO默认是没有生成RSS文件的</p>
+<ul>
+<li><p>安装hexo的rss插件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br><span class="line">`</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编辑项目文件下的_config.yml文件添加如下内容<br>  feed:</p>
+<pre><code>type: atom       <span class="hexcolor">#fee</span>d 类型 (atom/rss2)
+path: atom<span class="class">.xml</span>   <span class="id">#rss</span> 路径
+limit: <span class="number">20</span>        #在 rss 中最多生成的文章数(<span class="number">0</span>显示所有)
+</code></pre></li>
+<li>重新构建网站并且上传到你的网站空间<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hexo g</span><br><span class="line">``</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>注：以上所有修改完成后都需要重新构建项目然后发布public文件下的文件才可以看到效果。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -204,21 +218,13 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/07/01/IPMI/" title="IPMI">
+ <a href="/2015/06/30/QuartZ-Cron/" title="Cron 表达式入门">
   <strong>上一篇：</strong><br/>
   <span>
-  IPMI</span>
+  Cron 表达式入门</span>
 </a>
 </div>
 
-
-<div class="next">
-<a href="/2015/06/30/Log4j-N-MDC/"  title="Log4j中的NDC和MDC">
- <strong>下一篇：</strong><br/> 
- <span>Log4j中的NDC和MDC
-</span>
-</a>
-</div>
 
 </nav>
 
@@ -234,7 +240,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境准备"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建博客页面"><span class="toc-number">2.</span> <span class="toc-text">构建博客页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#博客风格设置"><span class="toc-number">3.</span> <span class="toc-text">博客风格设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#拷贝别人已经设计好的风格"><span class="toc-number">3.1.</span> <span class="toc-text">拷贝别人已经设计好的风格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改博客的theme"><span class="toc-number">3.2.</span> <span class="toc-text">修改博客的theme</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发表或者编辑文章"><span class="toc-number">4.</span> <span class="toc-text">发表或者编辑文章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署博客到网络上"><span class="toc-number">5.</span> <span class="toc-text">部署博客到网络上</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置评论系统"><span class="toc-number">6.</span> <span class="toc-text">配置评论系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置站内搜索"><span class="toc-number">7.</span> <span class="toc-text">配置站内搜索</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境准备"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建博客页面"><span class="toc-number">2.</span> <span class="toc-text">构建博客页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#博客风格设置"><span class="toc-number">3.</span> <span class="toc-text">博客风格设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#拷贝别人已经设计好的风格"><span class="toc-number">3.1.</span> <span class="toc-text">拷贝别人已经设计好的风格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改博客的theme"><span class="toc-number">3.2.</span> <span class="toc-text">修改博客的theme</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发表或者编辑文章"><span class="toc-number">4.</span> <span class="toc-text">发表或者编辑文章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署博客到网络上"><span class="toc-number">5.</span> <span class="toc-text">部署博客到网络上</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置评论系统"><span class="toc-number">6.</span> <span class="toc-text">配置评论系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置站内搜索"><span class="toc-number">7.</span> <span class="toc-text">配置站内搜索</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加RSS功能"><span class="toc-number">8.</span> <span class="toc-text">添加RSS功能</span></a></li></ol>
  
   </div>
 
@@ -291,6 +297,10 @@
   
 
 
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
 </aside>
 </div>
     </div>
@@ -317,6 +327,8 @@
 		
 		
 		
+		
+		<a href="mailto:luoyuan800@163.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
 			
