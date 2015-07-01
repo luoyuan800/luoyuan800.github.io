@@ -1,0 +1,541 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>基于Hexo构建博客并且部署到Github上 | Yuan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Luo Yuan">
+    
+
+    
+    <meta name="description" content="一个简单的Hexo构建博客的入门资料">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于Hexo构建博客并且部署到Github上">
+<meta property="og:url" content="http://luoyuan800.github.io/2015/07/01/Hexo-GitHub/index.html">
+<meta property="og:site_name" content="Yuan">
+<meta property="og:description" content="一个简单的Hexo构建博客的入门资料">
+<meta property="og:updated_time" content="2015-07-01T06:52:49.943Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于Hexo构建博客并且部署到Github上">
+<meta name="twitter:description" content="一个简单的Hexo构建博客的入门资料">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Yuan" title="Yuan"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Yuan">Yuan</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search">
+							<label>Search</label>
+						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/01/Hexo-GitHub/" title="基于Hexo构建博客并且部署到Github上" itemprop="url">基于Hexo构建博客并且部署到Github上</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-01T06:52:49.943Z" itemprop="datePublished"> 发表于 2015-07-01</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境准备"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建博客页面"><span class="toc-number">2.</span> <span class="toc-text">构建博客页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#博客风格设置"><span class="toc-number">3.</span> <span class="toc-text">博客风格设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#拷贝别人已经设计好的风格"><span class="toc-number">3.1.</span> <span class="toc-text">拷贝别人已经设计好的风格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改博客的theme"><span class="toc-number">3.2.</span> <span class="toc-text">修改博客的theme</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发表或者编辑文章"><span class="toc-number">4.</span> <span class="toc-text">发表或者编辑文章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署博客到网络上"><span class="toc-number">5.</span> <span class="toc-text">部署博客到网络上</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置评论系统"><span class="toc-number">6.</span> <span class="toc-text">配置评论系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置站内搜索"><span class="toc-number">7.</span> <span class="toc-text">配置站内搜索</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加RSS功能"><span class="toc-number">8.</span> <span class="toc-text">添加RSS功能</span></a></li></ol>
+		
+		</div>
+		
+		<p>一个简单的Hexo构建博客的入门资料<a id="more"></a></p>
+<h2 id="环境准备">环境准备</h2><ol>
+<li>注册一个Github账号<br>这一步就忽略不说了</li>
+<li>下载Node安装（如果有需要可以配置path路径）<br>Node可以下载对应操作系统的安装版本，安装后会自动设置path</li>
+<li><p>安装hexo<br>执行命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>初始化hexo<br>创建自定义目录用来存放hexo项目，在这个目录下执行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="构建博客页面">构建博客页面</h2><ol>
+<li><p>在之前生成的hexo项目的目录下执行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo g  <span class="comment"># 这个是命令 hexo generate 的简写</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>可以看到在当前目录下生成了一个public的目录，这个目录就是你博客页面</p>
+</li>
+<li><p>启动本地server查看页面 执行命令： </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$hexo</span> s  <span class="comment"># 这个命令是hexo server的简写</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在浏览器输入 localhost:4000查看效果</p>
+</li>
+</ol>
+<h2 id="博客风格设置">博客风格设置</h2><h3 id="拷贝别人已经设计好的风格">拷贝别人已经设计好的风格</h3><p>1.1 下载别人写好的风格文件夹并且放到项目目录的themes 目录下面</p>
+<p>1.2 然后更改项目根目录下的_config.yml的文件中的 theme: thems_name</p>
+<h3 id="修改博客的theme">修改博客的theme</h3><p>2.1 找到你当前使用的theme的文件夹，在其中有一个_config.yml文件。</p>
+<p>2.2 打开这个文件进行编辑即可以修改页面布局和一些其他的内容。</p>
+<h2 id="发表或者编辑文章">发表或者编辑文章</h2><ol>
+<li>在项目目录的 ./source/_posts 目录下的 *.md文件就是文章内容，可以是用文本编辑器打开编辑</li>
+<li><p>文件的格式：（注意所有冒号后面都要有一个空格）</p>
+<pre><code><span class="label">title:</span> postName <span class="preprocessor">#文章页面上的显示名称，可以任意修改，不会出现在URL中</span>
+<span class="label">date:</span> <span class="number">2013</span>-<span class="number">12</span>-<span class="number">02</span> <span class="number">15</span>:<span class="number">30</span>:<span class="number">16</span> <span class="preprocessor">#文章生成时间，一般不改，当然也可以任意修改</span>
+<span class="label">categories:</span> example <span class="preprocessor">#分类 可选，设置了的会自动归类</span>
+<span class="label">tags:</span> [tag1,tag2,tag3] <span class="preprocessor">#文章标签，可空，多标签请用格式，注意:后面有个空格</span>
+---
+这里是正文
+</code></pre></li>
+</ol>
+<ol>
+<li><p>摘要显示可以是用&lt;!--more-->放在作为摘要的文字后面</p>
+<pre><code>title: Hello
+---
+这里是摘要<span class="comment">&lt;!--more--&gt;</span>
+这里是正文
+</code></pre></li>
+</ol>
+<h2 id="部署博客到网络上">部署博客到网络上</h2><ul>
+<li>使用github提供的空间可以部署刚刚用hexo构建的博客：</li>
+<li>在github上创建衣和用户名相关的项目（名字格式是固定的）, 例如：luoyuan800.github.io</li>
+<li>将刚刚构建的hexo项目下的public文件夹中的都push到git项目中（拷贝后push）</li>
+<li>访问 <a href="http://luoyuan800.github.io">http://luoyuan800.github.io</a> 即可以查看博客。（将其中的luoyuan800换成你的用户名）</li>
+<li>如果发现不能访问的话，确认名称的格式，还有git用户中要配置一个已经verify的邮箱。</li>
+</ul>
+<h2 id="配置评论系统">配置评论系统</h2><p>默认的静态网页是不提供评论的，而Hexo这个框架搭建的博客默认是可以简单设置使用disqus搭建评论<br>而国内用户没办法是用disqus，可以选择使用多说（duoshuo）。</p>
+<ol>
+<li>去多说的网站<a href="http://duoshuo.com/" target="_blank" rel="external">http://duoshuo.com/</a> 注册一个账号（可以使用第三方QQ微博之类的登录）然后注册一个shortname</li>
+<li>我是使用Jacman（Theme）的模块搭建博客的，那么只需要打开这个Theme的文件下面的_config.yml文件，找到其中的#### Comment这一段，然后在对应的duoshuo_shortname后面添加你的shortname就可以加载评论模块了</li>
+</ol>
+<h2 id="配置站内搜索">配置站内搜索</h2><p>我使用的是jacman主题，这个主题可以简单的配置基于Google，百度， tinysou这个三种站内搜索工具。<br>因为Google访问比较麻烦，百度检索的收录速度超级慢，我选择了tinysou这个工具。</p>
+<ul>
+<li>打开<a href="http://tinysou.com/plan.html" target="_blank" rel="external">tinysou</a></li>
+<li>选择立即注册（免费版），用邮箱注册一个账号并且验证</li>
+<li>进入控制台创建一个Engines</li>
+<li>进入你创建的Engines的管理页面，点击爬虫选项卡，在其中添加博客的域名（luoyuan800.github.io)</li>
+<li>打开hexo项目中themes文件夹中的jacman文件夹中的_config.yml文件， 修改一下内容：<pre><code><span class="string">tinysou_search:</span>     ## <span class="string">http:</span><span class="comment">//tinysou.com/</span>
+<span class="label">  enable:</span> <span class="literal">true</span>
+<span class="label">  id:</span> engine key ## e.g. <span class="string">"4ac092ad8d749fdc6293"</span> <span class="keyword">for</span> your tiny search id
+</code></pre></li>
+<li>在Hexo项目目录下的sources文件夹下面创建一个search文件夹</li>
+<li>在刚刚创建的文件夹下面创建一个index.md文件，其中填写内容<pre><code>layout: search 
+<span class="header">title: search
+---</span>
+</code></pre></li>
+</ul>
+<h2 id="添加RSS功能">添加RSS功能</h2><p>jacman主题漠然开启RSS模块，不过如果你直接使用点击RSS只会返回404。因为HEXO默认是没有生成RSS文件的</p>
+<ul>
+<li><p>安装hexo的rss插件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br><span class="line">`</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编辑项目文件下的_config.yml文件添加如下内容<br>  feed:</p>
+<pre><code>type: atom       <span class="hexcolor">#fee</span>d 类型 (atom/rss2)
+path: atom<span class="class">.xml</span>   <span class="id">#rss</span> 路径
+limit: <span class="number">20</span>        #在 rss 中最多生成的文章数(<span class="number">0</span>显示所有)
+</code></pre></li>
+<li>重新构建网站并且上传到你的网站空间<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hexo g</span><br><span class="line">``</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>注：以上所有修改完成后都需要重新构建项目然后发布public文件下的文件才可以看到效果。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/网站-工具/">网站-工具</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://luoyuan800.github.io/2015/07/01/Hexo-GitHub/" data-title="基于Hexo构建博客并且部署到Github上 | Yuan" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/07/01/IPMI/"  title="IPMI">
+ <strong>下一篇：</strong><br/> 
+ <span>IPMI
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/07/01/Hexo-GitHub/" data-title="基于Hexo构建博客并且部署到Github上" data-url="http://luoyuan800.github.io/2015/07/01/Hexo-GitHub/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境准备"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建博客页面"><span class="toc-number">2.</span> <span class="toc-text">构建博客页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#博客风格设置"><span class="toc-number">3.</span> <span class="toc-text">博客风格设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#拷贝别人已经设计好的风格"><span class="toc-number">3.1.</span> <span class="toc-text">拷贝别人已经设计好的风格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改博客的theme"><span class="toc-number">3.2.</span> <span class="toc-text">修改博客的theme</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发表或者编辑文章"><span class="toc-number">4.</span> <span class="toc-text">发表或者编辑文章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署博客到网络上"><span class="toc-number">5.</span> <span class="toc-text">部署博客到网络上</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置评论系统"><span class="toc-number">6.</span> <span class="toc-text">配置评论系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置站内搜索"><span class="toc-number">7.</span> <span class="toc-text">配置站内搜索</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加RSS功能"><span class="toc-number">8.</span> <span class="toc-text">添加RSS功能</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Linux/" title="编程-Linux">编程-Linux<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-网络协议/" title="编程-网络协议">编程-网络协议<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-工具/" title="网站-工具">网站-工具<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Luo Yuan in Zhuhai. <br/>
+			Here is my place for knowledge accumulation.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:luoyuan800@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="Luo Yuan">Luo Yuan</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"luoyuan800"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: '32f8205e3ec577a3f6d4'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
