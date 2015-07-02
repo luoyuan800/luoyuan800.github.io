@@ -5,7 +5,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://luoyuan800.github.io//"/>
-  <updated>2015-07-01T02:06:00.561Z</updated>
+  <updated>2015-07-02T00:44:09.240Z</updated>
   <id>http://luoyuan800.github.io//</id>
   
   <author>
@@ -14,6 +14,54 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Linux 文件系统类型]]></title>
+    <link href="http://luoyuan800.github.io/2015/07/01/linux-filesystem-types/"/>
+    <id>http://luoyuan800.github.io/2015/07/01/linux-filesystem-types/</id>
+    <published>2015-07-01T07:38:50.000Z</published>
+    <updated>2015-07-02T00:44:09.240Z</updated>
+    <content type="html"><![CDATA[<p>Linux操作系统下可用的各种文件系统类型注解<a id="more"></a></p>
+<h2 id="ufs">ufs</h2><p><em>The Unix file system (UFS; also called the Berkeley Fast File System, the BSD Fast File System or FFS) is a file system used by many Unix and Unix-like operating systems. It is a distant descendant of the original filesystem used by Version 7 Unix.</em><br>UFS是UNIX文件系统的简称，它来源于4.3Tahoe发行版中提供的BSD Fat Fast File System（FFS）系统，属于FFS的演化版本。UFS几乎是大部分UNIX类操作系统默认的基于磁盘的文件系统，包括Solaris、Free BSD、Open BSD、Net BSD、HP-UX等，甚至Apple的OS X也能支持UFS文件系统。<br>在UFS文件系统中，“块”(“块”是UFS文件系统中文件分配和存储的基本单位，类似于FAT文件系统和NTFS文件系统中“簇”的概念）有多种类型，每种类型的块都具有特定的功能。UFS文件系统主要具有四种类型的块：引导块、超级块、i-节点、数据块。</p>
+<ul>
+<li>引导块：在引导系统时使用的信息</li>
+<li>超级块：记录文件系统的详细信息</li>
+<li>i-节点：记录文件的各种信息</li>
+<li>数据块：存储每个文件的实际内容</li>
+</ul>
+<h2 id="ext2">ext2</h2><p><em>The ext2 or second extended filesystem is a file system for the Linux kernel. It was initially designed by Rémy Card as a replacement for the extended file system (ext). Its metadata structure was inspired by the earlier Unix File System (UFS).</em><br>The Second Extended File System(ext2)文件系统是Linux系统中的标准文件系统，是通过对Minix的文件系统进行扩展而得到的，其存取文件的性能极好。<br>在ext2文件系统中，文件由inode（包含有文件的所有信息）进行唯一标识。一个文件可能对应多个文件名，只有在所有文件名都被删除后，该文件才会被删除。此外，同一文件在磁盘中存放和被打开时所对应的inode是不同的，并由内核负责同步。<br>ext2文件系统采用三级间接块来存储数据块指针，并以块（block，默认为1KB）为单位分配空间。其磁盘分配策略是尽可能将逻辑相邻的文件分配到磁盘上物理相邻的块中，并尽可能将碎片分配给尽量少的文件，以从全局上提高性能。ext2文件系统将同一目录下的文件（包括目录）尽可能的放在同一个块组中，但目录则分布在各个块组中以实现负载均衡。在扩展文件时，会尽量一次性扩展8个连续块给文件（以预留空间的形式实现）。</p>
+<h2 id="ext3">ext3</h2><p><em>Third extended filesystem, is a journaled file system that is commonly used by the Linux kernel. Its main advantage over ext2 is journaling, which improves reliability and eliminates the need to check the file system after an unclean shutdown.</em><br>ext3的设计目标就是提供对于ext2的高度兼容，很多磁盘上的结构和都和ext2很相似。也因为这样，ext3缺乏很多最新设计中的功能，例如动态分配inode和可变块大小（frags或tails）。<br>ext3文件系统在被挂载为写入的时候，是不能进行fsck的。 ext3档案系统的倾倒作业在这个档案系统还是挂载中的时候执行可能会造成资料的损坏。<br>ext3不支持在其他文件系统上已经支持（例如：JFS2和ext4）的扩展。</p>
+<h2 id="ext4">ext4</h2><p><em>The ext4 or fourth extended filesystem is a journaling file system for Linux, developed as the successor to ext3.</em><br>EXT4是第四代扩展文件系统（英语：Fourth extended filesystem，缩写为 ext4）是Linux系统下的日志文件系统，是ext3文件系统的后继版本。Ext3文件系统最多只能支持32TB的文件系统和2TB的文件，根据使用的具体架构和系统设置，实际容量上限可能比这个数字还要低，即只能容纳2TB的文件系统和16GB的文件。而Ext4的文件系统容量达到1EB，而文件容量则达到16TB。<br>Ext4文件系统在Ext3的基础之上做了很多改进，引入了大量新功能，这些改进主要是为了提高未来的Linux系统的性能。<br>虽然Ext4做了很多改进，但依然能够与Ext3实现向后和向前的兼容性，这一点的确很难得。<br>因为Ext3文件系统是Linux操作系统上最受欢迎的文件系统之一，所以Ext4的研发人员考虑到应该让Ext3用户能够轻松迁移到Ext4，为此，Ext4被设计为在盘区结构方面具有向后和向前的兼容性。<br>首先Ext4是可以向前兼容的，也就是说Ext3文件系统可以挂载为Ext4文件系统使用，不过为了充分利用Ext4的优势，必须实现文件系统的迁移，以转换和利用新的Ext4格式。<br>Ext3文件系统可以在线转换为Ext4，但这样并不能用到Ext4的全部新特性，只有将文件系统重新创建为Ext4才比较彻底。<br>Ext4的向后兼容，向后兼容就是指可以将Ext4文件系统挂载为Ext3文件系统使用，但是前提是Ext4文件系统不能使用盘区功能。</p>
+<h2 id="hfs">hfs</h2><p><em>Hierarchical File System (HFS) is a proprietary file system developed by Apple Inc for use in computer systems running Mac OS. Originally designed for use on floppy and hard disks, it can also be found on read-only media such as CD-ROMs. </em><br>HFS分层文件系统（Hierarchical File System，HFS）是一种由苹果电脑开发，并使用在Mac OS上的文件系统。最初被设计用于软盘和硬盘，同时也可以在在只读媒体如CD-ROM上见到。</p>
+<h2 id="hfs+">hfs+</h2><p><em>HFS+ is a file system developed by Apple Inc. HFS+ was developed to replace the Hierarchical File System (HFS).</em><br>HFS+文件系统是目前的Apple电脑中默认的最常见的文件系统。HFS+来源于UNIX，但是又不用于UNIX，它增加了许多新的特性，同时也有许多不同于Windows、UNIX等系统的概念。HFS+是苹果公司为替代他们的分层文件系统（HFS）而开发的一种文件系统。它被用在macintosh电脑（或者其他运行Mac OS的电脑）上。它也是iPod上使用的其中一种格式。HFS+也被称为Mac OS Extended（或误称为“HFS Extended”)。在开发过程中，苹果公司也把这个文件系统的代号命名为“Sequoia”<br>HFS+是一个HFS的改进版本，支持更大的文件，并用Unicode来命名文件或文件夹，代替了Mac OS Roman或其他一些字符集. 和HFS一样，HFS+也使用B树来存储大部分分卷元数据。</p>
+<h2 id="vsfs">vsfs</h2><h2 id="mvfs">mvfs</h2><p><em>MVFS (MultiVersion File System) is a virtual file system which displays specific versions of data stored in ClearCase. In particular, it supports dynamic views which can show an arbitrary combination of local and remote files.</em><br>这是一种虚拟的文件系统，在ClearCase中使用，用于展示不同版本的数据。</p>
+<h2 id="vxfs">vxfs</h2><p><em>The VERITAS File System (or VxFS; called JFS and OnlineJFS in HP-UX) is an extent-based file system. VxFS is used as the primary filesystem of the HP-UX operating system. </em><br>VeritasFileSystem(VxFS）是首个商业日志记录文件系统。通过日志记录功能，元数据更改首先写入到日志，然后再写入到磁盘。由于无需 在多处写入更改，且元数据是异步写入的，因此吞吐量的速度较快。VxFS也是基于扩展区的意向日志记录文件系统。VxFS设计用于要求高性能和高可用性， 并且可以处理大量数据的操作环境。</p>
+<h2 id="nfs">nfs</h2><p>NFS（Network File System）即网络文件系统，是FreeBSD支持的文件系统中的一种，它允许网络中的计算机之间通过TCP/IP网络共享资源。在NFS的应用中，本地NFS的客户端应用可以透明地读写位于远端NFS服务器上的文件，就像访问本地文件一样。</p>
+<h2 id="nfs2">nfs2</h2><p><em>NFSv2 originally operated only over UDP. Its designers meant to keep the server side stateless, with locking (for example) implemented outside of the core protocol. The decision to make the file system stateless was a key decision, since it makes recovery from server failures trivial: all network clients freeze up when a server becomes unavailable, but once the server is again operational all the state to retry each transaction is contained in each RPC, which is retried by the client stub(s). This design decision allows UNIX applications, which usually cannot tolerate file server crashes, to ignore the problem.</em><br>NFSv2是基于32为系统的，所以其支持的最大文件只能是2G。设计的目标是使得对应的文件系统是无状态的。</p>
+<h2 id="nfs3">nfs3</h2><ul>
+<li>支持64位，文件大小可以大于2g</li>
+<li>支持异步写操作</li>
+</ul>
+<h2 id="nfs4">nfs4</h2><p><em>NFS version 4.1 (RFC 5661, January 2010) aims to provide protocol support to take advantage of clustered server deployments including the ability to provide scalable parallel access to files distributed among multiple servers (pNFS extension).</em><br>针对的目标是集群的大文件读写优化。整合了afs和cifs的优点。</p>
+<h2 id="hsfs">hsfs</h2><h2 id="jfs">jfs</h2><p>JFS( JOURNAL FILE SYSTEM)，一种字节级日志文件系统，借鉴了数据库保护系统的技术，以日志的形式记录文件的变化。JFS通过记录文件结构而不是数据本身的变化来保证数据的完整性。这种方式可以确保在任何时刻都能维护数据的可访问性。<br>该文件系统主要是为满足服务器（从单处理器系统到高级多处理器和群集系统）的高吞吐量和可靠性需求而设计、开发的。JFS文件系统是为面向事务的高性能系统而开发的。在IBM的AIX系统上，JFS已经过较长时间的测试，结果表明它是可靠、快速和容易使用的。 JFS也是一个有大量用户安装使用的企业级文件系统，具有可伸缩性和健壮性。与非日志文件系统相比，它的突出优点是快速重启能力，JFS能够在几秒或几分钟内就把文件系统恢复到一致状态。</p>
+<h2 id="jfs2">jfs2</h2><p><em>In the AIX operating system, there exist two generations of JFS filesystem that are called JFS (JFS1) and JFS2 respectively.</em><br>Jfs2 是在AIX中专用的一种文件系统。</p>
+<h2 id="reiserfs">reiserfs</h2><p>ReiserFS是一种新型的文件系统，它通过一种与众不同的方式—完全平衡树结构来容纳数据，包括文件数据，文件名以及日志支持。ReiserFS还以支持海量磁盘和磁盘阵列，并能在上面继续保很快的搜索速度和很高的效率。</p>
+<h2 id="reiser4">reiser4</h2><p><em>Reiser4 is a computer file system, successor to the ReiserFS file system.</em><br>这个文件系统是设计用来替代reiserfs的。</p>
+<h2 id="smbfs">smbfs</h2><h2 id="zfs">zfs</h2><p>ZFS文件系统的英文名称为Zettabyte File System,也叫动态文件系统（Dynamic File System）,是第一个128位文件系统。最初是由Sun公司为Solaris 10操作系统开发的文件系统。作为OpenSolaris开源计划的一部分，ZFS于2005年11月发布，被Sun称为是终极文件系统，经历了 10 年的活跃开发。而最新的开发将全面开放，并重新命名为 OpenZFS</p>
+<h2 id="xfs">xfs</h2><p><em>XFS is a high-performance 64-bit journaling file system, the file system was ported to the Linux kernel in 2001.</em><br>XfS文件系统是SGI开发的高级日志文件系统，XFS极具伸缩性，非常健壮。所幸的是SGI将其移植到了Linux系统中。在linux环境下。目前版本可用的最新XFS文件系统的为1.2版本，可以很好地工作在2.4核心下。<br>XFS 是 Silicon Graphics，Inc. 于 90 年代初开发的。它至今仍作为 SGI 基于 IRIX 的产品（从工作站到超级计算机）的底层文件系统来使用。现在，XFS 也可以用于 Linux。XFS 的 Linux 版的到来是激动人心的，首先因为它为 Linux 社区提供了一种健壮的、优秀的以及功能丰富的文件系统，并且这种文件系统所具有的可伸缩性能够满足最苛刻的存储需求</p>
+<h2 id="btrfs">btrfs</h2><p><em>Btrfs (B-tree file system) is a GPL-licensed copy-on-write file system for Linux.</em><br>Btrfs（通常念成Butter FS），由Oracle于2007年宣布并进行中的COW(copy-on-write式)文件系统。目标是取代Linux目前的ext3文件系统，改善ext3的限制，特别是单一文件大小的限制，总文件系统大小限制以及加入文件校验和特性。加入目前ext3/4未支持的一些功能，例如可写的磁盘快照(snapshots)，以及支持递归的快照(snapshots of snapshots)，内建磁盘阵列（RAID）支持，支持子卷(Subvolumes)的概念，允许在线调整文件系统大小。</p>
+<h2 id="tmpfs">tmpfs</h2><p><em>A common name for a temporary file storage facility on many Unix-like operating systems.</em><br>tmpfs是一种基于内存的文件系统，它和虚拟磁盘ramdisk比较类似像，但不完全相同，和ramdisk一样，tmpfs可以使用RAM，但它也可以使用swap分区来存储。</p>
+<h2 id="gfs2">gfs2</h2><p><em>The Global File System 2 or GFS2 is a shared disk file system for Linux computer clusters.</em></p>
+<h2 id="vxcfs">vxcfs</h2><p><em>A cache coherent POSIX compliant shared file system built based upon VERITAS File System. Available on: IBM AIX, Solaris, Linux, and HP-UX.</em></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>Linux操作系统下可用的各种文件系统类型注解]]>
+    
+    </summary>
+    
+      <category term="编程-Linux" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[IPMI]]></title>
