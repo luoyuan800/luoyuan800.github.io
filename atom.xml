@@ -5,7 +5,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://luoyuan800.github.io//"/>
-  <updated>2015-07-02T00:44:09.240Z</updated>
+  <updated>2015-07-02T02:43:52.387Z</updated>
   <id>http://luoyuan800.github.io//</id>
   
   <author>
@@ -14,6 +14,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[git使用Tips]]></title>
+    <link href="http://luoyuan800.github.io/2015/07/02/git-study/"/>
+    <id>http://luoyuan800.github.io/2015/07/02/git-study/</id>
+    <published>2015-07-02T02:00:01.000Z</published>
+    <updated>2015-07-02T02:43:52.387Z</updated>
+    <content type="html"><![CDATA[<p>一些git命令的使用tips，关于git的原理解释就不在此处提及了<a id="more"></a></p>
+<h2 id="复制远程代码到本地">复制远程代码到本地</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> &lt;版本库网址&gt;  &lt;本地文件夹&gt; <span class="comment">## 这个命令是默认建立master分支</span></span><br></pre></td></tr></table></figure>
+<p>在clone出master分支之后，在对应的master文件夹下面使用checkout命令可以下载分支的代码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b branch origin/branch  <span class="comment">## 这个命令会在当前目录下载指定分支</span></span><br></pre></td></tr></table></figure></p>
+<p>如果只需要一个branch的代码，可以考虑直接clone一个branch的代码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> -b &lt;branch name&gt; &lt;版本库网址&gt; &lt;本地文件夹位置（可选）&gt; <span class="comment">## 这个命令可以clone对应的branch代码并且放到指定的文件夹中</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="撤销本地的文件修改">撤销本地的文件修改</h2><p>使用远程版本库的文件覆盖本地的文件，其本质是将本地版本库的文件头回退，即是使得git记录文件修改的文件忘记本次修改的内容，然后是用pull更新当前代码。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git reset --hard</span><br><span class="line">$ git pull</span><br></pre></td></tr></table></figure></p>
+<h2 id="在某个branch的基础上创建一个newBranch（本地）">在某个branch的基础上创建一个newBranch（本地）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b &lt;newBranch&gt; origin/&lt;remotebarnch&gt; <span class="comment">## 这个命令只会在本地仓库创建一个新的branch，如果之后执行commit push命令的话就会在远程仓库创建这个branch</span></span><br></pre></td></tr></table></figure>
+<h2 id="用指定的远程branch更新当前的branch">用指定的远程branch更新当前的branch</h2><p>这个命令要在需要更新branch的文件目录下执行<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git pull origin &lt;branchName&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="关联当前的branch和远程的branch">关联当前的branch和远程的branch</h2><p>这个命令可以指定当前本地的branch的pull和push的远程仓库对应的branch是哪一个（如果是直接从远程branch checkout的branch就默认关联同名）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git bran -- <span class="built_in">set</span>-upstram &lt;<span class="built_in">local</span>Branch&gt; origin/&lt;remoteBranch&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="修改当前项目commit的作者名称">修改当前项目commit的作者名称</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git config user.name &lt;name&gt; <span class="comment">## 修改用户名称</span></span><br><span class="line">$ git config user.email &lt;emailmaile@xxx.com&gt; <span class="comment">## 修改commit的作者的email</span></span><br></pre></td></tr></table></figure>
+<p>以上的两个步骤也可以打开.git文件目录下的config文件，修改里面的author和email。修改完成之后下一次commit就会适应这个新的配置了。</p>
+<h2 id="修改上一次commit的作者">修改上一次commit的作者</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git commit --amend --author=<span class="string">'Gavin Luo &lt;gavin.luo@dell.com&gt;'</span></span><br></pre></td></tr></table></figure>
+<h2 id="查看commit的记录：">查看commit的记录：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span></span><br></pre></td></tr></table></figure>]]></content>
+    <summary type="html">
+    <![CDATA[<p>一些git命令的使用tips，关于git的原理解释就不在此处提及了]]>
+    
+    </summary>
+    
+      <category term="编程-工具" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-%E5%B7%A5%E5%85%B7/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Linux 文件系统类型]]></title>
