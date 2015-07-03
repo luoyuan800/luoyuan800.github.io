@@ -1,0 +1,586 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>gradle使用入门 | Yuan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Luo Yuan">
+    
+
+    
+    <meta name="description" content="Gradle是一个基于Groovy实现的，类似于Ant工具的项目构建文件，其设计目标是用更简单的语法和方式来配置一个项目的构建，而不需要像Ant工具一样那么麻烦 。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="gradle使用入门">
+<meta property="og:url" content="http://luoyuan800.github.io/2015/07/03/gradle/index.html">
+<meta property="og:site_name" content="Yuan">
+<meta property="og:description" content="Gradle是一个基于Groovy实现的，类似于Ant工具的项目构建文件，其设计目标是用更简单的语法和方式来配置一个项目的构建，而不需要像Ant工具一样那么麻烦 。">
+<meta property="og:updated_time" content="2015-07-03T09:33:18.386Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="gradle使用入门">
+<meta name="twitter:description" content="Gradle是一个基于Groovy实现的，类似于Ant工具的项目构建文件，其设计目标是用更简单的语法和方式来配置一个项目的构建，而不需要像Ant工具一样那么麻烦 。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Yuan" title="Yuan"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Yuan">Yuan</a></h1>
+				<h2 class="blog-motto">一点一滴，技术积累</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search">
+							<label>Search</label>
+						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/03/gradle/" title="gradle使用入门" itemprop="url">gradle使用入门</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-03T09:17:14.000Z" itemprop="datePublished"> 发表于 2015-07-03</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何配置Gradle："><span class="toc-number">1.</span> <span class="toc-text">如何配置Gradle：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用Gradle_打包项目"><span class="toc-number">2.</span> <span class="toc-text">用Gradle 打包项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gradle_构建war项目："><span class="toc-number">3.</span> <span class="toc-text">Gradle 构建war项目：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#默认的项目结构："><span class="toc-number">3.1.</span> <span class="toc-text">默认的项目结构：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一个简单脚本示例："><span class="toc-number">3.2.</span> <span class="toc-text">一个简单脚本示例：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#标签含义介绍"><span class="toc-number">3.3.</span> <span class="toc-text">标签含义介绍</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用gradle关联本地的jar包"><span class="toc-number">4.</span> <span class="toc-text">使用gradle关联本地的jar包</span></a></li></ol>
+		
+		</div>
+		
+		<p>Gradle是一个基于Groovy实现的，类似于Ant工具的项目构建文件，其设计目标是用更简单的语法和方式来配置一个项目的构建，而不需要像Ant工具一样那么麻烦 。<a id="more"></a></p>
+<h2 id="如何配置Gradle：">如何配置Gradle：</h2><ul>
+<li>下载Gradle解压到自定义文件夹</li>
+<li>配置环境变量：GRADLE_HOME</li>
+<li>添加%GRADLE_HOME%到Path中</li>
+<li>测试 gradle -v 输出正常表示配置成功</li>
+</ul>
+<h2 id="用Gradle_打包项目">用Gradle 打包项目</h2><ul>
+<li>构建 build.gradle 文件</li>
+<li><p>一个简单的gradle build文件</p>
+<pre><code>apply plugin: <span class="string">'java'</span>
+version = <span class="string">'1.0.0'</span>
+
+<span class="keyword">repositories</span> {
+    mavenLocal()
+    mavenCentral()
+    maven{
+        url <span class="string">"https://oosnmp.net/dist/release"</span>
+    }
+}
+
+<span class="keyword">dependencies</span> {
+    <span class="keyword">compile</span> <span class="string">'org.snmp4j:snmp4j:2.3.3'</span>
+}
+
+jar {
+    manifest{
+    attributes <span class="string">'Title'</span>: <span class="string">'SNMPFramework'</span>, <span class="string">'Version'</span> : <span class="number">1.0</span>, <span class="string">'Author'</span>:<span class="string">'LuoYuan'</span>
+}
+
+metaInf {
+    <span class="keyword">from</span>(<span class="string">'..'</span>) {
+        <span class="keyword">include</span> <span class="string">'*.md'</span>
+    }
+    includeEmptyDirs = <span class="keyword">false</span>
+    }
+}
+
+<span class="keyword">sourceSets</span>{
+    main {
+        java{
+            srcDir <span class="string">'src'</span>
+        }
+    }
+}
+
+<span class="keyword">task</span> javaDoces(type: Javadoc){
+    <span class="keyword">source</span> = <span class="keyword">sourceSets</span>.main.allJava
+}
+</code></pre></li>
+</ul>
+<p>这个build文件表示这个项目的依赖关系，还有从什么地方获取依赖包。</p>
+<p><strong>dependencies</strong> 标签定义编译代码的时候要依赖的jar包</p>
+<p>Gradle会尝试从<strong>repositories</strong>获取依赖的jar包 ，然后放到user/.gradle的文件目录下缓存，下次build的时候直接从这个地方获取。</p>
+<p><strong>task</strong> 标签定义一个新的task， 可以通过gradle <task\> 运行。</task\></p>
+<p><strong>sourceSet</strong>标签指定项目的源代码结果，如果不配置的话会是用默认的结构 src/main/java作为源文件的存放位置。</p>
+<p><strong>jar</strong> 标签定义执行build之后生成的jar包目录结构，可以配置jar包中manifest文件的内容。</p>
+<p><strong>metaInf</strong> 标签定义在生产的jar包中 META-INF 目录要放入的文件。</p>
+<h2 id="Gradle_构建war项目：">Gradle 构建war项目：</h2><h3 id="默认的项目结构：">默认的项目结构：</h3><pre><code>.
+├── build<span class="class">.gradle</span>
+└── src
+    └── main
+        ├── java
+        │   └── com
+        │       └── manning
+        │           └── gia
+        │               └── todo
+        │                   ├── model
+        │                   │   └── ToDoItem<span class="class">.java</span>
+        │                   ├── repository
+        │                   │   ├── InMemoryToDoRepository<span class="class">.java</span>
+        │                   │   └── ToDoRepository<span class="class">.java</span>
+        │                   └── web
+        │                       └── ToDoServlet<span class="class">.java</span>
+        └── webapp-------------------------------------------------<span class="id">#A</span>
+            ├── WEB-INF
+            │   └── web.xml----------------------------------------<span class="id">#B</span>
+            ├── css------------------------------------------------<span class="id">#C</span>
+            │   ├── base<span class="class">.css</span>
+            │   └── bg<span class="class">.png</span>
+            └── jsp------------------------------------------------<span class="id">#D</span>
+                ├── index<span class="class">.jsp</span>
+                └── todo-list.jsp
+</code></pre><p>#A Web源文件默认目录</p>
+<p>#B Web应用描述符文件</p>
+<p>#C 存储描述如何展现HTML元素的样式单文件的目录</p>
+<p>#D 存放JSP形式的动态脚本化视图组件</p>
+<h3 id="一个简单脚本示例：">一个简单脚本示例：</h3><pre><code><span class="tag">apply</span> <span class="rule"><span class="attribute">plugin</span>:<span class="value"> <span class="string">'war'</span>
+version = <span class="string">'1.0.0'</span>
+apply plugin: <span class="string">'jetty'</span>
+httpPort = <span class="number">8888</span>
+repositories {
+    <span class="function">mavenLocal</span>()
+    <span class="function">mavenCentral</span>()
+}
+
+war {
+    manifest{
+        attributes <span class="string">'Title'</span>: <span class="string">'SNMPFrameworkUI'</span>, <span class="string">'Version'</span> : <span class="number">1.0</span>, <span class="string">'Author'</span>:<span class="string">'LuoYuan'</span>
+    }
+    metaInf {
+        <span class="function">from</span>(<span class="string">'.'</span>) {
+            include <span class="string">'**/*.md'</span>
+        }
+        includeEmptyDirs = false
+    }
+}</span></span>
+</code></pre><h3 id="标签含义介绍">标签含义介绍</h3><p><strong>apply plugin:’jetty’</strong> 指定是用jetty作为运行war的容器，当运行<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gradle jettyRun</span><br></pre></td></tr></table></figure></p>
+<p>可以启动jetty 然后自动部署当前的war包进行测试。</p>
+<p><strong>httpPort</strong> 这个属性指定jetty运行的时候使用的端口，默认为8080。</p>
+<h2 id="使用gradle关联本地的jar包">使用gradle关联本地的jar包</h2><ul>
+<li><p>首先定义repositories</p>
+<pre><code><span class="xml">repositories </span><span class="expression">{
+   <span class="variable">flatDir</span>{
+        <span class="variable">dirs</span> '<span class="variable">src</span><span class="end-block">/main</span><span class="end-block">/webapp</span><span class="end-block">/WEB-INF</span><span class="end-block">/lib</span>'
+    }</span><span class="xml">
+}</span>
+</code></pre></li>
+<li><p>然后需要将jar包放到对应的目录，并且在build文件中增加</p>
+<pre><code>dependencies {
+    compile ([':<span class="property">name</span>:<span class="property">version</span>'],[':<span class="property">name</span>:<span class="property">version</span>'])
+}
+</code></pre></li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程-工具/">编程-工具</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://luoyuan800.github.io/2015/07/03/gradle/" data-title="gradle使用入门 | Yuan" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/07/02/git-study/"  title="git使用Tips">
+ <strong>下一篇：</strong><br/> 
+ <span>git使用Tips
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/07/03/gradle/" data-title="gradle使用入门" data-url="http://luoyuan800.github.io/2015/07/03/gradle/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何配置Gradle："><span class="toc-number">1.</span> <span class="toc-text">如何配置Gradle：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用Gradle_打包项目"><span class="toc-number">2.</span> <span class="toc-text">用Gradle 打包项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gradle_构建war项目："><span class="toc-number">3.</span> <span class="toc-text">Gradle 构建war项目：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#默认的项目结构："><span class="toc-number">3.1.</span> <span class="toc-text">默认的项目结构：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一个简单脚本示例："><span class="toc-number">3.2.</span> <span class="toc-text">一个简单脚本示例：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#标签含义介绍"><span class="toc-number">3.3.</span> <span class="toc-text">标签含义介绍</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用gradle关联本地的jar包"><span class="toc-number">4.</span> <span class="toc-text">使用gradle关联本地的jar包</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Linux/" title="编程-Linux">编程-Linux<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-工具/" title="编程-工具">编程-工具<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-网络协议/" title="编程-网络协议">编程-网络协议<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-工具/" title="网站-工具">网站-工具<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Luo Yuan in Zhuhai. <br/>
+			Here is my place for knowledge accumulation.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:luoyuan800@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="Luo Yuan">Luo Yuan</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"luoyuan800"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F5529f030def9614f4dc83cc68b307ced' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: '32f8205e3ec577a3f6d4'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
