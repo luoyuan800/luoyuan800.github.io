@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Cron 表达式入门 | Yuan</title>
+    <title>Log4J中的继承关系 | Yuan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Luo Yuan">
     
 
     
-    <meta name="description" content="关于cron表达式的基本概念介绍。">
+    <meta name="description" content="Java代码中可以通过继承关系来扩展类的功能，在Log4J也有类似的机制。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Cron 表达式入门">
-<meta property="og:url" content="http://luoyuan800.github.io/2015/06/30/QuartZ-Cron/index.html">
+<meta property="og:title" content="Log4J中的继承关系">
+<meta property="og:url" content="http://luoyuan800.github.io/2015/07/06/Log4J-Inherit/index.html">
 <meta property="og:site_name" content="Yuan">
-<meta property="og:description" content="关于cron表达式的基本概念介绍。">
-<meta property="og:updated_time" content="2015-06-30T03:47:38.873Z">
+<meta property="og:description" content="Java代码中可以通过继承关系来扩展类的功能，在Log4J也有类似的机制。">
+<meta property="og:updated_time" content="2015-07-06T01:30:42.264Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Cron 表达式入门">
-<meta name="twitter:description" content="关于cron表达式的基本概念介绍。">
+<meta name="twitter:title" content="Log4J中的继承关系">
+<meta name="twitter:description" content="Java代码中可以通过继承关系来扩展类的功能，在Log4J也有类似的机制。">
 
     
     <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
@@ -79,14 +79,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/06/30/QuartZ-Cron/" title="Cron 表达式入门" itemprop="url">Cron 表达式入门</a>
+      <a href="/2015/07/06/Log4J-Inherit/" title="Log4J中的继承关系" itemprop="url">Log4J中的继承关系</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-30T01:28:52.000Z" itemprop="datePublished"> 发表于 2015-06-30</time>
+    <time datetime="2015-07-06T01:06:35.000Z" itemprop="datePublished"> 发表于 2015-07-06</time>
     
   </p>
 </header>
@@ -95,91 +95,45 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Cron表达式简介"><span class="toc-number">1.</span> <span class="toc-text">Cron表达式简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cron表达式中各个字段的可用字符"><span class="toc-number">2.</span> <span class="toc-text">Cron表达式中各个字段的可用字符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#特殊字符含义"><span class="toc-number">3.</span> <span class="toc-text">特殊字符含义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#举例"><span class="toc-number">4.</span> <span class="toc-text">举例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#英文版"><span class="toc-number">5.</span> <span class="toc-text">英文版</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Logger的理解"><span class="toc-number">1.</span> <span class="toc-text">Logger的理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#继承关系"><span class="toc-number">2.</span> <span class="toc-text">继承关系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#父类"><span class="toc-number">2.1.</span> <span class="toc-text">父类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用户自定义的Logger"><span class="toc-number">2.2.</span> <span class="toc-text">用户自定义的Logger</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码中直接定义子类"><span class="toc-number">2.3.</span> <span class="toc-text">代码中直接定义子类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#继承关系的用处"><span class="toc-number">3.</span> <span class="toc-text">继承关系的用处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RootLogger"><span class="toc-number">4.</span> <span class="toc-text">RootLogger</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类实例Logger"><span class="toc-number">5.</span> <span class="toc-text">类实例Logger</span></a></li></ol>
 		
 		</div>
 		
-		<p>关于cron表达式的基本概念介绍。<a id="more"></a></p>
-<h2 id="Cron表达式简介">Cron表达式简介</h2><p>Cron是Linux中的计划任务管理系统，cron表达式可以用来定义一个计划时间来约定执行工作。<br>Cron表达式使用空格进行各个时间段的分隔，每个字段的范例格式如下表：<br>（年份可以留空，但是其他不可留空）</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Second</th>
-<th style="text-align:center">Minut</th>
-<th style="text-align:center">Hours</th>
-<th style="text-align:center">DysofMounth</th>
-<th style="text-align:center">Mounth</th>
-<th style="text-align:center">DayofWeek</th>
-<th style="text-align:center">Year</th>
-<th style="text-align:right">Means</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">0</td>
-<td style="text-align:center">5,15</td>
-<td style="text-align:center">*</td>
-<td style="text-align:center">*</td>
-<td style="text-align:center">*</td>
-<td style="text-align:center">?</td>
-<td style="text-align:center"></td>
-<td style="text-align:right">每个小时的第五分钟，第十五分钟触发</td>
-</tr>
-</tbody>
-</table>
-<h2 id="Cron表达式中各个字段的可用字符">Cron表达式中各个字段的可用字符</h2><table>
-<thead>
-<tr>
-<th>字段名称</th>
-<th>字段可用字符</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Seconds Minutes</td>
-<td>, - * / 0-59</td>
-</tr>
-<tr>
-<td>Hours</td>
-<td>, - * / 0-23</td>
-</tr>
-<tr>
-<td>DayofMonth</td>
-<td>, - * / ? L W C 0-31</td>
-</tr>
-<tr>
-<td>Month</td>
-<td>, - * / 1-12 JAN-DEc</td>
-</tr>
-<tr>
-<td>DayofWeek</td>
-<td>, - * / ? L C # 1-7 SUN-SAT (1表示星期天，2表示星期一， 依次类推 )</td>
-</tr>
-<tr>
-<td>Year</td>
-<td>, - * / 1970-2099</td>
-</tr>
-</tbody>
-</table>
-<h2 id="特殊字符含义">特殊字符含义</h2><ol>
-<li><strong>*</strong> 表示匹配该域的任意值，假如在Minutes域使用*, 即表示每分钟都会触发事件。</li>
-<li><strong>?</strong> 只能用在DayofMonth和DayofWeek两个域。它也匹配域的任意值，但实际不会。因为DayofMonth和 DayofWeek会相互影响。例如想在每月的20日触发调度，不管20日到底是星期几，则只能使用如下写法： 13 13 15 20 * ?, 其中最后一位只能用？，而不能使用*。 </li>
-<li><strong>-</strong> 表示范围，例如在Minutes域使用5-20，表示从当前小时内的第5分到20分钟每分钟触发一次 </li>
-<li><strong>/</strong> 表示起始时间开始触发，然后每隔固定时间触发一次，例如在Minutes域使用5/20,则意味着第5分钟触发一次，而第25，第45等分别触发一次. </li>
-<li><strong>,</strong>  表示列出枚举值值。例如：在Minutes域使用5,20，则意味着在第5和第20分每分钟触发一次。 </li>
-<li><strong>L</strong> 表示最后，只能出现在DayofWeek和DayofMonth域，如果在DayofWeek域使用5L,意味着在当前月份的最后的一个星期四触发。 </li>
-<li><strong>W</strong> 表示有效工作日(周一到周五),只能出现在DayofMonth域，系统将在离指定日期的最近的有效工作日触发事件。例如：在 DayofMonth使用5W，如果5日是星期六，则将在最近的工作日：星期五，即4日触发。如果5日是星期天，则在6日(周一)触发；如果5日在星期一 到星期五中的一天，则就在5日触发。另外一点，W的最近寻找不会跨过月份 </li>
-<li><strong>LW</strong> 这两个字符可以连用，表示在某个月最后一个工作日，即最后一个星期五。 </li>
-<li><strong>#</strong> 用于确定每个月第几个星期几，只能出现在DayofWeek域。例如在4#2，表示某月的第二个星期三。</li>
-<li>由于”DayofMonth “和”DayofWeek”这两个元素互斥的,必须要对其中一个设置?</li>
-<li>\?字符仅被用于天（月）和天（星期）两个子表达式，表示不指定值。当2个子表达式其中之一被指定了值以后，为了避免冲突，需要将另一个子表达式的值设为“？”</li>
-<li>L 字符仅被用于天（月）和天（星期）两个子表达式，它是单词“last”的缩写。但是它在两个子表达式里的含义是不同的。</li>
-<li>在天（月）子表达式中，“L”表示一个月的最后一天</li>
-<li>在天（星期）自表达式中，“L”表示一个星期的最后一天，也就是SAT</li>
-<li>如果在“L”前有具体的内容，它就具有其他的含义了。例如：“6L”表示这个月的倒数第６天，“FRIL”表示这个月的最一个星期五</li>
-</ol>
-<h2 id="举例">举例</h2><p>“0 0 10,14,16 * * ?” 每天上午10点，下午2点，4点<br>“0 0/30 9-17 * * ?” 朝九晚五工作时间内每半小时<br>“0 0 12 ? * WED” 表示每个星期三中午12点<br>“0 0 12 * * ?” 每天中午12点触发<br>“0 15 10 ? * *“ 每天上午10:15触发<br>“0 15 10 * * ?” 每天上午10:15触发<br>“0 15 10 * * ? <em>“ 每天上午10:15触发<br>“0 15 10 \</em> * ? 2005” 2005年的每天上午10:15触发<br>“0 * 14 * * ?” 在每天下午2点到下午2:59期间的每1分钟触发<br>“0 0/5 14 * * ?” 在每天下午2点到下午2:55期间的每5分钟触发<br>“0 0/5 14,18 * * ?” 在每天下午2点到2:55期间和下午6点到6:55期间的每5分钟触发<br>“0 0-5 14 * * ?” 在每天下午2点到下午2:05期间的每1分钟触发<br>“0 10,44 14 ? 3 WED” 每年三月的星期三的下午2:10和2:44触发<br>“0 15 10 ? * MON-FRI” 周一至周五的上午10:15触发<br>“0 15 10 15 * ?” 每月15日上午10:15触发<br>“0 15 10 L * ?” 每月最后一日的上午10:15触发<br>“0 15 10 ? * 6L” 每月的最后一个星期五上午10:15触发<br>“0 15 10 ? * 6L 2002-2005” 2002年至2005年的每月的最后一个星期五上午10:15触发<br>“0 15 10 ? * 6#3” 每月的第三个星期五上午10:15触发 </p>
-<h2 id="英文版">英文版</h2><p><a href="../Cron-English">cron-English</a></p>
+		<p>Java代码中可以通过继承关系来扩展类的功能，在Log4J也有类似的机制。<br><a id="more"></a></p>
+<h2 id="Logger的理解">Logger的理解</h2><p>在log4j的使用中，我们是使用<code>Logger.getLogger(name)</code>来获取Logger实例，这里的Logger实例中的名字是有name来指定，这个那么就限定了我们这个logger会使用什么配置。个人的理解是，在log4j中的Logger的实例是根据名字来唯一存在的，一个名字只会存在一个Logger实例。大概可以这样理解，每一个<code>getLogger</code>返回的都是Logger的一个子类，这个子类是静态，每个子类之间是根据名字来区分的。</p>
+<h2 id="继承关系">继承关系</h2><h3 id="父类">父类</h3><p>既然是继承，那么需要一个父类，Logger是不能直接实例化，而我们可以通过<code>Logger.getRootLogger()</code>方式来取一个名字标识为rootLogger的Logger子类，这个类我们可以看做其他Logger子类的父类，所有的Logger子类都会继承自它。</p>
+<h3 id="用户自定义的Logger">用户自定义的Logger</h3><p>用户自定义的Logger其实际意义就是指定Log4J生成一个指定名称和配置的子类。<br>比如在<em>log4j.properties</em>文件中定义了这么一句</p>
+<pre><code>log4j<span class="class">.logger</span><span class="class">.father</span>=DEBUG, fatherConfig
+</code></pre><p>那么这句话的意思是说定义一个名字为father的logger类，在代码中可以通过<code>Logger.getLogger(“father”);</code> 来获取这个father对应Logger类。那如果我们需要定义一个这个father的子类就应该：</p>
+<pre><code>log4j<span class="class">.logger</span><span class="class">.father</span><span class="class">.children</span>=INFO,childrenConfig
+</code></pre><p>那么在定义上这个father.children就是一个子类，并且获取方式为：</p>
+<pre><code><span class="tag">Logger</span><span class="class">.getLogger</span>(“<span class="tag">father</span><span class="class">.children</span>”);
+</code></pre><h3 id="代码中直接定义子类">代码中直接定义子类</h3><p>即使没有在配置文件中显示的写出子类的定义，我们也可以在代码中通过名称来指定logger实例的继承关系：</p>
+<pre><code><span class="tag">Logger</span><span class="class">.getLogger</span>(“<span class="tag">father</span><span class="class">.children</span><span class="class">.children</span>”);
+</code></pre><p>上面这个语句就使得我们获得了一个继承自father.children的子类father.children.children。</p>
+<h2 id="继承关系的用处">继承关系的用处</h2><p>继承的存在对我们最显著的影响是什么呢？</p>
+<ul>
+<li><p>个人理解是记录到子类上的log也会被父类接收！是的，正常情况，如果使用子类的实例记录一个log信息，那么这个子类的所有父类都会接收到log信息并且记录。如果我们把子类和父类的输出目的地都设置为一样，那么就会发现重复的log信息。<br>比如我们使用以下代码段，并且把<code>father，father.children</code>的输出<em>appender</em>都设置为控制台输出(org.apache.log4j.ConsoleAppender)</p>
+<pre><code>Logger logger=Logger.getLogger(“father.children.children”)<span class="comment">;</span>
+Logger.info(“这是一个子类的子类log信息”)<span class="comment">;</span>
+</code></pre><p>我们可以在控制台看到3条log信息，分别是由<em>father.children.children、father.children、father</em>上log进行了输出。<br>这里要注意，father的级别被定义为DEBUG，但是我们输出的INFO信息页被father记录了，这个就表明了father接受到子类的log信息之后father的级别限定会被子类的覆盖掉。</p>
+</li>
+<li><p>其实我个人并不是很理解这个继承关系会给我们带来什么样的好处，或许是某些部分的信息我们希望不仅被自己的log记录，还希望能被其他的log接收到。另外一个好处就是我们使用名字限定的方式在代码中动态获得一个没有在配置文件中指定的logger实例的时候，这个logger会继承那个父类的log配置。</p>
+</li>
+</ul>
+<h2 id="RootLogger">RootLogger</h2><p>还有需要注意的一点是，我们经常可以看到别人使用的配置文件里面会定义个：</p>
+<pre><code>lo<span class="keyword">g4</span>j.rootLogger=DEBUG, appe<span class="label">nd1</span>, appe<span class="label">nd2</span>
+</code></pre><ul>
+<li>这里是对最高级的父类进行了<strong>rootLogger</strong>进行了配置限定，如果没有显式定义其他的Logger的话，那么所有代码中获取到的Logger实例都会继承这个配置。</li>
+<li><p>如果同时定义了其他Logger，并且那个Logger有一个继承的子Logger，那么那个子类Logger的继承关系是：</p>
+<pre><code>children-&gt; father -&gt;rootLogger
+</code></pre></li>
+<li><p>可以使用log4j.additivity.LOGNAME=false来屏蔽掉这种关系（注意LOGNAME是LOG的名称不是LOG的配置名）。</p>
+</li>
+</ul>
+<h2 id="类实例Logger">类实例Logger</h2><p>我们经常使用的<code>Logg.getLoggger(class)</code>获取的Logger实例,如果需要配置这些Logger，在配置文件中定义其log规范使用class name来定位。</p>
+<pre><code>Log4j<span class="class">.logger</span><span class="class">.className</span>= class_full_name
+</code></pre><p>其含义就是使用class的全限定名来作为logger的名称，这样如果有需要的话我们可以对每个类都定义自己的log规范。<br>当然如果没有在配置文件里面配置这个全限定名字的logger，这个logger会继承rootLogger的配置，如果连rootLogger都没配置，那么log信息是无法被接收的。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -187,7 +141,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程-Linux/">编程-Linux</a>
+  <a class="article-category-link" href="/categories/编程-Java/">编程-Java</a>
 </div>
 
 
@@ -197,7 +151,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://luoyuan800.github.io/2015/06/30/QuartZ-Cron/" data-title="Cron 表达式入门 | Yuan" data-tsina="null" class="share clearfix">
+	  <div data-url="http://luoyuan800.github.io/2015/07/06/Log4J-Inherit/" data-title="Log4J中的继承关系 | Yuan" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -210,19 +164,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/06/30/Cron-English/" title="About the Cron Expression">
-  <strong>上一篇：</strong><br/>
-  <span>
-  About the Cron Expression</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/06/30/Hexo-GitHub/"  title="基于Hexo构建博客并且部署到Github上">
+<a href="/2015/07/03/gradle/"  title="Gradle使用入门">
  <strong>下一篇：</strong><br/> 
- <span>基于Hexo构建博客并且部署到Github上
+ <span>Gradle使用入门
 </span>
 </a>
 </div>
@@ -231,7 +177,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/06/30/QuartZ-Cron/" data-title="Cron 表达式入门" data-url="http://luoyuan800.github.io/2015/06/30/QuartZ-Cron/"></div>
+	<div class="ds-thread" data-thread-key="2015/07/06/Log4J-Inherit/" data-title="Log4J中的继承关系" data-url="http://luoyuan800.github.io/2015/07/06/Log4J-Inherit/"></div>
 </section>
 
 
@@ -241,7 +187,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Cron表达式简介"><span class="toc-number">1.</span> <span class="toc-text">Cron表达式简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cron表达式中各个字段的可用字符"><span class="toc-number">2.</span> <span class="toc-text">Cron表达式中各个字段的可用字符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#特殊字符含义"><span class="toc-number">3.</span> <span class="toc-text">特殊字符含义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#举例"><span class="toc-number">4.</span> <span class="toc-text">举例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#英文版"><span class="toc-number">5.</span> <span class="toc-text">英文版</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Logger的理解"><span class="toc-number">1.</span> <span class="toc-text">Logger的理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#继承关系"><span class="toc-number">2.</span> <span class="toc-text">继承关系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#父类"><span class="toc-number">2.1.</span> <span class="toc-text">父类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用户自定义的Logger"><span class="toc-number">2.2.</span> <span class="toc-text">用户自定义的Logger</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码中直接定义子类"><span class="toc-number">2.3.</span> <span class="toc-text">代码中直接定义子类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#继承关系的用处"><span class="toc-number">3.</span> <span class="toc-text">继承关系的用处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RootLogger"><span class="toc-number">4.</span> <span class="toc-text">RootLogger</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类实例Logger"><span class="toc-number">5.</span> <span class="toc-text">类实例Logger</span></a></li></ol>
  
   </div>
 

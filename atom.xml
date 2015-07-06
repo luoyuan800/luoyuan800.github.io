@@ -5,7 +5,7 @@
   <subtitle><![CDATA[一点一滴，技术积累]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://luoyuan800.github.io//"/>
-  <updated>2015-07-03T09:33:18.386Z</updated>
+  <updated>2015-07-06T01:30:42.264Z</updated>
   <id>http://luoyuan800.github.io//</id>
   
   <author>
@@ -16,11 +16,62 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[gradle使用入门]]></title>
+    <title><![CDATA[Log4J中的继承关系]]></title>
+    <link href="http://luoyuan800.github.io/2015/07/06/Log4J-Inherit/"/>
+    <id>http://luoyuan800.github.io/2015/07/06/Log4J-Inherit/</id>
+    <published>2015-07-06T01:06:35.000Z</published>
+    <updated>2015-07-06T01:30:42.264Z</updated>
+    <content type="html"><![CDATA[<p>Java代码中可以通过继承关系来扩展类的功能，在Log4J也有类似的机制。<br><a id="more"></a></p>
+<h2 id="Logger的理解">Logger的理解</h2><p>在log4j的使用中，我们是使用<code>Logger.getLogger(name)</code>来获取Logger实例，这里的Logger实例中的名字是有name来指定，这个那么就限定了我们这个logger会使用什么配置。个人的理解是，在log4j中的Logger的实例是根据名字来唯一存在的，一个名字只会存在一个Logger实例。大概可以这样理解，每一个<code>getLogger</code>返回的都是Logger的一个子类，这个子类是静态，每个子类之间是根据名字来区分的。</p>
+<h2 id="继承关系">继承关系</h2><h3 id="父类">父类</h3><p>既然是继承，那么需要一个父类，Logger是不能直接实例化，而我们可以通过<code>Logger.getRootLogger()</code>方式来取一个名字标识为rootLogger的Logger子类，这个类我们可以看做其他Logger子类的父类，所有的Logger子类都会继承自它。</p>
+<h3 id="用户自定义的Logger">用户自定义的Logger</h3><p>用户自定义的Logger其实际意义就是指定Log4J生成一个指定名称和配置的子类。<br>比如在<em>log4j.properties</em>文件中定义了这么一句</p>
+<pre><code>log4j<span class="class">.logger</span><span class="class">.father</span>=DEBUG, fatherConfig
+</code></pre><p>那么这句话的意思是说定义一个名字为father的logger类，在代码中可以通过<code>Logger.getLogger(“father”);</code> 来获取这个father对应Logger类。那如果我们需要定义一个这个father的子类就应该：</p>
+<pre><code>log4j<span class="class">.logger</span><span class="class">.father</span><span class="class">.children</span>=INFO,childrenConfig
+</code></pre><p>那么在定义上这个father.children就是一个子类，并且获取方式为：</p>
+<pre><code><span class="tag">Logger</span><span class="class">.getLogger</span>(“<span class="tag">father</span><span class="class">.children</span>”);
+</code></pre><h3 id="代码中直接定义子类">代码中直接定义子类</h3><p>即使没有在配置文件中显示的写出子类的定义，我们也可以在代码中通过名称来指定logger实例的继承关系：</p>
+<pre><code><span class="tag">Logger</span><span class="class">.getLogger</span>(“<span class="tag">father</span><span class="class">.children</span><span class="class">.children</span>”);
+</code></pre><p>上面这个语句就使得我们获得了一个继承自father.children的子类father.children.children。</p>
+<h2 id="继承关系的用处">继承关系的用处</h2><p>继承的存在对我们最显著的影响是什么呢？</p>
+<ul>
+<li><p>个人理解是记录到子类上的log也会被父类接收！是的，正常情况，如果使用子类的实例记录一个log信息，那么这个子类的所有父类都会接收到log信息并且记录。如果我们把子类和父类的输出目的地都设置为一样，那么就会发现重复的log信息。<br>比如我们使用以下代码段，并且把<code>father，father.children</code>的输出<em>appender</em>都设置为控制台输出(org.apache.log4j.ConsoleAppender)</p>
+<pre><code>Logger logger=Logger.getLogger(“father.children.children”)<span class="comment">;</span>
+Logger.info(“这是一个子类的子类log信息”)<span class="comment">;</span>
+</code></pre><p>我们可以在控制台看到3条log信息，分别是由<em>father.children.children、father.children、father</em>上log进行了输出。<br>这里要注意，father的级别被定义为DEBUG，但是我们输出的INFO信息页被father记录了，这个就表明了father接受到子类的log信息之后father的级别限定会被子类的覆盖掉。</p>
+</li>
+<li><p>其实我个人并不是很理解这个继承关系会给我们带来什么样的好处，或许是某些部分的信息我们希望不仅被自己的log记录，还希望能被其他的log接收到。另外一个好处就是我们使用名字限定的方式在代码中动态获得一个没有在配置文件中指定的logger实例的时候，这个logger会继承那个父类的log配置。</p>
+</li>
+</ul>
+<h2 id="RootLogger">RootLogger</h2><p>还有需要注意的一点是，我们经常可以看到别人使用的配置文件里面会定义个：</p>
+<pre><code>lo<span class="keyword">g4</span>j.rootLogger=DEBUG, appe<span class="label">nd1</span>, appe<span class="label">nd2</span>
+</code></pre><ul>
+<li>这里是对最高级的父类进行了<strong>rootLogger</strong>进行了配置限定，如果没有显式定义其他的Logger的话，那么所有代码中获取到的Logger实例都会继承这个配置。</li>
+<li><p>如果同时定义了其他Logger，并且那个Logger有一个继承的子Logger，那么那个子类Logger的继承关系是：</p>
+<pre><code>children-&gt; father -&gt;rootLogger
+</code></pre></li>
+<li><p>可以使用log4j.additivity.LOGNAME=false来屏蔽掉这种关系（注意LOGNAME是LOG的名称不是LOG的配置名）。</p>
+</li>
+</ul>
+<h2 id="类实例Logger">类实例Logger</h2><p>我们经常使用的<code>Logg.getLoggger(class)</code>获取的Logger实例,如果需要配置这些Logger，在配置文件中定义其log规范使用class name来定位。</p>
+<pre><code>Log4j<span class="class">.logger</span><span class="class">.className</span>= class_full_name
+</code></pre><p>其含义就是使用class的全限定名来作为logger的名称，这样如果有需要的话我们可以对每个类都定义自己的log规范。<br>当然如果没有在配置文件里面配置这个全限定名字的logger，这个logger会继承rootLogger的配置，如果连rootLogger都没配置，那么log信息是无法被接收的。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>Java代码中可以通过继承关系来扩展类的功能，在Log4J也有类似的机制。<br>]]>
+    
+    </summary>
+    
+      <category term="编程-Java" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Gradle使用入门]]></title>
     <link href="http://luoyuan800.github.io/2015/07/03/gradle/"/>
     <id>http://luoyuan800.github.io/2015/07/03/gradle/</id>
     <published>2015-07-03T09:17:14.000Z</published>
-    <updated>2015-07-03T09:33:18.386Z</updated>
+    <updated>2015-07-06T01:25:39.906Z</updated>
     <content type="html"><![CDATA[<p>Gradle是一个基于Groovy实现的，类似于Ant工具的项目构建文件，其设计目标是用更简单的语法和方式来配置一个项目的构建，而不需要像Ant工具一样那么麻烦 。<a id="more"></a></p>
 <h2 id="如何配置Gradle：">如何配置Gradle：</h2><ul>
 <li>下载Gradle解压到自定义文件夹</li>
