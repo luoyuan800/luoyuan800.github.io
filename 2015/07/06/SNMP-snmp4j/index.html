@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Log4j中的NDC和MDC | Yuan</title>
+    <title>SNMP-snmp4j | Yuan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Luo Yuan">
     
 
     
-    <meta name="description" content="Log4j中的NDC和MDC两个功能类似，都是用于存储上下文的信息。">
+    <meta name="description" content="基于snmp4j实现的一个SNMP框架，目的是简化snmp的开发流程，只需要使用几个简单的类就可以实现通过snmp协议收集数据，也可以作为一个snmp4j的使用范例进行参考。基于Apache2.0协议开放源代码。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Log4j中的NDC和MDC">
-<meta property="og:url" content="http://luoyuan800.github.io/2015/06/30/Log4j-N-MDC/index.html">
+<meta property="og:title" content="SNMP-snmp4j">
+<meta property="og:url" content="http://luoyuan800.github.io/2015/07/06/SNMP-snmp4j/index.html">
 <meta property="og:site_name" content="Yuan">
-<meta property="og:description" content="Log4j中的NDC和MDC两个功能类似，都是用于存储上下文的信息。">
-<meta property="og:updated_time" content="2015-06-30T04:52:27.606Z">
+<meta property="og:description" content="基于snmp4j实现的一个SNMP框架，目的是简化snmp的开发流程，只需要使用几个简单的类就可以实现通过snmp协议收集数据，也可以作为一个snmp4j的使用范例进行参考。基于Apache2.0协议开放源代码。">
+<meta property="og:updated_time" content="2015-07-07T02:47:14.923Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Log4j中的NDC和MDC">
-<meta name="twitter:description" content="Log4j中的NDC和MDC两个功能类似，都是用于存储上下文的信息。">
+<meta name="twitter:title" content="SNMP-snmp4j">
+<meta name="twitter:description" content="基于snmp4j实现的一个SNMP框架，目的是简化snmp的开发流程，只需要使用几个简单的类就可以实现通过snmp协议收集数据，也可以作为一个snmp4j的使用范例进行参考。基于Apache2.0协议开放源代码。">
 
     
     <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
@@ -79,14 +79,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/06/30/Log4j-N-MDC/" title="Log4j中的NDC和MDC" itemprop="url">Log4j中的NDC和MDC</a>
+      <a href="/2015/07/06/SNMP-snmp4j/" title="SNMP-snmp4j" itemprop="url">SNMP-snmp4j</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-30T04:08:35.000Z" itemprop="datePublished"> 发表于 2015-06-30</time>
+    <time datetime="2015-07-06T09:58:14.000Z" itemprop="datePublished"> 发表于 2015-07-06</time>
     
   </p>
 </header>
@@ -95,29 +95,12 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本概念"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NDC与MDC的区别"><span class="toc-number">2.</span> <span class="toc-text">NDC与MDC的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用方式"><span class="toc-number">3.</span> <span class="toc-text">使用方式</span></a></li></ol>
+			
 		
 		</div>
 		
-		<p>Log4j中的NDC和MDC两个功能类似，都是用于存储上下文的信息。<a id="more"></a></p>
-<h2 id="基本概念">基本概念</h2><p>NDC（Nested Diagnostic Context）MDC（Mapped Diagnostic Context）是一种嵌套诊断环境的机制。这种机制的提出，主要为了减少多线程的系统为每个客户单独记录日志的系统开销。就是说在多线程和多并发系统中年，这个模式可以只使用一个logger实例，记录每个线程的日志信息，并且会带上各个线程独特的标识信息。更多的时候这两张机制是作用在一个网络应用上，特别是一个服务平台要同时提过服务给多个客户的时候，需要追踪每个客户的信息并且记录日志的时候，使用客户的唯一标识放入到NDC或者MDC中，从而使得在log信息中更容易查看到哪一个客户触发了log事件。个人理解这个两个功能是存储额外的信息，并且可以在新版本的log4j是用MDCFilter或者NDCFilter来级能进行log文本的过滤。</p>
-<h2 id="NDC与MDC的区别">NDC与MDC的区别</h2><p>NDC与MDC的区别在于存储方式的不同。<br>NDC是使用 栈的机制来存储信息，而MDC使用map的机制来存储信息。所以NDC可以通过%x来进行获取，而MDC需要通过%x{key}来获取</p>
-<h2 id="使用方式">使用方式</h2><p>在log的pattern的配置中使用%x来 显示NDC 或者MDC信息。<br>在代码中设定NDC或者MDC必须在调用logger的记录方法之前，而且要保证在退出当前环境（当前代码段）的时候将信息移除，以免造成内存溢出</p>
-<pre><code>……
-NDC.push<span class="params">(message)</span>;
-……
-logger.info<span class="params">()</span>;
-NDC.pop<span class="params">()</span>;
-……
-NDC.remove<span class="params">()</span>;<span class="comment">//在结束当前线程执行的时候要调用这个方法</span>
-</code></pre><p>使用MDC的方式大致相同，只不过是需要提供key来作为信息的映射。</p>
-<pre><code>……
-<span class="tag">MDC</span><span class="class">.put</span>(<span class="tag">key</span>,<span class="tag">message</span>);
-……
-<span class="tag">logger</span><span class="class">.infog</span>();
-……
-<span class="tag">MDC</span><span class="class">.remove</span>(<span class="tag">key</span>);
-</code></pre>  
+		<p>基于snmp4j实现的一个SNMP框架，目的是简化snmp的开发流程，只需要使用几个简单的类就可以实现通过snmp协议收集数据，也可以作为一个snmp4j的使用范例进行参考。基于Apache2.0协议开放源代码。<br><a id="more"></a></p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -134,7 +117,7 @@ NDC.remove<span class="params">()</span>;<span class="comment">//在结束当前
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://luoyuan800.github.io/2015/06/30/Log4j-N-MDC/" data-title="Log4j中的NDC和MDC | Yuan" data-tsina="null" class="share clearfix">
+	  <div data-url="http://luoyuan800.github.io/2015/07/06/SNMP-snmp4j/" data-title="SNMP-snmp4j | Yuan" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -148,18 +131,18 @@ NDC.remove<span class="params">()</span>;<span class="comment">//在结束当前
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/07/01/IPMI/" title="IPMI">
+ <a href="/2015/07/07/Markdown/" title="Markdown 语法说明">
   <strong>上一篇：</strong><br/>
   <span>
-  IPMI</span>
+  Markdown 语法说明</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/06/30/Cron-English/"  title="About the Cron Expression">
+<a href="/2015/07/06/Log4J-Inherit/"  title="Log4J中的继承关系">
  <strong>下一篇：</strong><br/> 
- <span>About the Cron Expression
+ <span>Log4J中的继承关系
 </span>
 </a>
 </div>
@@ -168,7 +151,7 @@ NDC.remove<span class="params">()</span>;<span class="comment">//在结束当前
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/06/30/Log4j-N-MDC/" data-title="Log4j中的NDC和MDC" data-url="http://luoyuan800.github.io/2015/06/30/Log4j-N-MDC/"></div>
+	<div class="ds-thread" data-thread-key="2015/07/06/SNMP-snmp4j/" data-title="SNMP-snmp4j" data-url="http://luoyuan800.github.io/2015/07/06/SNMP-snmp4j/"></div>
 </section>
 
 
@@ -178,7 +161,7 @@ NDC.remove<span class="params">()</span>;<span class="comment">//在结束当前
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本概念"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NDC与MDC的区别"><span class="toc-number">2.</span> <span class="toc-text">NDC与MDC的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用方式"><span class="toc-number">3.</span> <span class="toc-text">使用方式</span></a></li></ol>
+ 
  
   </div>
 

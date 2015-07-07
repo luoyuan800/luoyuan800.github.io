@@ -5,7 +5,7 @@
   <subtitle><![CDATA[一点一滴，技术积累]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://luoyuan800.github.io//"/>
-  <updated>2015-07-06T01:30:42.264Z</updated>
+  <updated>2015-07-07T07:14:19.327Z</updated>
   <id>http://luoyuan800.github.io//</id>
   
   <author>
@@ -14,6 +14,149 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Markdown 语法说明]]></title>
+    <link href="http://luoyuan800.github.io/2015/07/07/Markdown/"/>
+    <id>http://luoyuan800.github.io/2015/07/07/Markdown/</id>
+    <published>2015-07-07T02:51:34.000Z</published>
+    <updated>2015-07-07T07:14:19.327Z</updated>
+    <content type="html"><![CDATA[<p>Markdown是一种标记语言，主要用于网页上文本格式设置。它的使得我们可以使用普通的文本编辑器编辑网页文本。在页面显示用Markdown语法的文本，需要先转换为HTML格式再进行显示。Markdown使得普通文本和网页文本通过一种简单的格式关联了起来，文本编辑者不在需要了解复杂的HTML标签。同时，你也可以在Markdown格式的文本中使用HTML标签，这样可以补全一些Markdown语法不具备的功能，比如文字的显示颜色。<br>本文中不会对Markdown语法转换原理和转换后的HTML标签进行说明，只会列举Markdown的格式显示效果。<br><a id="more"></a></p>
+<h2 id="我为什么要用Markdown">我为什么要用Markdown</h2><p>因为我搭建的博客支持使用Markdown来构建博文，并且Markdown作为一种标记语言学习简单，而且作为程序员，使用标记语言来写作会更加符合那种高逼格与众不同的形象~</p>
+<h2 id="标题">标题</h2><p>Markdown中的标题使用<code>#</code>进行标识， Markdown支持六级标题，标题1可以作为文本题目的显示，标题2后会跟一个下划线（HEXO搭建的博客支持Markdown语法写的文本，并且会根据标题格式生成博文目录，不过只会支持从标题2开始的标题）。</p>
+<pre><code><span class="preprocessor"># 标题1</span>
+<span class="preprocessor">## 标题2</span>
+<span class="preprocessor">### 标题3</span>
+<span class="preprocessor">#### 标题4</span>
+<span class="preprocessor">##### 标题5</span>
+<span class="preprocessor">###### 标题6</span>
+</code></pre><p>以上文本的显示效果为</p>
+<p><img src="http://7xk7ce.com1.z0.glb.clouddn.com/head.png" alt=""></p>
+<h2 id="文字格式">文字格式</h2><ul>
+<li><p>斜体。<code>*斜体*</code> 显示为 <em>斜体</em></p>
+</li>
+<li><p>粗体。<code>**粗体**</code> 显示为 <strong>粗体</strong></p>
+</li>
+</ul>
+<h2 id="文本块">文本块</h2><h3 id="引用文本块">引用文本块</h3><p>强调引用的文本格式是一个文本块，使用>开头的文本会被显示为文本块</p>
+<pre><code>&gt;这是一个
+&gt;引用的文本
+</code></pre><p>会被显示为</p>
+<blockquote>
+<p>这是一个<br>引用的文本</p>
+</blockquote>
+<h3 id="代码块">代码块</h3><p>代码块有三种</p>
+<ul>
+<li><p>一种是插入到文本中的<code>这是一小节代码</code>，使用的格式为</p>
+<pre><code><span class="escape">`这</span>是一小节代码`
+</code></pre></li>
+<li><p>一种是一整段的代码，这个整段代码的格式和特殊字符都会保留而不会被转换。每一行的文本前面增加缩进可以实现代码块的显示，可以缩进一个，也可以缩进两个。</p>
+<pre><code><span class="variable">&lt;Tab缩进&gt;</span>public CmdLineDiskMetrics(AbstractUnixCollector execWrapper, LogService <span class="keyword">log</span>Service,
+<span class="variable">&lt;Tab缩进&gt;</span>                          UnixAgentPropertyWrapper properties) {
+<span class="variable">&lt;Tab缩进&gt;</span>mExecWrapper = execWrapper;
+<span class="variable">&lt;Tab缩进&gt;</span>mLogger = <span class="keyword">log</span>Service.getLogger(CmdLineDiskMetrics.class);
+<span class="variable">&lt;Tab缩进&gt;</span>mStringUtils = new StringUtils(<span class="keyword">log</span>Service, CmdLineDiskMetrics.class.getName());
+<span class="variable">&lt;Tab缩进&gt;</span>mProperties = properties;
+<span class="variable">&lt;Tab缩进&gt;</span>mIsDebugEnable = mLogger.getDebugLevel() &gt;= <span class="number">1</span>;
+<span class="variable">&lt;Tab缩进&gt;</span>
+<span class="variable">&lt;Tab缩进&gt;</span>mHostResolver = new HostNameResolver(<span class="keyword">log</span>Service, execWrapper.getServices().getResolverService());
+<span class="variable">&lt;Tab缩进&gt;</span>}
+</code></pre><p>会被显示成</p>
+<pre><code>public <span class="type">CmdLineDiskMetrics</span>(<span class="type">AbstractUnixCollector</span> execWrapper, <span class="type">LogService</span> logService,
+                      <span class="type">UnixAgentPropertyWrapper</span> properties) {
+mExecWrapper = execWrapper;
+mLogger = logService.getLogger(<span class="type">CmdLineDiskMetrics</span>.<span class="keyword">class</span>);
+mStringUtils = <span class="keyword">new</span> <span class="type">StringUtils</span>(logService, <span class="type">CmdLineDiskMetrics</span>.<span class="keyword">class</span>.getName<span class="literal">()</span>);
+mProperties = properties;
+mIsDebugEnable = mLogger.getDebugLevel<span class="literal">()</span> &gt;= <span class="number">1</span>;
+
+mHostResolver = <span class="keyword">new</span> <span class="type">HostNameResolver</span>(logService, execWrapper.getServices<span class="literal">()</span>.getResolverService<span class="literal">()</span>);
+}
+</code></pre></li>
+<li><p>命令行格式的代码需要使用bash格式来显示，这样的格式会在每一条命令前面加上序号</p>
+<p>  ````bash<br>  $ commond1<br>  $ commond2<br>  ````<br>会显示成</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ commond1</span><br><span class="line">$ commond2</span><br></pre></td></tr></table></figure>
+<h2 id="表格">表格</h2><p>Markdown中使用形象的格式来表示表格（表格和上一个文本之间需要有一个空行分隔）</p>
+<pre><code>|<span class="string">标题1</span>|<span class="string">标题2</span>|
+|<span class="string">-----</span>|<span class="string">-----</span>|<span class="string">    #这一行是用来定义表格的对齐方式的        
+</span>|<span class="string">第一格</span>|<span class="string">第二格</span>|
+|<span class="string">第三格</span>|<span class="string">第四格</span>|
+</code></pre><p>会显示一个如下的表格</p>
+<table>
+<thead>
+<tr>
+<th>标题1</th>
+<th>标题2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第一格</td>
+<td>第二格</td>
+</tr>
+<tr>
+<td>第三格</td>
+<td>第四格</td>
+</tr>
+</tbody>
+</table>
+<p>表格的对齐方式是通过表格标题下方的第二行|——|——-|来定义的</p>
+<ul>
+<li><code>----</code>表示左对齐</li>
+<li><code>-----：</code>表示右对齐</li>
+<li><code>：----：</code>表示居中对齐</li>
+</ul>
+<h2 id="超链接">超链接</h2><p>定义一个超链接使用一下格式</p>
+<pre><code>[<span class="link_label">Yuan</span>](<span class="link_url">http://luoyuan800.github.io "Yuan-Blog"</span>)
+</code></pre><p>[]内的是要显示的文本，而()的前半部分是连接的地址，后半部分则是鼠标移动到链接上面要显示的内容。<br>最后的显示结果为 <a href="http://luoyuan800.github.io" title="Yuan-Blog">Yuan</a></p>
+<h2 id="图片">图片</h2><p>图片的格式和超链接是一样的，不同的地方是，在[]要留空，之后的()中只需要填入图片的网址即可</p>
+<pre><code>!<span class="attr_selector">[]</span>(<span class="attribute">http</span>:<span class="comment">//7xk7ce.com1.z0.glb.clouddn.com/head.png)</span>
+</code></pre><h2 id="特殊字符">特殊字符</h2><p>如果要正常显示特殊字符，需要在其前面使用<code>\</code>标识，这样的话特殊字符就不会被转换。特殊字符包括：</p>
+<pre><code><span class="change">!</span>
+`
+&gt;
+\
+&lt;
+[
+]
+(
+)
+*
+<span class="addition">+</span>
+<span class="deletion">-</span>
+_
+.
+</code></pre><p>如果是要同时显示括号的话只需要在后一个括号前面加上<code>\</code> 如：</p>
+<pre><code>(<span class="string">\)</span>  [<span class="string">\]</span> &lt;<span class="string">\&gt;</span> 
+</code></pre><p>会显示成<br>() [] &lt;></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>Markdown是一种标记语言，主要用于网页上文本格式设置。它的使得我们可以使用普通的文本编辑器编辑网页文本。在页面显示用Markdown语法的文本，需要先转换为HTML格式再进行显示。Markdown使得普通文本和网页文本通过一种简单的格式关联了起来，文本编辑者不在需要了解复杂的HTML标签。同时，你也可以在Markdown格式的文本中使用HTML标签，这样可以补全一些Markdown语法不具备的功能，比如文字的显示颜色。<br>本文中不会对Markdown语法转换原理和转换后的HTML标签进行说明，只会列举Markdown的格式显示效果。<br>]]>
+    
+    </summary>
+    
+      <category term="网站-语言" scheme="http://luoyuan800.github.io/categories/%E7%BD%91%E7%AB%99-%E8%AF%AD%E8%A8%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[SNMP-snmp4j]]></title>
+    <link href="http://luoyuan800.github.io/2015/07/06/SNMP-snmp4j/"/>
+    <id>http://luoyuan800.github.io/2015/07/06/SNMP-snmp4j/</id>
+    <published>2015-07-06T09:58:14.000Z</published>
+    <updated>2015-07-07T02:47:14.923Z</updated>
+    <content type="html"><![CDATA[<p>基于snmp4j实现的一个SNMP框架，目的是简化snmp的开发流程，只需要使用几个简单的类就可以实现通过snmp协议收集数据，也可以作为一个snmp4j的使用范例进行参考。基于Apache2.0协议开放源代码。<br><a id="more"></a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>基于snmp4j实现的一个SNMP框架，目的是简化snmp的开发流程，只需要使用几个简单的类就可以实现通过snmp协议收集数据，也可以作为一个snmp4j的使用范例进行参考。基于Apache2.0协议开放源代码。<br>]]>
+    
+    </summary>
+    
+      <category term="编程-Java" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Java/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Log4J中的继承关系]]></title>
@@ -71,7 +214,7 @@ Logger.info(“这是一个子类的子类log信息”)<span class="comment">;</
     <link href="http://luoyuan800.github.io/2015/07/03/gradle/"/>
     <id>http://luoyuan800.github.io/2015/07/03/gradle/</id>
     <published>2015-07-03T09:17:14.000Z</published>
-    <updated>2015-07-06T01:25:39.906Z</updated>
+    <updated>2015-07-07T03:17:21.479Z</updated>
     <content type="html"><![CDATA[<p>Gradle是一个基于Groovy实现的，类似于Ant工具的项目构建文件，其设计目标是用更简单的语法和方式来配置一个项目的构建，而不需要像Ant工具一样那么麻烦 。<a id="more"></a></p>
 <h2 id="如何配置Gradle：">如何配置Gradle：</h2><ul>
 <li>下载Gradle解压到自定义文件夹</li>
@@ -136,16 +279,9 @@ metaInf {
     └── main
         ├── java
         │   └── com
-        │       └── manning
-        │           └── gia
-        │               └── todo
-        │                   ├── model
-        │                   │   └── ToDoItem<span class="class">.java</span>
-        │                   ├── repository
-        │                   │   ├── InMemoryToDoRepository<span class="class">.java</span>
-        │                   │   └── ToDoRepository<span class="class">.java</span>
-        │                   └── web
-        │                       └── ToDoServlet<span class="class">.java</span>
+        │       └── todo
+        │           └── ToDoServlet<span class="class">.java</span>
+        │                   
         └── webapp-------------------------------------------------<span class="id">#A</span>
             ├── WEB-INF
             │   └── web.xml----------------------------------------<span class="id">#B</span>
