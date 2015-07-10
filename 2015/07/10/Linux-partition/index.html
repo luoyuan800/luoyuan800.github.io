@@ -1,0 +1,529 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Linux的分区 | Yuan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Luo Yuan">
+    
+
+    
+    <meta name="description" content="简单了解Linux文件系统的管理（磁盘管理）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux的分区">
+<meta property="og:url" content="http://luoyuan800.github.io/2015/07/10/Linux-partition/index.html">
+<meta property="og:site_name" content="Yuan">
+<meta property="og:description" content="简单了解Linux文件系统的管理（磁盘管理）。">
+<meta property="og:updated_time" content="2015-07-10T09:27:04.345Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux的分区">
+<meta name="twitter:description" content="简单了解Linux文件系统的管理（磁盘管理）。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Yuan" title="Yuan"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Yuan">Yuan</a></h1>
+				<h2 class="blog-motto">一点一滴，技术积累</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search">
+							<label>Search</label>
+						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/10/Linux-partition/" title="Linux的分区" itemprop="url">Linux的分区</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-10T08:47:16.000Z" itemprop="datePublished"> 发表于 2015-07-10</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#设备管理"><span class="toc-number">1.</span> <span class="toc-text">设备管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分区编号"><span class="toc-number">2.</span> <span class="toc-text">分区编号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分区的作用"><span class="toc-number">3.</span> <span class="toc-text">分区的作用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#主分区"><span class="toc-number">3.1.</span> <span class="toc-text">主分区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#扩展分区"><span class="toc-number">3.2.</span> <span class="toc-text">扩展分区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#逻辑分区"><span class="toc-number">3.3.</span> <span class="toc-text">逻辑分区</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分区指标"><span class="toc-number">4.</span> <span class="toc-text">分区指标　　</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用分区介绍"><span class="toc-number">5.</span> <span class="toc-text">常用分区介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看分区的常用命令"><span class="toc-number">6.</span> <span class="toc-text">查看分区的常用命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mount"><span class="toc-number">6.1.</span> <span class="toc-text">mount</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#df"><span class="toc-number">6.2.</span> <span class="toc-text">df</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>简单了解Linux文件系统的管理（磁盘管理）。<a id="more"></a></p>
+<h2 id="设备管理">设备管理</h2><p>在 Linux 中，每一个硬件设备都映射到一个系统的文件，对于硬盘、光驱等 IDE 或 SCSI 设备也不例外。Linux把各种 IDE 设备分配了一个由 hd 前缀组成的文件；而对于各种 SCSI 设备，则分配了一个由 sd 前缀组成的文件。<br>对于ide硬盘，驱动器标识符为“hdx~”,其中“hd”表明分区所在设备的类型，这里是指ide硬盘了。“x”为盘号（a为基本盘，b为基本从属盘，c为辅助主盘，d为辅助从属盘）,“~”代表分区，前四个分区用数字1到4表示，它们是主分区或扩展分区，从5开始就是逻辑分区。例，hda3表示为第一个ide硬盘上的第三个主分区或扩展分区,hdb2表示为第二个ide硬盘上的第二个主分区或扩展分区。对于scsi硬盘则标识为“sdx~”，scsi硬盘是用“sd”来表示分区所在设备的类型的，其余则和ide硬盘的表示方法一样，不在多说。<br>例如，第一个 IDE 设备，Linux 就定义为 hda；第二个 IDE 设备就定义为 hdb；下面以此类推。而 SCSI 设备就应该是 sda、sdb、sdc 等。</p>
+<h2 id="分区编号">分区编号</h2><p>要进行分区就必须针对每一个硬件设备进行操作，这就有可能是一块IDE硬盘或是一块SCSI硬盘。对于每一个硬盘（IDE 或 SCSI）设备，Linux 分配了一个 1 到 16 的序列号码，这就代表了这块硬盘上面的分区号码。</p>
+<ul>
+<li>例如，第一个 IDE 硬盘的第一个分区，在 Linux 下面映射的就是 hda1，第二个分区就称作是 hda2。</li>
+<li>对于SCSI 硬盘则是 sda1、sdb1 等。</li>
+</ul>
+<h2 id="分区的作用">分区的作用</h2><p>在 Linux 中规定，每一个硬盘设备最多能有 4个主分区（其中包含扩展分区）构成，任何一个扩展分区都要占用一个主分区号码，也就是在一个硬盘中，主分区和扩展分区一共最多是 4 个。</p>
+<blockquote>
+<p>对于早期的 DOS 和 Windows（Windows 2000 以前的版本），系统只承认一个主分区，可以通过在扩展分区上增加逻辑盘符（逻辑分区&gt;&gt;的方法，进一步地细化分区。</p>
+</blockquote>
+<h3 id="主分区">主分区</h3><p>主分区的作用就是计算机用来进行启动操作系统的，因此每一个操作系统的启动，或者称作是引导程序，都应该存放在主分区上。这就是主分区和扩展分区及逻辑分区的最大区别。我们在指定安装引导 Linux 的 bootloader 的时候，都要指定在主分区上，就是最好的例证。<br>Linux 规定了主分区（或者扩展分区）占用 1 至 16 号码中的前 4 个号码。以第一个 IDE 硬盘为例说明，主分区（或者扩展分区）占用了 hda1、hda2、hda3、hda4，而逻辑分区占用了 hda5 到 hda16 等 12 个号码。因此，Linux 下面每一个硬盘总共最多有 16 个分区。</p>
+<h3 id="扩展分区">扩展分区</h3><p>除了主分区占用的空间，余下的空间划分出来的分区都被称为扩展分区。</p>
+<h3 id="逻辑分区">逻辑分区</h3><p>对于逻辑分区，Linux 规定它们必须建立在扩展分区上（在 DOS 和 Windows 系统上也是如此规定），而不是主分区上。因此，我们可以看到扩展分区能够提供更加灵活的分区模式，但不能用来作为 操作系统 的引导。 除去上面这些各种分区的差别，我们就可以简单地把它们一视同仁了。</p>
+<h2 id="分区指标">分区指标　　</h2><p>对于每一个 Linux 分区来讲，分区的大小和分区的类型是最主要的指标。分区的类型规定了这个分区上面的文件系统的格式。<br>Linux 支持多种的文件系统格式，其中包含了我们熟悉的FAT32、FAT16、NTFS、HP-UX，以及各种 Linux 特有的 Linux Native和 Linux Swap分区类型。在 Linux 系统中，可以通过分区类型号码来区别这些不同类型的分区。可以参考我的另外一篇博文来了解Linux分区的类型（也可以称为文件系统类型）<a href="/2015/07/01/linux-filesystem-types/" title="Linux文件系统类型">Linux文件系统类型</a>。</p>
+<h2 id="常用分区介绍">常用分区介绍</h2><ul>
+<li>/boot分区，它包含了操作系统的内核和在启动系统过程中所要用到的文件，建这个 分区是有必要的，因为目前大多数的pc机要受到bios的限制,况且如果有了一个单独的/boot启动分区，即使主要的根分区出现了问题，计算机依然能够 启动。这个分区的大小约在50mb—100mb之间。但是如果想用lilo启动red hat linux系统的话，含有/boot的分区必须完全在柱面1023以下。又由于8gb后的数据lilo不能读取，所以red hat - linux要安装在8gb的区域以内。</li>
+<li>/usr分区，是red hat linux系统存放软件的地方，如有可能应将最大空间分给它。</li>
+<li>/home分区，是用户的home目录所在地，这个分区的大小取决于有多少用户。如 果是多用户共同使用一台电脑的话，这个分区是完全有必要的，况且根用户也可以很好地控制普通用户使用计算机，如对用户或者用户组实行硬盘限量使用，限制普 通用户访问哪些文件等。其实单用户也有建立这个分区的必要，因为没这个分区的话，那么你只能以根用户的身份登陆系统，这样做是危险的，因为根用户对系统有 绝对的使用权，可一旦你对系统进行了误操作，麻烦也就来了。</li>
+<li>/var/log分区，是系统日志记录分区，如果设立了这一单独的分区，这样即使系统的日志文件出现了问题，它们也不会影响到操作系统的主分区。</li>
+<li>/tmp分区，用来存放临时文件。这对于多用户系统或者网络服务器来说是有必要的。 这样即使程序运行时生成大量的临时文件，或者用户对系统进行了错误的操作，文件系统的其它部分仍然是安全的。因为文件系统的这一部分仍然还承受着读写操 作，所以它通常会比其它的部分更快地发生问题。</li>
+<li>/bin分区，存放标准系统实用程序。</li>
+<li>/dev分区，存放设备文件。</li>
+<li>/opt分区，存放可选的安装的软件。</li>
+<li>/sbin分区，存放标准系统管理文件。</li>
+</ul>
+<p>上面介绍了几个常用的分区，一般来说我们需要一个swap分区，一个/boot分区，一个/usr分区，一个/home 分区，一个/var/log分区。当然这没有什么规定，完全是依照你个人来定的。但记住至少要有两个分区，一个swap分区，一个/分区。</p>
+<h2 id="查看分区的常用命令">查看分区的常用命令</h2><h3 id="mount">mount</h3><p>mount命令用来查看那些已经分配了mountpoint的文件系统</p>
+<pre><code>:~$ mount
+/dev/sda1 on / <span class="keyword">type</span> ext4 (rw,errors=remount-ro,user_xattr)
+<span class="keyword">proc</span> on /<span class="keyword">proc</span> <span class="keyword">type</span> <span class="keyword">proc</span> (rw,noexec,nosuid,nodev)
+none on /sys <span class="keyword">type</span> sysfs (rw,noexec,nosuid,nodev)
+none on /sys/fs/fuse/connections <span class="keyword">type</span> fusectl (rw)
+none on /sys/kernel/debugtype debugfs (rw)
+none on /sys/kernel/security <span class="keyword">type</span> securityfs (rw)
+none on /dev <span class="keyword">type</span> devtmpfs (rw,mode=<span class="number">0755</span>)
+none on /dev/pts <span class="keyword">type</span> devpts (rw,noexec,nosuid,gid=<span class="number">5</span>,mode=<span class="number">0620</span>)
+none on /dev/shm <span class="keyword">type</span> tmpfs (rw,nosuid,nodev)
+none on /<span class="keyword">var</span>/runtype tmpfs (rw,nosuid,mode=<span class="number">0755</span>)
+none on /<span class="keyword">var</span>/lock <span class="keyword">type</span> tmpfs (rw,noexec,nosuid,nodev)
+none on /lib/init/rw <span class="keyword">type</span> tmpfs (rw,nosuid,mode=<span class="number">0755</span>)
+none on /<span class="keyword">var</span>/lib/ureadahead/debugfs <span class="keyword">type</span> debugfs (rw,relatime)
+none on /<span class="keyword">proc</span>/fs/vmblock/mountPoint <span class="keyword">type</span> vmblock (rw)
+binfmt_misc on /<span class="keyword">proc</span>/sys/fs/binfmt_misc <span class="keyword">type</span> binfmt_misc (rw,noexec,nosuid,nodev)
+gvfs-fuse-daemon on /home/kysnail/.gvfs <span class="keyword">type</span> fuse.gvfs-fuse-daemon (rw,nosuid,nodev,user=kysnail)
+</code></pre><h3 id="df">df</h3><p>df命令可以查看文件系统的分区大小， 使用-l参数可以只参看本地文件系统。</p>
+<pre><code>:~$ df -lhT
+文件系统      类型    容量  已用 可用 已用% 挂载点
+/dev/sda1     ext4     19G   11G  <span class="number">7</span>.8G  <span class="number">57</span>% /
+<span class="keyword">none</span>      devtmpfs    498M  248K  497M   <span class="number">1</span>% /dev
+<span class="keyword">none</span>         tmpfs    502M  252K  501M   <span class="number">1</span>% /dev/shm
+<span class="keyword">none</span>         tmpfs    502M   96K  502M   <span class="number">1</span>% /<span class="keyword">var</span>/run
+<span class="keyword">none</span>         tmpfs    502M     <span class="number">0</span>  502M   <span class="number">0</span>% /<span class="keyword">var</span>/lock
+<span class="keyword">none</span>         tmpfs    502M     <span class="number">0</span>  502M   <span class="number">0</span>% /lib/<span class="keyword">init</span>/rw
+<span class="keyword">none</span>       debugfs     19G   11G  <span class="number">7</span>.8G  <span class="number">57</span>% /<span class="keyword">var</span>/lib/ureadahead/debugfs
+</code></pre>  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程-Linux/">编程-Linux</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://luoyuan800.github.io/2015/07/10/Linux-partition/" data-title="Linux的分区 | Yuan" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/07/11/Linux-progress-status/" title="Linux系统中的进程状态">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Linux系统中的进程状态</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/07/07/Markdown/"  title="Markdown 语法说明">
+ <strong>下一篇：</strong><br/> 
+ <span>Markdown 语法说明
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/07/10/Linux-partition/" data-title="Linux的分区" data-url="http://luoyuan800.github.io/2015/07/10/Linux-partition/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#设备管理"><span class="toc-number">1.</span> <span class="toc-text">设备管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分区编号"><span class="toc-number">2.</span> <span class="toc-text">分区编号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分区的作用"><span class="toc-number">3.</span> <span class="toc-text">分区的作用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#主分区"><span class="toc-number">3.1.</span> <span class="toc-text">主分区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#扩展分区"><span class="toc-number">3.2.</span> <span class="toc-text">扩展分区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#逻辑分区"><span class="toc-number">3.3.</span> <span class="toc-text">逻辑分区</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分区指标"><span class="toc-number">4.</span> <span class="toc-text">分区指标　　</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用分区介绍"><span class="toc-number">5.</span> <span class="toc-text">常用分区介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看分区的常用命令"><span class="toc-number">6.</span> <span class="toc-text">查看分区的常用命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mount"><span class="toc-number">6.1.</span> <span class="toc-text">mount</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#df"><span class="toc-number">6.2.</span> <span class="toc-text">df</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Linux/" title="编程-Linux">编程-Linux<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-工具/" title="编程-工具">编程-工具<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-网络协议/" title="编程-网络协议">编程-网络协议<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-工具/" title="网站-工具">网站-工具<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-语言/" title="网站-语言">网站-语言<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Luo Yuan in Zhuhai. <br/>
+			Here is my place for knowledge accumulation.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:luoyuan800@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="Luo Yuan">Luo Yuan</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"luoyuan800"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F5529f030def9614f4dc83cc68b307ced' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: '32f8205e3ec577a3f6d4'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
