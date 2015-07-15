@@ -5,7 +5,7 @@
   <subtitle><![CDATA[一点一滴，技术积累]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://luoyuan800.github.io//"/>
-  <updated>2015-07-10T09:27:04.348Z</updated>
+  <updated>2015-07-15T08:39:37.450Z</updated>
   <id>http://luoyuan800.github.io//</id>
   
   <author>
@@ -14,6 +14,70 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[正则表达式进阶]]></title>
+    <link href="http://luoyuan800.github.io/2015/07/15/java-regex/"/>
+    <id>http://luoyuan800.github.io/2015/07/15/java-regex/</id>
+    <published>2015-07-15T08:19:43.000Z</published>
+    <updated>2015-07-15T08:39:37.450Z</updated>
+    <content type="html"><![CDATA[<p>正则表达式的作用在我看来是：匹配、查找、替换三种。使用正则表达式也算是粗粗入门了，至少已经可以写一些简单的表达式来进行字符串的匹配了，而且也会从网络上拷贝别人的一些比较复杂的表达式……那么就学习一些进阶的东西吧。包括 捕获组和非捕获组，匹配模式解析。<a id="more"></a></p>
+<h2 id="组的概念">组的概念</h2><p>首先了解正则表达式中组的概念，在正则表示中组的应用是非常广泛的，只是我们经常没有在意组的真正用法：抽取字符串。一般我们使用正则表达式都只是使用它的匹配功能，只需要验证目标文本是否符合要求。那么如果我们要应用到正则表达式的抽取字符串和替换的时候，组就可以提供我们正确的获得查找结果。<br>Java中组是使用()来表示，一个()表示一个组，在匹配过程中，是依次按照组进行文本匹配，当匹配到当前组之后，就会使用余下的文本来匹配下一个组。</p>
+<h3 id="捕获组">捕获组</h3><p>顾名思义，捕获组就是会捕获我们需要匹配的字符串进而提供给我们抽取。<br>如果有一个正则表达<code>(\\w+)(\\d{3}).*</code>，那么这个表达式中包含3个捕获组，分别为代表整个表达式的组0：<code>\\w\\d{3}.*</code> 组1为<code>\\w+</code> 这里表示匹配一个或多个字符，组2为<code>\\d{3}</code>匹配正好3个数字字符。那么我们可以用这个表达式去抽取文本中的连续的三个数字。</p>
+<h3 id="非捕获组">非捕获组</h3><p>以上提到的组都是属于捕获组，就是会匹配这个组的字符串，并且抽取到组中。Java中还有非捕获组的概念，即是一个非的概念。以 (<code>?</code>) 开头的组是纯的非捕获组，它不捕获文本，也不针对组合计进行计数。就是说，如果小括号中以?号开头，那么这个分组就不会抽取文本。Java中支持的非捕获组并不多（请忽略专业的概念术语）</p>
+<ul>
+<li><code>(?=X)</code>     X，通过零宽度的正 lookahead 即左侧匹配</li>
+<li><code>(?!X)</code>     X，通过零宽度的负 lookahead 即左侧匹配 </li>
+<li><code>(?&lt;=X)</code>     X，通过零宽度的正 lookbehind 即右侧匹配 </li>
+<li><code>(?&lt;!X)</code>     X，通过零宽度的负 lookbehind 即右侧匹配 </li>
+</ul>
+<p>非捕获组中四个表达式的区别：</p>
+<ul>
+<li><code>(?=X )</code> 和<code>(?!X)</code>用于右侧匹配</li>
+<li><code>(?&lt;=X)</code>和<code>(?&lt;!X)</code>用于左侧匹配</li>
+</ul>
+<p>被非捕获组匹配的到的字符串，最后是不会被抽取出来的。所以非捕获组是应用于更加精确的定位某段字符串而存在的。下面是几个非捕获组的范例<br>匹配用字符串： <code>abc12dd344oo</code></p>
+<ul>
+<li><code>(?&lt;=abc)(\\d+)</code> 匹配左侧为abc的数字串，分组为组(1) = 12</li>
+<li><code>(?&lt;!abc)(\\d+)</code> 匹配左侧不是abc的数字串，分组为组（1） = 2. 注意这个正则表达式会导致匹配失控，因为可以匹配到的分组有两个，一般这种会失控的表达式是不提倡的。</li>
+<li><code>(\\d+)(?=dd)</code> 匹配右侧为dd的数字串， 分组为组（1） = 12</li>
+<li><code>(\\d+)(?!dd)</code> 匹配右侧不是dd的数字串， 分组为组（1） = 1. 同样，这个表达式在Java中是会失控，因为我们期望匹配344.</li>
+</ul>
+<h3 id="Java中根据组来抽取字符串">Java中根据组来抽取字符串</h3><p>字符串的抽取需要用到java中的Pattern和Matcher来进行。</p>
+<pre><code>Pattern pattern = Pattern.compile<span class="params">(“\\w+<span class="params">(\\d{<span class="number">3</span>})</span>.*”)</span>;
+Matcher matcher = pattern.matcher<span class="params">(“aaaa123aaaa”)</span>;
+<span class="keyword">if</span><span class="params">(matcher.find<span class="params">()</span>)</span>{
+    String nums = matcher.group<span class="params">(<span class="number">1</span>)</span>;
+}
+</code></pre><p>其中<code>Matcher.group(int)</code>方法中传入的就是这个要查找的组的序号。如果传入的序号大于表达式中组的实际个数，那么会抛出异常。</p>
+<h2 id="匹配模式">匹配模式</h2><p>在有了组的基本概念之后，再来讨论Java中的正则表达式在匹配中使用到的三种模式</p>
+<h3 id="贪婪模式">贪婪模式</h3><p>没有加上其他模式标识的普通模式就是贪婪模式，在日常应用中我们最常用的模式就贪婪模式。贪婪模式总是尽可能的去匹配文本，以期望能够返回匹配成功。贪婪模式其实效率最为差的一种模式，因为在匹配过程中他首先从整个文本开始进行匹配，然后会大量的回溯文本，并且是一个一个字符进行回溯，越是长的文本，在贪婪模式下匹配效率越差。</p>
+<h3 id="勉强模式">勉强模式</h3><p>与贪婪模式相反，该模式是从第一个字符开始向后进行匹配，只是匹配尽量少的文本，所以除非最差的情况下，该模式的匹配次数会比贪婪模式少。勉强模式的标识是在传统的贪婪模式的组表达式后面增加一个<code>?</code> 。</p>
+<h3 id="占有模式">占有模式</h3><p>这种模式是Java特有的模式，它只会对整个文本匹配一次，不会回溯。这种模式的速度是最快的，因为只是匹配一次。Java编程思想中提到，这个模式可以防止正则表达式失控，也可以减少匹配过程中因为要保存回溯信息而占用的空间。占有模式的标识是在传统的贪婪模式组表达式后面增加一个<code>+</code> 。</p>
+<h3 id="模式在文本匹配中的影响">模式在文本匹配中的影响</h3><p>对应同一个文本，不同的模式会返回不同的匹配结果.假定要分析的字符串是<code>xfooxxxxxxfoo</code>(来源网络）</p>
+<ul>
+<li>模式<code>.*foo</code> （贪婪模式）: 模式分为子模式<code>p1(.*)</code>和子模式<code>p2(foo)</code>两个部分. 其中p1中的量词匹配方式使用默认方式(贪婪型)。匹配开始时,吃入所有字符<code>xfooxxxxxx</code>去匹配子模式p1。匹配成功,但这样以来就没有了字符串去匹配子模式p2。本轮匹配失败；第二轮：减少p1部分的匹配量，吐出最后一个字符, 把字符串分割成<code>xfooxxxxxxfo</code>和<code>o</code>两个子字符串s1和s2。 s1匹配p1, 但s2不匹配p2。本轮匹配失败；第三轮，再次减少p1部分匹配量，吐出两个字符, 字符串被分割成<code>xfooxxxxxxfo</code>和<code>oo</code>两部分。结果同上。第四轮，再次减少p1匹配量, 字符串分割成<code>xfooxxxxxx</code>和<code>foo</code>两个部分, 这次s1/s2分别和p1/p2匹配。停止尝试,返回匹配成功。</li>
+<li>模式<code>.*?foo</code> （勉强模式）: 最小匹配方式。第一次尝试匹配, p1由于是0或任意次，因此被忽略，用字符串去匹配p2,失败；第二次，读入第一个字符<code>x</code>, 尝试和p1匹配, 匹配成功; 字符串剩余部分<code>fooxxxxxxfoo</code>中前三个字符和p2也是匹配的. 因此, 停止尝试, 返回匹配成功。在这种模式下，如果对剩余字符串继续去寻找和模式相匹配的子字符串，还会找到字符串末尾的另一个<code>xfoo</code>，而在贪婪模式下，由于第一次匹配成功的子串就已经是所有字符，因此不存在第二个匹配子串。</li>
+<li>模式<code>.*+foo</code> （占有模式）:匹配开始时读入所有字符串, 和p1匹配成功, 但没有剩余字符串去和p2匹配。因此, 匹配失败。返回。</li>
+</ul>
+<p>再看下面一个例子：贪婪模式与占有模式的比较</p>
+<blockquote>
+<p>正则：<code>\w+[a-z]</code>与<code>\w++[a-z]</code><br>目标串：<code>232hjdhfd7474$</code></p>
+</blockquote>
+<p>分析:</p>
+<ul>
+<li><code>\w+[a-z]</code>：<code>\w+</code>属于贪婪模式，会一次性吃掉它所能吃掉的所有的字符，也就是子串<code>232hjdhfd7474</code>，此时<code>[a-z]</code>不能够找到匹配了，故<code>\w+</code>匹配的串会吐出一个字符<code>4</code>，但此时还是得不到匹配。反复的这样吐出回退，直到吐出字符<code>d</code>时，此时<code>[a-z]</code>能够匹配h，所以这时正则表达式会返回一次成功的匹配结果，为<code>232hjdhfd</code></li>
+<li><code>\w++[a-z]</code>：<code>\w++</code>属于侵占模式，它会一次性吃掉它所能够吃掉的所有字符，即子串<code>232hjdhfd7474</code>，而且不留给其他部分使用，故不会回退。此时<code>[a-z]</code>不能够找到匹配，所以此次匹配失败。在余下的子串中也找不到能匹配成功的子串。所以整个正则表达式是找不到匹配结果的！</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>正则表达式的作用在我看来是：匹配、查找、替换三种。使用正则表达式也算是粗粗入门了，至少已经可以写一些简单的表达式来进行字符串的匹配了，而且也会从网络上拷贝别人的一些比较复杂的表达式……那么就学习一些进阶的东西吧。包括 捕获组和非捕获组，匹配模式解析。]]>
+    
+    </summary>
+    
+      <category term="编程-Java" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Java/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Linux系统中的进程状态]]></title>

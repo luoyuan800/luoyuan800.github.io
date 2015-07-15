@@ -1,0 +1,514 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>正则表达式进阶 | Yuan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Luo Yuan">
+    
+
+    
+    <meta name="description" content="正则表达式的作用在我看来是：匹配、查找、替换三种。使用正则表达式也算是粗粗入门了，至少已经可以写一些简单的表达式来进行字符串的匹配了，而且也会从网络上拷贝别人的一些比较复杂的表达式……那么就学习一些进阶的东西吧。包括 捕获组和非捕获组，匹配模式解析。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="正则表达式进阶">
+<meta property="og:url" content="http://luoyuan800.github.io/2015/07/15/java-regex/index.html">
+<meta property="og:site_name" content="Yuan">
+<meta property="og:description" content="正则表达式的作用在我看来是：匹配、查找、替换三种。使用正则表达式也算是粗粗入门了，至少已经可以写一些简单的表达式来进行字符串的匹配了，而且也会从网络上拷贝别人的一些比较复杂的表达式……那么就学习一些进阶的东西吧。包括 捕获组和非捕获组，匹配模式解析。">
+<meta property="og:updated_time" content="2015-07-15T08:39:37.450Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="正则表达式进阶">
+<meta name="twitter:description" content="正则表达式的作用在我看来是：匹配、查找、替换三种。使用正则表达式也算是粗粗入门了，至少已经可以写一些简单的表达式来进行字符串的匹配了，而且也会从网络上拷贝别人的一些比较复杂的表达式……那么就学习一些进阶的东西吧。包括 捕获组和非捕获组，匹配模式解析。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Yuan" title="Yuan"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Yuan">Yuan</a></h1>
+				<h2 class="blog-motto">一点一滴，技术积累</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search">
+							<label>Search</label>
+						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/15/java-regex/" title="正则表达式进阶" itemprop="url">正则表达式进阶</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-15T08:19:43.000Z" itemprop="datePublished"> 发表于 2015-07-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#组的概念"><span class="toc-number">1.</span> <span class="toc-text">组的概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#捕获组"><span class="toc-number">1.1.</span> <span class="toc-text">捕获组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非捕获组"><span class="toc-number">1.2.</span> <span class="toc-text">非捕获组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java中根据组来抽取字符串"><span class="toc-number">1.3.</span> <span class="toc-text">Java中根据组来抽取字符串</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#匹配模式"><span class="toc-number">2.</span> <span class="toc-text">匹配模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#贪婪模式"><span class="toc-number">2.1.</span> <span class="toc-text">贪婪模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#勉强模式"><span class="toc-number">2.2.</span> <span class="toc-text">勉强模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#占有模式"><span class="toc-number">2.3.</span> <span class="toc-text">占有模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模式在文本匹配中的影响"><span class="toc-number">2.4.</span> <span class="toc-text">模式在文本匹配中的影响</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>正则表达式的作用在我看来是：匹配、查找、替换三种。使用正则表达式也算是粗粗入门了，至少已经可以写一些简单的表达式来进行字符串的匹配了，而且也会从网络上拷贝别人的一些比较复杂的表达式……那么就学习一些进阶的东西吧。包括 捕获组和非捕获组，匹配模式解析。<a id="more"></a></p>
+<h2 id="组的概念">组的概念</h2><p>首先了解正则表达式中组的概念，在正则表示中组的应用是非常广泛的，只是我们经常没有在意组的真正用法：抽取字符串。一般我们使用正则表达式都只是使用它的匹配功能，只需要验证目标文本是否符合要求。那么如果我们要应用到正则表达式的抽取字符串和替换的时候，组就可以提供我们正确的获得查找结果。<br>Java中组是使用()来表示，一个()表示一个组，在匹配过程中，是依次按照组进行文本匹配，当匹配到当前组之后，就会使用余下的文本来匹配下一个组。</p>
+<h3 id="捕获组">捕获组</h3><p>顾名思义，捕获组就是会捕获我们需要匹配的字符串进而提供给我们抽取。<br>如果有一个正则表达<code>(\\w+)(\\d{3}).*</code>，那么这个表达式中包含3个捕获组，分别为代表整个表达式的组0：<code>\\w\\d{3}.*</code> 组1为<code>\\w+</code> 这里表示匹配一个或多个字符，组2为<code>\\d{3}</code>匹配正好3个数字字符。那么我们可以用这个表达式去抽取文本中的连续的三个数字。</p>
+<h3 id="非捕获组">非捕获组</h3><p>以上提到的组都是属于捕获组，就是会匹配这个组的字符串，并且抽取到组中。Java中还有非捕获组的概念，即是一个非的概念。以 (<code>?</code>) 开头的组是纯的非捕获组，它不捕获文本，也不针对组合计进行计数。就是说，如果小括号中以?号开头，那么这个分组就不会抽取文本。Java中支持的非捕获组并不多（请忽略专业的概念术语）</p>
+<ul>
+<li><code>(?=X)</code>     X，通过零宽度的正 lookahead 即左侧匹配</li>
+<li><code>(?!X)</code>     X，通过零宽度的负 lookahead 即左侧匹配 </li>
+<li><code>(?&lt;=X)</code>     X，通过零宽度的正 lookbehind 即右侧匹配 </li>
+<li><code>(?&lt;!X)</code>     X，通过零宽度的负 lookbehind 即右侧匹配 </li>
+</ul>
+<p>非捕获组中四个表达式的区别：</p>
+<ul>
+<li><code>(?=X )</code> 和<code>(?!X)</code>用于右侧匹配</li>
+<li><code>(?&lt;=X)</code>和<code>(?&lt;!X)</code>用于左侧匹配</li>
+</ul>
+<p>被非捕获组匹配的到的字符串，最后是不会被抽取出来的。所以非捕获组是应用于更加精确的定位某段字符串而存在的。下面是几个非捕获组的范例<br>匹配用字符串： <code>abc12dd344oo</code></p>
+<ul>
+<li><code>(?&lt;=abc)(\\d+)</code> 匹配左侧为abc的数字串，分组为组(1) = 12</li>
+<li><code>(?&lt;!abc)(\\d+)</code> 匹配左侧不是abc的数字串，分组为组（1） = 2. 注意这个正则表达式会导致匹配失控，因为可以匹配到的分组有两个，一般这种会失控的表达式是不提倡的。</li>
+<li><code>(\\d+)(?=dd)</code> 匹配右侧为dd的数字串， 分组为组（1） = 12</li>
+<li><code>(\\d+)(?!dd)</code> 匹配右侧不是dd的数字串， 分组为组（1） = 1. 同样，这个表达式在Java中是会失控，因为我们期望匹配344.</li>
+</ul>
+<h3 id="Java中根据组来抽取字符串">Java中根据组来抽取字符串</h3><p>字符串的抽取需要用到java中的Pattern和Matcher来进行。</p>
+<pre><code>Pattern pattern = Pattern.compile<span class="params">(“\\w+<span class="params">(\\d{<span class="number">3</span>})</span>.*”)</span>;
+Matcher matcher = pattern.matcher<span class="params">(“aaaa123aaaa”)</span>;
+<span class="keyword">if</span><span class="params">(matcher.find<span class="params">()</span>)</span>{
+    String nums = matcher.group<span class="params">(<span class="number">1</span>)</span>;
+}
+</code></pre><p>其中<code>Matcher.group(int)</code>方法中传入的就是这个要查找的组的序号。如果传入的序号大于表达式中组的实际个数，那么会抛出异常。</p>
+<h2 id="匹配模式">匹配模式</h2><p>在有了组的基本概念之后，再来讨论Java中的正则表达式在匹配中使用到的三种模式</p>
+<h3 id="贪婪模式">贪婪模式</h3><p>没有加上其他模式标识的普通模式就是贪婪模式，在日常应用中我们最常用的模式就贪婪模式。贪婪模式总是尽可能的去匹配文本，以期望能够返回匹配成功。贪婪模式其实效率最为差的一种模式，因为在匹配过程中他首先从整个文本开始进行匹配，然后会大量的回溯文本，并且是一个一个字符进行回溯，越是长的文本，在贪婪模式下匹配效率越差。</p>
+<h3 id="勉强模式">勉强模式</h3><p>与贪婪模式相反，该模式是从第一个字符开始向后进行匹配，只是匹配尽量少的文本，所以除非最差的情况下，该模式的匹配次数会比贪婪模式少。勉强模式的标识是在传统的贪婪模式的组表达式后面增加一个<code>?</code> 。</p>
+<h3 id="占有模式">占有模式</h3><p>这种模式是Java特有的模式，它只会对整个文本匹配一次，不会回溯。这种模式的速度是最快的，因为只是匹配一次。Java编程思想中提到，这个模式可以防止正则表达式失控，也可以减少匹配过程中因为要保存回溯信息而占用的空间。占有模式的标识是在传统的贪婪模式组表达式后面增加一个<code>+</code> 。</p>
+<h3 id="模式在文本匹配中的影响">模式在文本匹配中的影响</h3><p>对应同一个文本，不同的模式会返回不同的匹配结果.假定要分析的字符串是<code>xfooxxxxxxfoo</code>(来源网络）</p>
+<ul>
+<li>模式<code>.*foo</code> （贪婪模式）: 模式分为子模式<code>p1(.*)</code>和子模式<code>p2(foo)</code>两个部分. 其中p1中的量词匹配方式使用默认方式(贪婪型)。匹配开始时,吃入所有字符<code>xfooxxxxxx</code>去匹配子模式p1。匹配成功,但这样以来就没有了字符串去匹配子模式p2。本轮匹配失败；第二轮：减少p1部分的匹配量，吐出最后一个字符, 把字符串分割成<code>xfooxxxxxxfo</code>和<code>o</code>两个子字符串s1和s2。 s1匹配p1, 但s2不匹配p2。本轮匹配失败；第三轮，再次减少p1部分匹配量，吐出两个字符, 字符串被分割成<code>xfooxxxxxxfo</code>和<code>oo</code>两部分。结果同上。第四轮，再次减少p1匹配量, 字符串分割成<code>xfooxxxxxx</code>和<code>foo</code>两个部分, 这次s1/s2分别和p1/p2匹配。停止尝试,返回匹配成功。</li>
+<li>模式<code>.*?foo</code> （勉强模式）: 最小匹配方式。第一次尝试匹配, p1由于是0或任意次，因此被忽略，用字符串去匹配p2,失败；第二次，读入第一个字符<code>x</code>, 尝试和p1匹配, 匹配成功; 字符串剩余部分<code>fooxxxxxxfoo</code>中前三个字符和p2也是匹配的. 因此, 停止尝试, 返回匹配成功。在这种模式下，如果对剩余字符串继续去寻找和模式相匹配的子字符串，还会找到字符串末尾的另一个<code>xfoo</code>，而在贪婪模式下，由于第一次匹配成功的子串就已经是所有字符，因此不存在第二个匹配子串。</li>
+<li>模式<code>.*+foo</code> （占有模式）:匹配开始时读入所有字符串, 和p1匹配成功, 但没有剩余字符串去和p2匹配。因此, 匹配失败。返回。</li>
+</ul>
+<p>再看下面一个例子：贪婪模式与占有模式的比较</p>
+<blockquote>
+<p>正则：<code>\w+[a-z]</code>与<code>\w++[a-z]</code><br>目标串：<code>232hjdhfd7474$</code></p>
+</blockquote>
+<p>分析:</p>
+<ul>
+<li><code>\w+[a-z]</code>：<code>\w+</code>属于贪婪模式，会一次性吃掉它所能吃掉的所有的字符，也就是子串<code>232hjdhfd7474</code>，此时<code>[a-z]</code>不能够找到匹配了，故<code>\w+</code>匹配的串会吐出一个字符<code>4</code>，但此时还是得不到匹配。反复的这样吐出回退，直到吐出字符<code>d</code>时，此时<code>[a-z]</code>能够匹配h，所以这时正则表达式会返回一次成功的匹配结果，为<code>232hjdhfd</code></li>
+<li><code>\w++[a-z]</code>：<code>\w++</code>属于侵占模式，它会一次性吃掉它所能够吃掉的所有字符，即子串<code>232hjdhfd7474</code>，而且不留给其他部分使用，故不会回退。此时<code>[a-z]</code>不能够找到匹配，所以此次匹配失败。在余下的子串中也找不到能匹配成功的子串。所以整个正则表达式是找不到匹配结果的！</li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程-Java/">编程-Java</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://luoyuan800.github.io/2015/07/15/java-regex/" data-title="正则表达式进阶 | Yuan" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/07/11/Linux-progress-status/"  title="Linux系统中的进程状态">
+ <strong>下一篇：</strong><br/> 
+ <span>Linux系统中的进程状态
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/07/15/java-regex/" data-title="正则表达式进阶" data-url="http://luoyuan800.github.io/2015/07/15/java-regex/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#组的概念"><span class="toc-number">1.</span> <span class="toc-text">组的概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#捕获组"><span class="toc-number">1.1.</span> <span class="toc-text">捕获组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非捕获组"><span class="toc-number">1.2.</span> <span class="toc-text">非捕获组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java中根据组来抽取字符串"><span class="toc-number">1.3.</span> <span class="toc-text">Java中根据组来抽取字符串</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#匹配模式"><span class="toc-number">2.</span> <span class="toc-text">匹配模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#贪婪模式"><span class="toc-number">2.1.</span> <span class="toc-text">贪婪模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#勉强模式"><span class="toc-number">2.2.</span> <span class="toc-text">勉强模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#占有模式"><span class="toc-number">2.3.</span> <span class="toc-text">占有模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模式在文本匹配中的影响"><span class="toc-number">2.4.</span> <span class="toc-text">模式在文本匹配中的影响</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Linux/" title="编程-Linux">编程-Linux<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-工具/" title="编程-工具">编程-工具<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-网络协议/" title="编程-网络协议">编程-网络协议<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-工具/" title="网站-工具">网站-工具<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-语言/" title="网站-语言">网站-语言<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Luo Yuan in Zhuhai. <br/>
+			Here is my place for knowledge accumulation.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:luoyuan800@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="Luo Yuan">Luo Yuan</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"luoyuan800"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F5529f030def9614f4dc83cc68b307ced' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: '32f8205e3ec577a3f6d4'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
