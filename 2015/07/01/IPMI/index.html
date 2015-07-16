@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://luoyuan800.github.io/2015/07/01/IPMI/index.html">
 <meta property="og:site_name" content="Yuan">
 <meta property="og:description" content="智能平台管理界面（IPMI，Intelligent Platform Management Interface）是管理基于 Intel结构的企业级系统中所使用的外围设备采用的一种工业标准，用户能够利用IPMI监控服务器的物理健康特征，如温度、电压、风扇工作状态、电源状 态等。该标准由美国英特尔、惠普（Hewlett-Packard）、NEC、美国戴尔电脑和SuperMicro等公司定制。新的版本是">
-<meta property="og:updated_time" content="2015-07-01T02:06:00.561Z">
+<meta property="og:updated_time" content="2015-07-16T09:31:37.291Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IPMI">
 <meta name="twitter:description" content="智能平台管理界面（IPMI，Intelligent Platform Management Interface）是管理基于 Intel结构的企业级系统中所使用的外围设备采用的一种工业标准，用户能够利用IPMI监控服务器的物理健康特征，如温度、电压、风扇工作状态、电源状 态等。该标准由美国英特尔、惠普（Hewlett-Packard）、NEC、美国戴尔电脑和SuperMicro等公司定制。新的版本是">
@@ -110,7 +110,7 @@
 <li><p>另一种是通过网络在另外一台机器上管理目标服务器。这个时候作为管理者使用的机器不需要安装IPMI驱动或者BMC，只需要通过网络发送IPMI命令到被管理的服务器上就使用IPMI进行服务器管理，如果查询硬件状态、开关机。这个时候我们可以在管理用的机器上安装IPMI管理工具如IPMITool。</p>
 </li>
 </ul>
-<h2 id="IPMI_管理工具">IPMI 管理工具</h2><p>IPMI的管理工具可选择范围比较有限，目前Linux上就是用IPMITool，windows上使用 IPMIUtil。基于IPMI进行开发的Java工具包目前可免费是用的是基于Gplv3开源的vxipmi工具。我也基于IPMIutil实现了一个在windows平台下进行Java开发的支持工具包。</p>
+<h2 id="IPMI_管理工具">IPMI 管理工具</h2><p>IPMI的管理工具可选择范围比较有限，目前Linux上就是用IPMITool，windows上使用 IPMIUtil。基于IPMI进行开发的Java工具包目前可免费是用的是基于Gplv3开源的vxipmi工具。我也基于IPMIutil实现了一个Java开发的支持工具包<a href="https://github.com/luoyuan800/IPMIUtil4J" title="IPMIUtil4J" target="_blank" rel="external">IPMIUtil4J</a>, 基于Apache2.0开放源代码，欢迎使用和提供建议。</p>
 <h2 id="IPMI命令范例">IPMI命令范例</h2><p>IPMI使用Remote Management Control Protocol (RMCP) 版本1支持操作系统关闭（pre-OS和OS-absent），RMCP把把数据发送到<strong>UDP</strong>的623端口。象lan接口一样，lanplus同样使用 Ethernet LAN 的UDP协议与BMC通信，但是lanplus使用RMCP＋协议（在IPMIV20中描述）来同新，RMCP+允许使用改经的认证方式和数据完整性检 查。我没有深入去研究IPMI的命令格式的组成，只是大概学了下怎么是用IPMItool执行IPMI命令，于是在这里记录下一些常用的IPMI命令<br>IPMITool工具执行IPMI命令的时候需要有相应的网络接口来访问BMC，接口有三种模式： open， lan， lanplus，IPMI2.0开始可以是用lanplus来打开网络接口进行远程访问。Open端口用于本地监控系统使用的；Lan/lanplus通过网络进行远程监控。</p>
 <h3 id="IPMITool命令格式">IPMITool命令格式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ipmitool -I lanplus -H &lt;ip&gt; -p &lt;port&gt; -C <span class="number">3</span> -U &lt;user&gt; -P &lt;password&gt; &lt;<span class="built_in">command</span>&gt;</span><br></pre></td></tr></table></figure>
 <p> command的可选命令如下</p>

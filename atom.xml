@@ -5,7 +5,7 @@
   <subtitle><![CDATA[一点一滴，技术积累]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://luoyuan800.github.io//"/>
-  <updated>2015-07-15T08:39:37.450Z</updated>
+  <updated>2015-07-15T09:17:48.988Z</updated>
   <id>http://luoyuan800.github.io//</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://luoyuan800.github.io/2015/07/15/java-regex/"/>
     <id>http://luoyuan800.github.io/2015/07/15/java-regex/</id>
     <published>2015-07-15T08:19:43.000Z</published>
-    <updated>2015-07-15T08:39:37.450Z</updated>
+    <updated>2015-07-15T09:17:48.988Z</updated>
     <content type="html"><![CDATA[<p>正则表达式的作用在我看来是：匹配、查找、替换三种。使用正则表达式也算是粗粗入门了，至少已经可以写一些简单的表达式来进行字符串的匹配了，而且也会从网络上拷贝别人的一些比较复杂的表达式……那么就学习一些进阶的东西吧。包括 捕获组和非捕获组，匹配模式解析。<a id="more"></a></p>
 <h2 id="组的概念">组的概念</h2><p>首先了解正则表达式中组的概念，在正则表示中组的应用是非常广泛的，只是我们经常没有在意组的真正用法：抽取字符串。一般我们使用正则表达式都只是使用它的匹配功能，只需要验证目标文本是否符合要求。那么如果我们要应用到正则表达式的抽取字符串和替换的时候，组就可以提供我们正确的获得查找结果。<br>Java中组是使用()来表示，一个()表示一个组，在匹配过程中，是依次按照组进行文本匹配，当匹配到当前组之后，就会使用余下的文本来匹配下一个组。</p>
 <h3 id="捕获组">捕获组</h3><p>顾名思义，捕获组就是会捕获我们需要匹配的字符串进而提供给我们抽取。<br>如果有一个正则表达<code>(\\w+)(\\d{3}).*</code>，那么这个表达式中包含3个捕获组，分别为代表整个表达式的组0：<code>\\w\\d{3}.*</code> 组1为<code>\\w+</code> 这里表示匹配一个或多个字符，组2为<code>\\d{3}</code>匹配正好3个数字字符。那么我们可以用这个表达式去抽取文本中的连续的三个数字。</p>
@@ -39,9 +39,9 @@
 <p>被非捕获组匹配的到的字符串，最后是不会被抽取出来的。所以非捕获组是应用于更加精确的定位某段字符串而存在的。下面是几个非捕获组的范例<br>匹配用字符串： <code>abc12dd344oo</code></p>
 <ul>
 <li><code>(?&lt;=abc)(\\d+)</code> 匹配左侧为abc的数字串，分组为组(1) = 12</li>
-<li><code>(?&lt;!abc)(\\d+)</code> 匹配左侧不是abc的数字串，分组为组（1） = 2. 注意这个正则表达式会导致匹配失控，因为可以匹配到的分组有两个，一般这种会失控的表达式是不提倡的。</li>
+<li><code>(?&lt;!abc)(\\d+)</code> 匹配左侧不是abc的数字串，分组为组（1） = 2 和 344. 注意这个正则表达式会导致匹配失控，因为可以匹配到的分组有两个。</li>
 <li><code>(\\d+)(?=dd)</code> 匹配右侧为dd的数字串， 分组为组（1） = 12</li>
-<li><code>(\\d+)(?!dd)</code> 匹配右侧不是dd的数字串， 分组为组（1） = 1. 同样，这个表达式在Java中是会失控，因为我们期望匹配344.</li>
+<li><code>(\\d+)(?!dd)</code> 匹配右侧不是dd的数字串， 分组为组（1） = 1 和344. 同样，这个表达式在Java中也是会失控。</li>
 </ul>
 <h3 id="Java中根据组来抽取字符串">Java中根据组来抽取字符串</h3><p>字符串的抽取需要用到java中的Pattern和Matcher来进行。</p>
 <pre><code>Pattern pattern = Pattern.compile<span class="params">(“\\w+<span class="params">(\\d{<span class="number">3</span>})</span>.*”)</span>;
@@ -705,7 +705,7 @@ war {
     <link href="http://luoyuan800.github.io/2015/07/01/IPMI/"/>
     <id>http://luoyuan800.github.io/2015/07/01/IPMI/</id>
     <published>2015-07-01T00:39:21.000Z</published>
-    <updated>2015-07-01T02:06:00.561Z</updated>
+    <updated>2015-07-16T09:31:37.291Z</updated>
     <content type="html"><![CDATA[<p>智能平台管理界面（IPMI，Intelligent Platform Management Interface）是管理基于 Intel结构的企业级系统中所使用的外围设备采用的一种工业标准，用户能够利用IPMI监控服务器的物理健康特征，如温度、电压、风扇工作状态、电源状 态等。该标准由美国英特尔、惠普（Hewlett-Packard）、NEC、美国戴尔电脑和SuperMicro等公司定制。新的版本是 IPMI2.0（<a href="http://www.intel.com/design/servers/ipmi/）。" target="_blank" rel="external">http://www.intel.com/design/servers/ipmi/）。</a><a id="more"></a></p>
 <h2 id="IPMI平台">IPMI平台</h2><p>需要使用IPMI的前提条件是目标服务器具备有IPMI的硬件基础。IPMI是独立主机OS的一个管理模块，其本质是一个独立运行的硬件芯片，这个芯片提供IPMI的实现，并且具有独立的电源，独立的MAC和IP地址。可以将这个芯片视为网络层的一种硬件实现。这个芯片在IPMI的概念中被定义为BMC，嵌入式管理为控制器。</p>
 <h3 id="服务器对IPMI的硬件支持">服务器对IPMI的硬件支持</h3><p>目前惠普、戴尔、和NEC等大多数厂商生成的服务器都会默认集成支持IPMI2.0。但是要注意并不是所有的服务器都支持，比如HP的服务器本身知道iLo管理系统，hp的服务器通过这个ILo管理系统模拟BMC实现IPMI，但是早起的ILo中是没有ipmi模块，需要升级到最新的版本才可以支持IPMI2.0.</p>
@@ -717,7 +717,7 @@ war {
 <li><p>另一种是通过网络在另外一台机器上管理目标服务器。这个时候作为管理者使用的机器不需要安装IPMI驱动或者BMC，只需要通过网络发送IPMI命令到被管理的服务器上就使用IPMI进行服务器管理，如果查询硬件状态、开关机。这个时候我们可以在管理用的机器上安装IPMI管理工具如IPMITool。</p>
 </li>
 </ul>
-<h2 id="IPMI_管理工具">IPMI 管理工具</h2><p>IPMI的管理工具可选择范围比较有限，目前Linux上就是用IPMITool，windows上使用 IPMIUtil。基于IPMI进行开发的Java工具包目前可免费是用的是基于Gplv3开源的vxipmi工具。我也基于IPMIutil实现了一个在windows平台下进行Java开发的支持工具包。</p>
+<h2 id="IPMI_管理工具">IPMI 管理工具</h2><p>IPMI的管理工具可选择范围比较有限，目前Linux上就是用IPMITool，windows上使用 IPMIUtil。基于IPMI进行开发的Java工具包目前可免费是用的是基于Gplv3开源的vxipmi工具。我也基于IPMIutil实现了一个Java开发的支持工具包<a href="https://github.com/luoyuan800/IPMIUtil4J" title="IPMIUtil4J" target="_blank" rel="external">IPMIUtil4J</a>, 基于Apache2.0开放源代码，欢迎使用和提供建议。</p>
 <h2 id="IPMI命令范例">IPMI命令范例</h2><p>IPMI使用Remote Management Control Protocol (RMCP) 版本1支持操作系统关闭（pre-OS和OS-absent），RMCP把把数据发送到<strong>UDP</strong>的623端口。象lan接口一样，lanplus同样使用 Ethernet LAN 的UDP协议与BMC通信，但是lanplus使用RMCP＋协议（在IPMIV20中描述）来同新，RMCP+允许使用改经的认证方式和数据完整性检 查。我没有深入去研究IPMI的命令格式的组成，只是大概学了下怎么是用IPMItool执行IPMI命令，于是在这里记录下一些常用的IPMI命令<br>IPMITool工具执行IPMI命令的时候需要有相应的网络接口来访问BMC，接口有三种模式： open， lan， lanplus，IPMI2.0开始可以是用lanplus来打开网络接口进行远程访问。Open端口用于本地监控系统使用的；Lan/lanplus通过网络进行远程监控。</p>
 <h3 id="IPMITool命令格式">IPMITool命令格式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ipmitool -I lanplus -H &lt;ip&gt; -p &lt;port&gt; -C <span class="number">3</span> -U &lt;user&gt; -P &lt;password&gt; &lt;<span class="built_in">command</span>&gt;</span><br></pre></td></tr></table></figure>
 <p> command的可选命令如下</p>

@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://luoyuan800.github.io/2015/07/15/java-regex/index.html">
 <meta property="og:site_name" content="Yuan">
 <meta property="og:description" content="正则表达式的作用在我看来是：匹配、查找、替换三种。使用正则表达式也算是粗粗入门了，至少已经可以写一些简单的表达式来进行字符串的匹配了，而且也会从网络上拷贝别人的一些比较复杂的表达式……那么就学习一些进阶的东西吧。包括 捕获组和非捕获组，匹配模式解析。">
-<meta property="og:updated_time" content="2015-07-15T08:39:37.450Z">
+<meta property="og:updated_time" content="2015-07-15T09:17:48.988Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="正则表达式进阶">
 <meta name="twitter:description" content="正则表达式的作用在我看来是：匹配、查找、替换三种。使用正则表达式也算是粗粗入门了，至少已经可以写一些简单的表达式来进行字符串的匹配了，而且也会从网络上拷贝别人的一些比较复杂的表达式……那么就学习一些进阶的东西吧。包括 捕获组和非捕获组，匹配模式解析。">
@@ -117,9 +117,9 @@
 <p>被非捕获组匹配的到的字符串，最后是不会被抽取出来的。所以非捕获组是应用于更加精确的定位某段字符串而存在的。下面是几个非捕获组的范例<br>匹配用字符串： <code>abc12dd344oo</code></p>
 <ul>
 <li><code>(?&lt;=abc)(\\d+)</code> 匹配左侧为abc的数字串，分组为组(1) = 12</li>
-<li><code>(?&lt;!abc)(\\d+)</code> 匹配左侧不是abc的数字串，分组为组（1） = 2. 注意这个正则表达式会导致匹配失控，因为可以匹配到的分组有两个，一般这种会失控的表达式是不提倡的。</li>
+<li><code>(?&lt;!abc)(\\d+)</code> 匹配左侧不是abc的数字串，分组为组（1） = 2 和 344. 注意这个正则表达式会导致匹配失控，因为可以匹配到的分组有两个。</li>
 <li><code>(\\d+)(?=dd)</code> 匹配右侧为dd的数字串， 分组为组（1） = 12</li>
-<li><code>(\\d+)(?!dd)</code> 匹配右侧不是dd的数字串， 分组为组（1） = 1. 同样，这个表达式在Java中是会失控，因为我们期望匹配344.</li>
+<li><code>(\\d+)(?!dd)</code> 匹配右侧不是dd的数字串， 分组为组（1） = 1 和344. 同样，这个表达式在Java中也是会失控。</li>
 </ul>
 <h3 id="Java中根据组来抽取字符串">Java中根据组来抽取字符串</h3><p>字符串的抽取需要用到java中的Pattern和Matcher来进行。</p>
 <pre><code>Pattern pattern = Pattern.compile<span class="params">(“\\w+<span class="params">(\\d{<span class="number">3</span>})</span>.*”)</span>;
