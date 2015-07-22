@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Linux系统中的进程状态 | Yuan</title>
+    <title>使用Java进行文本加密 | Yuan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Luo Yuan">
     
 
     
-    <meta name="description" content="Linux系统进程状态注解">
+    <meta name="description" content="通用的加密模式可以分为对称加密、不对称加密、单向加密（不可逆加密）。偶然想要查询下如何在java中进行文本加密，网上搜索到的都是大篇幅介绍加密原理，如何使用却都是一句话带过，真真是看着就烦。所以本文不涉及加密原理和概念，只是列举了如何使用java进行加密的例子，作为参考使用。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux系统中的进程状态">
-<meta property="og:url" content="http://luoyuan800.github.io/2015/07/11/Linux-progress-status/index.html">
+<meta property="og:title" content="使用Java进行文本加密">
+<meta property="og:url" content="http://luoyuan800.github.io/2015/07/22/java-encode/index.html">
 <meta property="og:site_name" content="Yuan">
-<meta property="og:description" content="Linux系统进程状态注解">
-<meta property="og:updated_time" content="2015-07-10T09:27:04.348Z">
+<meta property="og:description" content="通用的加密模式可以分为对称加密、不对称加密、单向加密（不可逆加密）。偶然想要查询下如何在java中进行文本加密，网上搜索到的都是大篇幅介绍加密原理，如何使用却都是一句话带过，真真是看着就烦。所以本文不涉及加密原理和概念，只是列举了如何使用java进行加密的例子，作为参考使用。">
+<meta property="og:updated_time" content="2015-07-22T08:07:29.252Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Linux系统中的进程状态">
-<meta name="twitter:description" content="Linux系统进程状态注解">
+<meta name="twitter:title" content="使用Java进行文本加密">
+<meta name="twitter:description" content="通用的加密模式可以分为对称加密、不对称加密、单向加密（不可逆加密）。偶然想要查询下如何在java中进行文本加密，网上搜索到的都是大篇幅介绍加密原理，如何使用却都是一句话带过，真真是看着就烦。所以本文不涉及加密原理和概念，只是列举了如何使用java进行加密的例子，作为参考使用。">
 
     
     <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
@@ -79,14 +79,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/11/Linux-progress-status/" title="Linux系统中的进程状态" itemprop="url">Linux系统中的进程状态</a>
+      <a href="/2015/07/22/java-encode/" title="使用Java进行文本加密" itemprop="url">使用Java进行文本加密</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-11T09:21:15.000Z" itemprop="datePublished"> 发表于 2015-07-11</time>
+    <time datetime="2015-07-22T07:58:00.000Z" itemprop="datePublished"> 发表于 2015-07-22</time>
     
   </p>
 </header>
@@ -95,26 +95,67 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Deep_Sleep"><span class="toc-number">1.</span> <span class="toc-text">Deep Sleep</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Running"><span class="toc-number">2.</span> <span class="toc-text">Running</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Interrupt"><span class="toc-number">3.</span> <span class="toc-text">Interrupt</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Stop"><span class="toc-number">4.</span> <span class="toc-text">Stop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Paging"><span class="toc-number">5.</span> <span class="toc-text">Paging</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dead"><span class="toc-number">6.</span> <span class="toc-text">Dead</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zombie"><span class="toc-number">7.</span> <span class="toc-text">Zombie</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MD5"><span class="toc-number">1.</span> <span class="toc-text">MD5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AES"><span class="toc-number">2.</span> <span class="toc-text">AES</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#加密"><span class="toc-number">2.1.</span> <span class="toc-text">加密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解密"><span class="toc-number">2.2.</span> <span class="toc-text">解密</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RSA"><span class="toc-number">3.</span> <span class="toc-text">RSA</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#加密-1"><span class="toc-number">3.1.</span> <span class="toc-text">加密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解密-1"><span class="toc-number">3.2.</span> <span class="toc-text">解密</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<p>Linux系统进程状态注解<a id="more"></a></p>
-<h2 id="Deep_Sleep">Deep Sleep</h2><p>D Uninterruptible sleep (usually IO)<br>不可中断的深度睡眠，一般由IO引起，同步IO在做读或写操作时，此进程不能做其它事情，只能等待，这时进程处于这种状态，如果程序采用异步IO，这种状态应该就很少见到了</p>
-<h2 id="Running">Running</h2><p>R Running or runnable (on run queue)<br>进程处于运行或就绪状态</p>
-<h2 id="Interrupt">Interrupt</h2><p>S Interruptible sleep (waiting for an event to complete)<br>可接收信号的睡眠状态，sleep函数可演示这种状态</p>
-<h2 id="Stop">Stop</h2><p>T Stopped, either by a job control signal or because it is being traced.<br>被ctrl+z中断或被trace</p>
-<h2 id="Paging">Paging</h2><p>W paging (not valid since the 2.6.xx kernel) </p>
-<h2 id="Dead">Dead</h2><p>X dead (should never be seen)<br>进程已经完全死掉，不可能看见这种状态的</p>
-<h2 id="Zombie">Zombie</h2><p>Z Defunct (“zombie”) process, terminated but not reaped by its parent.<br>进程已经终止，但是其父进程没有来及处理它，多进程写不好的话，这种状态是常见的</p>
-  
+		<p>通用的加密模式可以分为对称加密、不对称加密、单向加密（不可逆加密）。偶然想要查询下如何在java中进行文本加密，网上搜索到的都是大篇幅介绍加密原理，如何使用却都是一句话带过，真真是看着就烦。所以本文不涉及加密原理和概念，只是列举了如何使用java进行加密的例子，作为参考使用。<a id="more"></a></p>
+<h2 id="MD5">MD5</h2><p>不可逆加密指的是使用MD5或者SHA进行加密，其本质是抽取特征码，抽取出来的密文是不可逆向解密回原来的文本的。这种方式大多用于密码的存储——只在数据库中存储抽取的特征码，而不存储原来的密码。</p>
+<pre><code>MessageDigest md5 = MessageDigest.getInstance<span class="params">(<span class="string">"MD5"</span>)</span>;
+BASE64Encoder base64Encoder = new BASE64Encoder<span class="params">()</span>;
+String info = base64Encoder.encode<span class="params">(md5.digest<span class="params">(<span class="string">"luoyuan"</span>.getBytes<span class="params">(<span class="string">"utf-8"</span>)</span>)</span>)</span>;
+System.out.println<span class="params">(info)</span>;
+</code></pre><p>其中<code>getInstance(String)</code>的取值是限定的，如果传入的不是以下的字符串之一，就会抛出<code>NoSuchAlgorithmException</code></p>
+<ul>
+<li>MD5</li>
+<li>MD2</li>
+<li>SHA-1</li>
+<li>SHA-256</li>
+<li>SHA-384</li>
+<li>SHA-512</li>
+</ul>
+<h2 id="AES">AES</h2><p>AES和DES的使用方式在Java中都差不多，所以不在此处提及DES的使用范例。<br>AES加密方式属于对称加密，加密和解密都需要使用一样的密钥。所以在加密时候使用的密钥要和密文一起发送。</p>
+<h3 id="加密">加密</h3><pre><code>String mess = <span class="string">"luoyuan"</span>;
+KeyGenerator keyGenerator = KeyGenerator.getInstance<span class="params">(<span class="string">"AES"</span>)</span>;<span class="comment">//获取一个AES相关的KeyGenerator</span>
+keyGenerator.init<span class="params">(<span class="number">128</span>)</span>;<span class="comment">//指定生成密钥的长度为128</span>
+SecretKey key = keyGenerator.generateKey<span class="params">()</span>;<span class="comment">//生成一个密钥</span>
+Cipher cipher = Cipher.getInstance<span class="params">(<span class="string">"AES/ECB/PKCS5Padding"</span>)</span>;<span class="comment">//构建Cipher,设置模式，解密的时候也必须使用同样的模式</span>
+cipher.init<span class="params">(Cipher.ENCRYPT_MODE, key)</span>;<span class="comment">//使用生成的密钥初始化</span>
+byte[] encode = cipher.doFinal<span class="params">(mess.getBytes<span class="params">(<span class="string">"utf-8"</span>)</span>)</span>;<span class="comment">//执行加密过程</span>
+System.out.println<span class="params">(Arrays.toString<span class="params">(encode)</span>)</span>;
+</code></pre><h3 id="解密">解密</h3><pre><code>byte[] keyCode = <span class="decorator">{...}</span>;//加密过程生成的密钥的encoded
+byte[] data = <span class="decorator">{...}</span>;//加密后的文本字节数组
+<span class="type">SecretKey</span> key = new <span class="type">SecretKeySpec</span>(keyCode, <span class="string">"AES"</span>);//根据给出的密钥（字节数组）生成一个<span class="type">Key</span>对象
+<span class="type">Cipher</span> cipher = <span class="type">Cipher</span>.getInstance(<span class="string">"AES/ECB/PKCS5Padding"</span>); //生成一个和加密时候使用的模式一样的<span class="type">Cipher</span>
+cipher.init(<span class="type">Cipher</span>.<span class="type">DECRYPT_MODE</span>, key);
+byte[] decode = cipher.doFinal(data);//执行解密步骤
+<span class="type">System</span>.<span class="keyword">out</span>.println(new <span class="type">String</span>(decode));
+</code></pre><h2 id="RSA">RSA</h2><p>RSA(DSA)加密属于非对称加密，加密解密过程会使用到不同的密钥——公钥和私钥。<br>如果使用公钥加密，那么解密可以使用私钥解密，如果使用私钥加密，则必须使用公钥进行解密。</p>
+<h3 id="加密-1">加密</h3><pre><code>String msg = <span class="string">"Luoyuan"</span>;
+KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance<span class="params">(<span class="string">"RSA"</span>)</span>;<span class="comment">//初始化一个KeyPairGenerator</span>
+keyGenerator.initialize<span class="params">(<span class="number">1024</span>)</span>;<span class="comment">//设置密钥长度为1024</span>
+KeyPair keyPair = keyGenerator.generateKeyPair<span class="params">()</span>;<span class="comment">//RSA加密需要生成相对应的公钥和私钥</span>
+RSAPrivateKey privateKey = <span class="params">(RSAPrivateKey)</span> keyPair.getPrivate<span class="params">()</span>;<span class="comment">//获得私钥</span>
+RSAPublicKey publicKey = <span class="params">(RSAPublicKey)</span> keyPair.getPublic<span class="params">()</span>;<span class="comment">//获得公钥</span>
+Cipher cipher = Cipher.getInstance<span class="params">(<span class="string">"RSA"</span>)</span>;
+cipher.init<span class="params">(Cipher.ENCRYPT_MODE, privateKey)</span>;<span class="comment">//使用私钥加密</span>
+byte[] encode = cipher.doFinal<span class="params">(msg.getBytes<span class="params">(<span class="string">"utf-8"</span>)</span>)</span>;
+System.out.println<span class="params">(Arrays.toString<span class="params">(encode)</span>)</span>;
+</code></pre><h3 id="解密-1">解密</h3><pre><code>byte[] publicKeyCode = <span class="decorator">{...}</span>;
+byte[] encode = <span class="decorator">{...}</span>;
+<span class="type">Cipher</span> cipher = <span class="type">Cipher</span>.getInstance(<span class="string">"RSA"</span>);
+<span class="type">RSAPublicKey</span> publicKey = new <span class="type">RSAPublicKeyImpl</span>(publicKeyCode);//根据公钥的encode构建公钥对象
+cipher.init(<span class="type">Cipher</span>.<span class="type">DECRYPT_MODE</span>, publicKey);//使用公钥解密
+byte[] decode = cipher.doFinal(encode);
+<span class="type">System</span>.<span class="keyword">out</span>.println(new <span class="type">String</span>(decode));
+</code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程-Linux/">编程-Linux</a>
+  <a class="article-category-link" href="/categories/编程-Java/">编程-Java</a>
 </div>
 
 
@@ -124,7 +165,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://luoyuan800.github.io/2015/07/11/Linux-progress-status/" data-title="Linux系统中的进程状态 | Yuan" data-tsina="null" class="share clearfix">
+	  <div data-url="http://luoyuan800.github.io/2015/07/22/java-encode/" data-title="使用Java进行文本加密 | Yuan" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -137,19 +178,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/07/15/java-regex/" title="正则表达式进阶">
-  <strong>上一篇：</strong><br/>
-  <span>
-  正则表达式进阶</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/07/10/Linux-partition/"  title="Linux的分区">
+<a href="/2015/07/15/java-regex/"  title="正则表达式进阶">
  <strong>下一篇：</strong><br/> 
- <span>Linux的分区
+ <span>正则表达式进阶
 </span>
 </a>
 </div>
@@ -158,7 +191,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/07/11/Linux-progress-status/" data-title="Linux系统中的进程状态" data-url="http://luoyuan800.github.io/2015/07/11/Linux-progress-status/"></div>
+	<div class="ds-thread" data-thread-key="2015/07/22/java-encode/" data-title="使用Java进行文本加密" data-url="http://luoyuan800.github.io/2015/07/22/java-encode/"></div>
 </section>
 
 
@@ -168,7 +201,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Deep_Sleep"><span class="toc-number">1.</span> <span class="toc-text">Deep Sleep</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Running"><span class="toc-number">2.</span> <span class="toc-text">Running</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Interrupt"><span class="toc-number">3.</span> <span class="toc-text">Interrupt</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Stop"><span class="toc-number">4.</span> <span class="toc-text">Stop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Paging"><span class="toc-number">5.</span> <span class="toc-text">Paging</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dead"><span class="toc-number">6.</span> <span class="toc-text">Dead</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zombie"><span class="toc-number">7.</span> <span class="toc-text">Zombie</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MD5"><span class="toc-number">1.</span> <span class="toc-text">MD5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AES"><span class="toc-number">2.</span> <span class="toc-text">AES</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#加密"><span class="toc-number">2.1.</span> <span class="toc-text">加密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解密"><span class="toc-number">2.2.</span> <span class="toc-text">解密</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RSA"><span class="toc-number">3.</span> <span class="toc-text">RSA</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#加密-1"><span class="toc-number">3.1.</span> <span class="toc-text">加密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解密-1"><span class="toc-number">3.2.</span> <span class="toc-text">解密</span></a></li></ol></li></ol>
  
   </div>
 

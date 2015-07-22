@@ -5,7 +5,7 @@
   <subtitle><![CDATA[一点一滴，技术积累]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://luoyuan800.github.io//"/>
-  <updated>2015-07-15T09:17:48.988Z</updated>
+  <updated>2015-07-22T08:07:29.252Z</updated>
   <id>http://luoyuan800.github.io//</id>
   
   <author>
@@ -14,6 +14,71 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[使用Java进行文本加密]]></title>
+    <link href="http://luoyuan800.github.io/2015/07/22/java-encode/"/>
+    <id>http://luoyuan800.github.io/2015/07/22/java-encode/</id>
+    <published>2015-07-22T07:58:00.000Z</published>
+    <updated>2015-07-22T08:07:29.252Z</updated>
+    <content type="html"><![CDATA[<p>通用的加密模式可以分为对称加密、不对称加密、单向加密（不可逆加密）。偶然想要查询下如何在java中进行文本加密，网上搜索到的都是大篇幅介绍加密原理，如何使用却都是一句话带过，真真是看着就烦。所以本文不涉及加密原理和概念，只是列举了如何使用java进行加密的例子，作为参考使用。<a id="more"></a></p>
+<h2 id="MD5">MD5</h2><p>不可逆加密指的是使用MD5或者SHA进行加密，其本质是抽取特征码，抽取出来的密文是不可逆向解密回原来的文本的。这种方式大多用于密码的存储——只在数据库中存储抽取的特征码，而不存储原来的密码。</p>
+<pre><code>MessageDigest md5 = MessageDigest.getInstance<span class="params">(<span class="string">"MD5"</span>)</span>;
+BASE64Encoder base64Encoder = new BASE64Encoder<span class="params">()</span>;
+String info = base64Encoder.encode<span class="params">(md5.digest<span class="params">(<span class="string">"luoyuan"</span>.getBytes<span class="params">(<span class="string">"utf-8"</span>)</span>)</span>)</span>;
+System.out.println<span class="params">(info)</span>;
+</code></pre><p>其中<code>getInstance(String)</code>的取值是限定的，如果传入的不是以下的字符串之一，就会抛出<code>NoSuchAlgorithmException</code></p>
+<ul>
+<li>MD5</li>
+<li>MD2</li>
+<li>SHA-1</li>
+<li>SHA-256</li>
+<li>SHA-384</li>
+<li>SHA-512</li>
+</ul>
+<h2 id="AES">AES</h2><p>AES和DES的使用方式在Java中都差不多，所以不在此处提及DES的使用范例。<br>AES加密方式属于对称加密，加密和解密都需要使用一样的密钥。所以在加密时候使用的密钥要和密文一起发送。</p>
+<h3 id="加密">加密</h3><pre><code>String mess = <span class="string">"luoyuan"</span>;
+KeyGenerator keyGenerator = KeyGenerator.getInstance<span class="params">(<span class="string">"AES"</span>)</span>;<span class="comment">//获取一个AES相关的KeyGenerator</span>
+keyGenerator.init<span class="params">(<span class="number">128</span>)</span>;<span class="comment">//指定生成密钥的长度为128</span>
+SecretKey key = keyGenerator.generateKey<span class="params">()</span>;<span class="comment">//生成一个密钥</span>
+Cipher cipher = Cipher.getInstance<span class="params">(<span class="string">"AES/ECB/PKCS5Padding"</span>)</span>;<span class="comment">//构建Cipher,设置模式，解密的时候也必须使用同样的模式</span>
+cipher.init<span class="params">(Cipher.ENCRYPT_MODE, key)</span>;<span class="comment">//使用生成的密钥初始化</span>
+byte[] encode = cipher.doFinal<span class="params">(mess.getBytes<span class="params">(<span class="string">"utf-8"</span>)</span>)</span>;<span class="comment">//执行加密过程</span>
+System.out.println<span class="params">(Arrays.toString<span class="params">(encode)</span>)</span>;
+</code></pre><h3 id="解密">解密</h3><pre><code>byte[] keyCode = <span class="decorator">{...}</span>;//加密过程生成的密钥的encoded
+byte[] data = <span class="decorator">{...}</span>;//加密后的文本字节数组
+<span class="type">SecretKey</span> key = new <span class="type">SecretKeySpec</span>(keyCode, <span class="string">"AES"</span>);//根据给出的密钥（字节数组）生成一个<span class="type">Key</span>对象
+<span class="type">Cipher</span> cipher = <span class="type">Cipher</span>.getInstance(<span class="string">"AES/ECB/PKCS5Padding"</span>); //生成一个和加密时候使用的模式一样的<span class="type">Cipher</span>
+cipher.init(<span class="type">Cipher</span>.<span class="type">DECRYPT_MODE</span>, key);
+byte[] decode = cipher.doFinal(data);//执行解密步骤
+<span class="type">System</span>.<span class="keyword">out</span>.println(new <span class="type">String</span>(decode));
+</code></pre><h2 id="RSA">RSA</h2><p>RSA(DSA)加密属于非对称加密，加密解密过程会使用到不同的密钥——公钥和私钥。<br>如果使用公钥加密，那么解密可以使用私钥解密，如果使用私钥加密，则必须使用公钥进行解密。</p>
+<h3 id="加密-1">加密</h3><pre><code>String msg = <span class="string">"Luoyuan"</span>;
+KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance<span class="params">(<span class="string">"RSA"</span>)</span>;<span class="comment">//初始化一个KeyPairGenerator</span>
+keyGenerator.initialize<span class="params">(<span class="number">1024</span>)</span>;<span class="comment">//设置密钥长度为1024</span>
+KeyPair keyPair = keyGenerator.generateKeyPair<span class="params">()</span>;<span class="comment">//RSA加密需要生成相对应的公钥和私钥</span>
+RSAPrivateKey privateKey = <span class="params">(RSAPrivateKey)</span> keyPair.getPrivate<span class="params">()</span>;<span class="comment">//获得私钥</span>
+RSAPublicKey publicKey = <span class="params">(RSAPublicKey)</span> keyPair.getPublic<span class="params">()</span>;<span class="comment">//获得公钥</span>
+Cipher cipher = Cipher.getInstance<span class="params">(<span class="string">"RSA"</span>)</span>;
+cipher.init<span class="params">(Cipher.ENCRYPT_MODE, privateKey)</span>;<span class="comment">//使用私钥加密</span>
+byte[] encode = cipher.doFinal<span class="params">(msg.getBytes<span class="params">(<span class="string">"utf-8"</span>)</span>)</span>;
+System.out.println<span class="params">(Arrays.toString<span class="params">(encode)</span>)</span>;
+</code></pre><h3 id="解密-1">解密</h3><pre><code>byte[] publicKeyCode = <span class="decorator">{...}</span>;
+byte[] encode = <span class="decorator">{...}</span>;
+<span class="type">Cipher</span> cipher = <span class="type">Cipher</span>.getInstance(<span class="string">"RSA"</span>);
+<span class="type">RSAPublicKey</span> publicKey = new <span class="type">RSAPublicKeyImpl</span>(publicKeyCode);//根据公钥的encode构建公钥对象
+cipher.init(<span class="type">Cipher</span>.<span class="type">DECRYPT_MODE</span>, publicKey);//使用公钥解密
+byte[] decode = cipher.doFinal(encode);
+<span class="type">System</span>.<span class="keyword">out</span>.println(new <span class="type">String</span>(decode));
+</code></pre>]]></content>
+    <summary type="html">
+    <![CDATA[<p>通用的加密模式可以分为对称加密、不对称加密、单向加密（不可逆加密）。偶然想要查询下如何在java中进行文本加密，网上搜索到的都是大篇幅介绍加密原理，如何使用却都是一句话带过，真真是看着就烦。所以本文不涉及加密原理和概念，只是列举了如何使用java进行加密的例子，作为参考使用。]]>
+    
+    </summary>
+    
+      <category term="编程-Java" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Java/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[正则表达式进阶]]></title>
