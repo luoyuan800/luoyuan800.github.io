@@ -5,7 +5,7 @@
   <subtitle><![CDATA[一点一滴，技术积累]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://luoyuan800.github.io//"/>
-  <updated>2015-07-22T08:07:29.252Z</updated>
+  <updated>2015-07-23T09:32:43.389Z</updated>
   <id>http://luoyuan800.github.io//</id>
   
   <author>
@@ -14,6 +14,90 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[JVM 启动参数设置]]></title>
+    <link href="http://luoyuan800.github.io/2015/07/24/jvm-argument/"/>
+    <id>http://luoyuan800.github.io/2015/07/24/jvm-argument/</id>
+    <published>2015-07-24T08:57:43.000Z</published>
+    <updated>2015-07-23T09:32:43.389Z</updated>
+    <content type="html"><![CDATA[<p>JVM可以在启动的时候进行配置，大部分时候要进行调节的参数是为了优化运行效率，提升GC机制的执行效率。<br><a id="more"></a></p>
+<h2 id="启用参数示例">启用参数示例</h2><pre><code>JAVA_OPTS="-server -XX:+UseParNewGC -Xms1024m -Xmx2048m 
+    -<span class="ruby"><span class="constant">XX</span><span class="symbol">:MaxNewSize=</span><span class="number">128</span>m -<span class="constant">XX</span><span class="symbol">:NewSize=</span><span class="number">128</span>m -<span class="constant">XX</span><span class="symbol">:PermSize=</span><span class="number">96</span>m 
+</span>    -<span class="ruby"><span class="constant">XX</span><span class="symbol">:MaxPermSize=</span><span class="number">128</span>m -<span class="constant">XX</span><span class="symbol">:+UseConcMarkSweepGC</span> 
+</span>    -<span class="ruby"><span class="constant">XX</span><span class="symbol">:+CMSPermGenSweepingEnabled</span> -<span class="symbol">verbose:</span>gc 
+</span>    -<span class="ruby"><span class="constant">XX</span><span class="symbol">:+PrintGCDetails</span> -<span class="constant">XX</span><span class="symbol">:+PrintGCTimeStamps</span> 
+</span>    -<span class="ruby"><span class="constant">XX</span><span class="symbol">:CMSInitiatingOccupancyFraction=</span><span class="number">1</span> -<span class="constant">XX</span><span class="symbol">:+CMSIncrementalMode</span>
+</span>    -<span class="ruby"><span class="constant">XX</span><span class="symbol">:MaxTenuringThreshold=</span><span class="number">0</span> -<span class="constant">XX</span><span class="symbol">:SurvivorRatio=</span><span class="number">20000</span> 
+</span>    -<span class="ruby"><span class="constant">XX</span><span class="symbol">:+UseCMSCompactAtFullCollection</span> 
+</span>    -<span class="ruby"><span class="constant">XX</span><span class="symbol">:CMSFullGCsBeforeCompaction=</span><span class="number">0</span>  
+</span>    -<span class="ruby"><span class="constant">XX</span><span class="symbol">:CMSIncrementalDutyCycleMin=</span><span class="number">10</span> -<span class="constant">XX</span><span class="symbol">:CMSIncrementalDutyCycle=</span><span class="number">30</span> 
+</span>    -<span class="ruby"><span class="constant">XX</span><span class="symbol">:CMSMarkStackSize=</span><span class="number">8</span>M -<span class="constant">XX</span><span class="symbol">:CMSMarkStackSizeMax=</span><span class="number">32</span>M<span class="string">"</span></span>
+</code></pre><h2 id="参数说明">参数说明</h2><h3 id="-server">-server</h3><p>一定要作为第一个参数，在多个CPU时提升性能（大概就是把JVM做为服务器使用）</p>
+<h3 id="-Xmx1280m">-Xmx1280m</h3><p>设置JVM最大可用内存为1280m。最大可设为3550m。具体应用可适当调整。</p>
+<h3 id="-Xms1280m">-Xms1280m</h3><p>设置JVM初始内存为1280m。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存。</p>
+<h3 id="-Xmn480m">-Xmn480m</h3><p>设置年轻代大小为480m。整个堆大小=年轻代大小 + 年老代大小 + 持久代大小。持久代一般固定大小为64m，所以增大年轻代后，将会减小年老代大小。此值对系统性能影响较大，Sun官方推荐配置为整个堆的3/8。</p>
+<h3 id="-Xss256k">-Xss256k</h3><p>设置每个线程的堆栈大小。JDK5.0以后每个线程堆栈大小为1M，以前每个线程堆栈大小为256K。更具应用的线程所需内存大小进行调整。在相同物理内存下，减小这个值能生成更多的线程。但是操作系统对一个进程内的线程数还是有限制的，不能无限生成，经验值在3000~5000左右。</p>
+<h3 id="-XX:PermSize=64m">-XX:PermSize=64m</h3><p>指定 jvm 中 Perm Generation 的最小值。 这个参数需要看你的实际情况。可以通过jmap 命令看看到底需要多少。</p>
+<h3 id="-XX:MaxPermSize=128m">-XX:MaxPermSize=128m</h3><p>指定 Perm Generation 的最大值</p>
+<h3 id="-XX:+UseConcMarkSweepGC">-XX:+UseConcMarkSweepGC</h3><p>设置并发收集器</p>
+<h3 id="-XX:ParallelGCThreads=8">-XX:ParallelGCThreads=8</h3><p>配置并行收集器的线程数，即：同时多少个线程一起进行垃圾回收。此值最好配置与处理器数目相等。</p>
+<h3 id="-XX:CMSFullGCsBeforeCompaction=0">-XX:CMSFullGCsBeforeCompaction=0</h3><p>由于并发收集器不对内存空间进行压缩、整理，所以运行一段时间以后会产生“碎片”，使得运行效率降低。此值设置运行多少次GC以后对内存空间进行压缩、整理。</p>
+<h3 id="-XX:+UseCMSCompactAtFullCollection">-XX:+UseCMSCompactAtFullCollection</h3><p>打开对年老代的压缩。可能会影响性能，但是可以消除碎片。</p>
+<h3 id="-XX:SurvivorRatio=8">-XX:SurvivorRatio=8</h3><p>每个survivor space 和 eden之间的比例。</p>
+<h3 id="-XX:MaxTenuringThreshold=7">-XX:MaxTenuringThreshold=7</h3><p>设置垃圾最大年龄。如果设置为0的话，则年轻代对象不经过Survivor区，直接进入年老代。对于年老代比较多的应用，可以提高效率。如果将此值设置为一个较大值，则年轻代对象会在Survivor区进行多次复制，这样可以增加对象再年轻代的存活时间，增加在年轻代即被回收的概率。</p>
+<h3 id="-XX:GCTimeRatio=19">-XX:GCTimeRatio=19</h3><p>设置垃圾回收时间占程序运行时间的百分比，公式为1/(1+n)。</p>
+<h3 id="-Xnoclassgc">-Xnoclassgc</h3><p>禁用类垃圾回收，性能会有一定提高。</p>
+<h3 id="-XX:+DisableExplicitGC">-XX:+DisableExplicitGC</h3><p>当此参数打开时，在程序中调用System.gc()将会不起作用。默认是off。</p>
+<h3 id="-XX:+UseParNewGC">-XX:+UseParNewGC</h3><p>设置年轻代为并行收集。可与CMS收集同时使用。</p>
+<h3 id="-XX:-CMSParallelRemarkEnabled">-XX:-CMSParallelRemarkEnabled</h3><p>在使用 UseParNewGC 的情况下 , 尽量减少 mark 的时间。</p>
+<h3 id="-XX:CMSInitiatingOccupancyFraction=70">-XX:CMSInitiatingOccupancyFraction=70</h3><p>指示在 old generation 在使用了 70% 的比例后 , 启动 concurrent collector。</p>
+<h3 id="-XX:SoftRefLRUPolicyMSPerMB=0">-XX:SoftRefLRUPolicyMSPerMB=0</h3><p>每兆堆空闲空间中SoftReference的存活时间。</p>
+<h3 id="-verbose">-verbose</h3><p>显示垃圾收集信息</p>
+<h3 id="-Xloggc:gc-log">-Xloggc:gc.log</h3><p>指定垃圾收集日志文件（记录垃圾回收的日志）</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>JVM可以在启动的时候进行配置，大部分时候要进行调节的参数是为了优化运行效率，提升GC机制的执行效率。<br>]]>
+    
+    </summary>
+    
+      <category term="编程-Java" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[JVM 垃圾回收器]]></title>
+    <link href="http://luoyuan800.github.io/2015/07/23/jvm-gc/"/>
+    <id>http://luoyuan800.github.io/2015/07/23/jvm-gc/</id>
+    <published>2015-07-23T08:57:43.000Z</published>
+    <updated>2015-07-23T08:58:31.538Z</updated>
+    <content type="html"><![CDATA[<p>简单列举了JVM中使用的集中垃圾收集器<a id="more"></a></p>
+<h2 id="新生代收集器">新生代收集器</h2><h3 id="Serial">Serial</h3><p>Serial收集器的机制被称为“Stop the word”。它属于单线程收集器，进行垃圾收集GC的时候会暂停所有的用户线程，采用复制算法进行GC。<br>这个收集器适用于Client端，因为它对于小内存的收集来说尤为高效，停顿时间也比较短。</p>
+<h3 id="ParNew">ParNew</h3><p>ParNew收集器同样是使用“Stop the word”机制。但是它是多线程的。如果是运行在多cpu的服务器上的时候，首选这种收集器。</p>
+<h3 id="Parallel_Scavenger">Parallel Scavenger</h3><p>这是一个吞吐量优先的垃圾收集器，采用多线程机制。</p>
+<h2 id="年老代收集器">年老代收集器</h2><h3 id="Serial_Old">Serial Old</h3><p>和Serial相对应，是年老代收集器，使用单线程的和标记-整理算法进行垃圾回收。</p>
+<h3 id="Parallel_Old">Parallel Old</h3><p>是Parallel Scavenge收集器的年老代版本。使用多线程和标记-整理算法，主要是服务端模式下和Parallel Scavenge收集器组合使用。</p>
+<h3 id="CMS（Current_Mark_Sweep)">CMS（Current Mark Sweep)</h3><p>CMS是对年老带的进行对象回收，这是一个额外的回收管理机制，基于标记-清除算法实现。它的特点是JVM的停顿时间较短（普通的年老代回收机制就有较长时间的JVM响应停顿），因此CMS主要可以应用于对响应时间有较高要求的服务器上。由于收集完成后会产生碎片，所以要开启 <code>-XXUseCMSCompactAtFullCollection</code>开关参数，表示在Full GC之后，要进行一次碎片整理。开启CMS需要使用额外的参数启用它 ：在启动JVM参数加上<code>-XX:+UseConcMarkSweepGC</code>。</p>
+<h4 id="CMS的运作阶段">CMS的运作阶段</h4><p><img src="http://7xk7ce.com1.z0.glb.clouddn.com/cms.png" alt=""></p>
+<ul>
+<li>初始标记 ：在这个阶段，需要虚拟机停顿正在执行的任务，Stop The Word。这个过程从垃圾回收的”根对象”开始，只扫描到能够和”根对象”直接关联的对象，并作标记。所以这个过程虽然暂停了整个JVM，但是很快就完成了。</li>
+<li>并发标记 ：这个阶段紧随初始标记阶段，在初始标记的基础上继续向下追溯标记。并发标记阶段，应用程序的线程和并发标记的线程并发执行，所以用户不会感受到停顿。</li>
+<li>并发预清理 ：并发预清理阶段仍然是并发的。在这个阶段，虚拟机查找在执行并发标记阶段新进入老年代的对象(可能会有一些对象从新生代晋升到老年代， 或者有一些对象被分配到老年代)。通过重新扫描，减少下一个阶段”重新标记”的工作，因为下一个阶段会Stop The World。</li>
+<li>重新标记 ：这个阶段会暂停虚拟机，收集器线程扫描在CMS堆中剩余的对象。扫描从”根对象”开始向下追溯，并处理对象关联。</li>
+<li>并发清理 ：清理垃圾对象，这个阶段收集器线程和应用程序线程并发执行。</li>
+<li>并发重置 ：这个阶段，重置CMS收集器的数据结构，等待下一次垃圾回收。</li>
+</ul>
+<h3 id="G1(Garbage_First)">G1(Garbage First)</h3><p>G1将整个JAVA堆（包括新生代、老年代）划分为多个固定大小的独立区域，并跟踪垃圾堆积程度，在后台维护一个优先列表，每次根据允许的收集时间，有限回收垃圾最多的区域。 它是基于标记-整理算法实现的，并且具有非常准确的控制停顿。</p>
+<h2 id="各个收集器的可用组合">各个收集器的可用组合</h2><p>图例表示了各个收集器组合可能性，如果两个收集器之间存在连线，表明他们可以一起组合使用。<br><img src="http://7xk7ce.com1.z0.glb.clouddn.com/relationship.png" alt=""></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>简单列举了JVM中使用的集中垃圾收集器]]>
+    
+    </summary>
+    
+      <category term="编程-Java" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Java/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[使用Java进行文本加密]]></title>
@@ -85,8 +169,8 @@ byte[] decode = cipher.doFinal(encode);
     <link href="http://luoyuan800.github.io/2015/07/15/java-regex/"/>
     <id>http://luoyuan800.github.io/2015/07/15/java-regex/</id>
     <published>2015-07-15T08:19:43.000Z</published>
-    <updated>2015-07-15T09:17:48.988Z</updated>
-    <content type="html"><![CDATA[<p>正则表达式的作用在我看来是：匹配、查找、替换三种。使用正则表达式也算是粗粗入门了，至少已经可以写一些简单的表达式来进行字符串的匹配了，而且也会从网络上拷贝别人的一些比较复杂的表达式……那么就学习一些进阶的东西吧。包括 捕获组和非捕获组，匹配模式解析。<a id="more"></a></p>
+    <updated>2015-07-23T06:21:35.351Z</updated>
+    <content type="html"><![CDATA[<p>正则表达式的作用在我看来是：匹配、查找、替换三种。使用正则表达式也算是粗粗入门了，至少已经可以写一些简单的表达式来进行字符串的匹配了，而且也会从网络上拷贝别人的一些比较复杂的表达式……那么就学习一些进阶的东西吧。包括 捕获组和非捕获组，匹配模式解析。（本文中的正则表达式均是Java中可以使用的格式，<code>\\</code>表示普通正则表达式中的<code>\</code>）<a id="more"></a></p>
 <h2 id="组的概念">组的概念</h2><p>首先了解正则表达式中组的概念，在正则表示中组的应用是非常广泛的，只是我们经常没有在意组的真正用法：抽取字符串。一般我们使用正则表达式都只是使用它的匹配功能，只需要验证目标文本是否符合要求。那么如果我们要应用到正则表达式的抽取字符串和替换的时候，组就可以提供我们正确的获得查找结果。<br>Java中组是使用()来表示，一个()表示一个组，在匹配过程中，是依次按照组进行文本匹配，当匹配到当前组之后，就会使用余下的文本来匹配下一个组。</p>
 <h3 id="捕获组">捕获组</h3><p>顾名思义，捕获组就是会捕获我们需要匹配的字符串进而提供给我们抽取。<br>如果有一个正则表达<code>(\\w+)(\\d{3}).*</code>，那么这个表达式中包含3个捕获组，分别为代表整个表达式的组0：<code>\\w\\d{3}.*</code> 组1为<code>\\w+</code> 这里表示匹配一个或多个字符，组2为<code>\\d{3}</code>匹配正好3个数字字符。那么我们可以用这个表达式去抽取文本中的连续的三个数字。</p>
 <h3 id="非捕获组">非捕获组</h3><p>以上提到的组都是属于捕获组，就是会匹配这个组的字符串，并且抽取到组中。Java中还有非捕获组的概念，即是一个非的概念。以 (<code>?</code>) 开头的组是纯的非捕获组，它不捕获文本，也不针对组合计进行计数。就是说，如果小括号中以?号开头，那么这个分组就不会抽取文本。Java中支持的非捕获组并不多（请忽略专业的概念术语）</p>
@@ -127,16 +211,16 @@ Matcher matcher = pattern.matcher<span class="params">(“aaaa123aaaa”)</span>
 </ul>
 <p>再看下面一个例子：贪婪模式与占有模式的比较</p>
 <blockquote>
-<p>正则：<code>\w+[a-z]</code>与<code>\w++[a-z]</code><br>目标串：<code>232hjdhfd7474$</code></p>
+<p>正则：<code>\\w+[a-z]</code>与<code>\\w++[a-z]</code><br>目标串：<code>232hjdhfd7474$</code></p>
 </blockquote>
 <p>分析:</p>
 <ul>
-<li><code>\w+[a-z]</code>：<code>\w+</code>属于贪婪模式，会一次性吃掉它所能吃掉的所有的字符，也就是子串<code>232hjdhfd7474</code>，此时<code>[a-z]</code>不能够找到匹配了，故<code>\w+</code>匹配的串会吐出一个字符<code>4</code>，但此时还是得不到匹配。反复的这样吐出回退，直到吐出字符<code>d</code>时，此时<code>[a-z]</code>能够匹配h，所以这时正则表达式会返回一次成功的匹配结果，为<code>232hjdhfd</code></li>
-<li><code>\w++[a-z]</code>：<code>\w++</code>属于侵占模式，它会一次性吃掉它所能够吃掉的所有字符，即子串<code>232hjdhfd7474</code>，而且不留给其他部分使用，故不会回退。此时<code>[a-z]</code>不能够找到匹配，所以此次匹配失败。在余下的子串中也找不到能匹配成功的子串。所以整个正则表达式是找不到匹配结果的！</li>
+<li><code>\\w+[a-z]</code>：<code>\\w+</code>属于贪婪模式，会一次性吃掉它所能吃掉的所有的字符，也就是子串<code>232hjdhfd7474</code>，此时<code>[a-z]</code>不能够找到匹配了，故<code>\w+</code>匹配的串会吐出一个字符<code>4</code>，但此时还是得不到匹配。反复的这样吐出回退，直到吐出字符<code>d</code>时，此时<code>[a-z]</code>能够匹配h，所以这时正则表达式会返回一次成功的匹配结果，为<code>232hjdhfd</code></li>
+<li><code>\\w++[a-z]</code>：<code>\\w++</code>属于侵占模式，它会一次性吃掉它所能够吃掉的所有字符，即子串<code>232hjdhfd7474</code>，而且不留给其他部分使用，故不会回退。此时<code>[a-z]</code>不能够找到匹配，所以此次匹配失败。在余下的子串中也找不到能匹配成功的子串。所以整个正则表达式是找不到匹配结果的！</li>
 </ul>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>正则表达式的作用在我看来是：匹配、查找、替换三种。使用正则表达式也算是粗粗入门了，至少已经可以写一些简单的表达式来进行字符串的匹配了，而且也会从网络上拷贝别人的一些比较复杂的表达式……那么就学习一些进阶的东西吧。包括 捕获组和非捕获组，匹配模式解析。]]>
+    <![CDATA[<p>正则表达式的作用在我看来是：匹配、查找、替换三种。使用正则表达式也算是粗粗入门了，至少已经可以写一些简单的表达式来进行字符串的匹配了，而且也会从网络上拷贝别人的一些比较复杂的表达式……那么就学习一些进阶的东西吧。包括 捕获组和非捕获组，匹配模式解析。（本文中的正则表达式均是Java中可以使用的格式，<code>\\</code>表示普通正则表达式中的<code>\</code>）]]>
     
     </summary>
     

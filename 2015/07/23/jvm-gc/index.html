@@ -4,23 +4,25 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>About the Cron Expression | Yuan</title>
+    <title>JVM 垃圾回收器 | Yuan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Luo Yuan">
     
 
     
-    <meta name="description" content="Cron is use in Linux for the time schedule">
+    <meta name="description" content="简单列举了JVM中使用的集中垃圾收集器">
 <meta property="og:type" content="article">
-<meta property="og:title" content="About the Cron Expression">
-<meta property="og:url" content="http://luoyuan800.github.io/2015/06/30/Cron-English/index.html">
+<meta property="og:title" content="JVM 垃圾回收器">
+<meta property="og:url" content="http://luoyuan800.github.io/2015/07/23/jvm-gc/index.html">
 <meta property="og:site_name" content="Yuan">
-<meta property="og:description" content="Cron is use in Linux for the time schedule">
-<meta property="og:updated_time" content="2015-06-30T03:52:34.173Z">
+<meta property="og:description" content="简单列举了JVM中使用的集中垃圾收集器">
+<meta property="og:image" content="http://7xk7ce.com1.z0.glb.clouddn.com/cms.png">
+<meta property="og:image" content="http://7xk7ce.com1.z0.glb.clouddn.com/relationship.png">
+<meta property="og:updated_time" content="2015-07-23T08:58:31.538Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="About the Cron Expression">
-<meta name="twitter:description" content="Cron is use in Linux for the time schedule">
+<meta name="twitter:title" content="JVM 垃圾回收器">
+<meta name="twitter:description" content="简单列举了JVM中使用的集中垃圾收集器">
 
     
     <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
@@ -79,14 +81,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/06/30/Cron-English/" title="About the Cron Expression" itemprop="url">About the Cron Expression</a>
+      <a href="/2015/07/23/jvm-gc/" title="JVM 垃圾回收器" itemprop="url">JVM 垃圾回收器</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-30T03:44:14.000Z" itemprop="datePublished"> 发表于 2015-06-30</time>
+    <time datetime="2015-07-23T08:57:43.000Z" itemprop="datePublished"> 发表于 2015-07-23</time>
     
   </p>
 </header>
@@ -95,43 +97,28 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Format"><span class="toc-number">1.</span> <span class="toc-text">Format</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Special_character:"><span class="toc-number">2.</span> <span class="toc-text">Special character:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Sample"><span class="toc-number">3.</span> <span class="toc-text">Sample</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chinese_version_for_this_blog"><span class="toc-number">4.</span> <span class="toc-text">Chinese version for this blog</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#新生代收集器"><span class="toc-number">1.</span> <span class="toc-text">新生代收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Serial"><span class="toc-number">1.1.</span> <span class="toc-text">Serial</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ParNew"><span class="toc-number">1.2.</span> <span class="toc-text">ParNew</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parallel_Scavenger"><span class="toc-number">1.3.</span> <span class="toc-text">Parallel Scavenger</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#年老代收集器"><span class="toc-number">2.</span> <span class="toc-text">年老代收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Serial_Old"><span class="toc-number">2.1.</span> <span class="toc-text">Serial Old</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parallel_Old"><span class="toc-number">2.2.</span> <span class="toc-text">Parallel Old</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CMS（Current_Mark_Sweep)"><span class="toc-number">2.3.</span> <span class="toc-text">CMS（Current Mark Sweep)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CMS的运作阶段"><span class="toc-number">2.3.1.</span> <span class="toc-text">CMS的运作阶段</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#G1(Garbage_First)"><span class="toc-number">2.4.</span> <span class="toc-text">G1(Garbage First)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#各个收集器的可用组合"><span class="toc-number">3.</span> <span class="toc-text">各个收集器的可用组合</span></a></li></ol>
 		
 		</div>
 		
-		<p>Cron is use in Linux for the time schedule <a id="more"></a></p>
-<h2 id="Format">Format</h2><p>Seconds Minutes Hours DayofMonth DayofWeek [Year]<br>The value of each row </p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Second</th>
-<th style="text-align:center">Minute</th>
-<th style="text-align:center">Hours</th>
-<th style="text-align:center">DayofMonth</th>
-<th style="text-align:center">DayofWeek</th>
-<th style="text-align:center">Year</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">, - * / 0-59</td>
-<td style="text-align:center">, - * / 0-59</td>
-<td style="text-align:center">, - * / 0-23</td>
-<td style="text-align:center">, - * / 1-12 JAN-DEc</td>
-<td style="text-align:center">, - * / ? L C # 1-7 SUN-SAT</td>
-<td style="text-align:center">, - * / 1970-2099</td>
-</tr>
-</tbody>
-</table>
-<h2 id="Special_character:">Special character:</h2><pre><code>1. \* every
-2. ? If the DayofMonth <span class="operator"><span class="keyword">use</span> \*, the <span class="keyword">DayofWeek</span> must <span class="keyword">use</span> ? <span class="keyword">to</span> <span class="keyword">match</span> <span class="keyword">any</span>
-<span class="number">3.</span> \- Rang <span class="number">5</span>\-<span class="number">7</span> means5, <span class="number">6</span>, <span class="number">7</span> <span class="keyword">match</span>
-<span class="number">4.</span> / <span class="built_in">interval</span> <span class="keyword">for</span> <span class="keyword">each</span>, <span class="number">0</span>/<span class="number">30</span> means <span class="keyword">start</span> <span class="keyword">when</span> <span class="number">0</span> <span class="keyword">and</span> <span class="keyword">each</span> <span class="number">30</span> will <span class="keyword">match</span>.
-<span class="number">5.</span> , It <span class="keyword">use</span> <span class="keyword">for</span> list
-<span class="number">6.</span> L Means <span class="keyword">Last</span>
-<span class="number">7.</span> W <span class="keyword">Work</span> <span class="keyword">day</span></span>
-</code></pre><h2 id="Sample">Sample</h2><p>0 5,15, * * * ? every week every month each hours 5 and 15 minute match.<br>0 0 10,14,16 * * ? Every day 10am, 2pm, 4 pm match.<br>0 15 10 L * ? The last day of each month at 10:15 am </p>
-<h2 id="Chinese_version_for_this_blog">Chinese version for this blog</h2><p><a href="../QuartZ-Cron">中文版</a></p>
+		<p>简单列举了JVM中使用的集中垃圾收集器<a id="more"></a></p>
+<h2 id="新生代收集器">新生代收集器</h2><h3 id="Serial">Serial</h3><p>Serial收集器的机制被称为“Stop the word”。它属于单线程收集器，进行垃圾收集GC的时候会暂停所有的用户线程，采用复制算法进行GC。<br>这个收集器适用于Client端，因为它对于小内存的收集来说尤为高效，停顿时间也比较短。</p>
+<h3 id="ParNew">ParNew</h3><p>ParNew收集器同样是使用“Stop the word”机制。但是它是多线程的。如果是运行在多cpu的服务器上的时候，首选这种收集器。</p>
+<h3 id="Parallel_Scavenger">Parallel Scavenger</h3><p>这是一个吞吐量优先的垃圾收集器，采用多线程机制。</p>
+<h2 id="年老代收集器">年老代收集器</h2><h3 id="Serial_Old">Serial Old</h3><p>和Serial相对应，是年老代收集器，使用单线程的和标记-整理算法进行垃圾回收。</p>
+<h3 id="Parallel_Old">Parallel Old</h3><p>是Parallel Scavenge收集器的年老代版本。使用多线程和标记-整理算法，主要是服务端模式下和Parallel Scavenge收集器组合使用。</p>
+<h3 id="CMS（Current_Mark_Sweep)">CMS（Current Mark Sweep)</h3><p>CMS是对年老带的进行对象回收，这是一个额外的回收管理机制，基于标记-清除算法实现。它的特点是JVM的停顿时间较短（普通的年老代回收机制就有较长时间的JVM响应停顿），因此CMS主要可以应用于对响应时间有较高要求的服务器上。由于收集完成后会产生碎片，所以要开启 <code>-XXUseCMSCompactAtFullCollection</code>开关参数，表示在Full GC之后，要进行一次碎片整理。开启CMS需要使用额外的参数启用它 ：在启动JVM参数加上<code>-XX:+UseConcMarkSweepGC</code>。</p>
+<h4 id="CMS的运作阶段">CMS的运作阶段</h4><p><img src="http://7xk7ce.com1.z0.glb.clouddn.com/cms.png" alt=""></p>
+<ul>
+<li>初始标记 ：在这个阶段，需要虚拟机停顿正在执行的任务，Stop The Word。这个过程从垃圾回收的”根对象”开始，只扫描到能够和”根对象”直接关联的对象，并作标记。所以这个过程虽然暂停了整个JVM，但是很快就完成了。</li>
+<li>并发标记 ：这个阶段紧随初始标记阶段，在初始标记的基础上继续向下追溯标记。并发标记阶段，应用程序的线程和并发标记的线程并发执行，所以用户不会感受到停顿。</li>
+<li>并发预清理 ：并发预清理阶段仍然是并发的。在这个阶段，虚拟机查找在执行并发标记阶段新进入老年代的对象(可能会有一些对象从新生代晋升到老年代， 或者有一些对象被分配到老年代)。通过重新扫描，减少下一个阶段”重新标记”的工作，因为下一个阶段会Stop The World。</li>
+<li>重新标记 ：这个阶段会暂停虚拟机，收集器线程扫描在CMS堆中剩余的对象。扫描从”根对象”开始向下追溯，并处理对象关联。</li>
+<li>并发清理 ：清理垃圾对象，这个阶段收集器线程和应用程序线程并发执行。</li>
+<li>并发重置 ：这个阶段，重置CMS收集器的数据结构，等待下一次垃圾回收。</li>
+</ul>
+<h3 id="G1(Garbage_First)">G1(Garbage First)</h3><p>G1将整个JAVA堆（包括新生代、老年代）划分为多个固定大小的独立区域，并跟踪垃圾堆积程度，在后台维护一个优先列表，每次根据允许的收集时间，有限回收垃圾最多的区域。 它是基于标记-整理算法实现的，并且具有非常准确的控制停顿。</p>
+<h2 id="各个收集器的可用组合">各个收集器的可用组合</h2><p>图例表示了各个收集器组合可能性，如果两个收集器之间存在连线，表明他们可以一起组合使用。<br><img src="http://7xk7ce.com1.z0.glb.clouddn.com/relationship.png" alt=""></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -139,7 +126,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程-Linux/">编程-Linux</a>
+  <a class="article-category-link" href="/categories/编程-Java/">编程-Java</a>
 </div>
 
 
@@ -149,7 +136,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://luoyuan800.github.io/2015/06/30/Cron-English/" data-title="About the Cron Expression | Yuan" data-tsina="null" class="share clearfix">
+	  <div data-url="http://luoyuan800.github.io/2015/07/23/jvm-gc/" data-title="JVM 垃圾回收器 | Yuan" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -163,18 +150,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/06/30/Log4j-N-MDC/" title="Log4j中的NDC和MDC">
+ <a href="/2015/07/24/jvm-argument/" title="JVM 启动参数设置">
   <strong>上一篇：</strong><br/>
   <span>
-  Log4j中的NDC和MDC</span>
+  JVM 启动参数设置</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/06/30/QuartZ-Cron/"  title="Cron 表达式入门">
+<a href="/2015/07/22/java-encode/"  title="使用Java进行文本加密">
  <strong>下一篇：</strong><br/> 
- <span>Cron 表达式入门
+ <span>使用Java进行文本加密
 </span>
 </a>
 </div>
@@ -183,7 +170,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/06/30/Cron-English/" data-title="About the Cron Expression" data-url="http://luoyuan800.github.io/2015/06/30/Cron-English/"></div>
+	<div class="ds-thread" data-thread-key="2015/07/23/jvm-gc/" data-title="JVM 垃圾回收器" data-url="http://luoyuan800.github.io/2015/07/23/jvm-gc/"></div>
 </section>
 
 
@@ -193,7 +180,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Format"><span class="toc-number">1.</span> <span class="toc-text">Format</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Special_character:"><span class="toc-number">2.</span> <span class="toc-text">Special character:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Sample"><span class="toc-number">3.</span> <span class="toc-text">Sample</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chinese_version_for_this_blog"><span class="toc-number">4.</span> <span class="toc-text">Chinese version for this blog</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#新生代收集器"><span class="toc-number">1.</span> <span class="toc-text">新生代收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Serial"><span class="toc-number">1.1.</span> <span class="toc-text">Serial</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ParNew"><span class="toc-number">1.2.</span> <span class="toc-text">ParNew</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parallel_Scavenger"><span class="toc-number">1.3.</span> <span class="toc-text">Parallel Scavenger</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#年老代收集器"><span class="toc-number">2.</span> <span class="toc-text">年老代收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Serial_Old"><span class="toc-number">2.1.</span> <span class="toc-text">Serial Old</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parallel_Old"><span class="toc-number">2.2.</span> <span class="toc-text">Parallel Old</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CMS（Current_Mark_Sweep)"><span class="toc-number">2.3.</span> <span class="toc-text">CMS（Current Mark Sweep)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CMS的运作阶段"><span class="toc-number">2.3.1.</span> <span class="toc-text">CMS的运作阶段</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#G1(Garbage_First)"><span class="toc-number">2.4.</span> <span class="toc-text">G1(Garbage First)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#各个收集器的可用组合"><span class="toc-number">3.</span> <span class="toc-text">各个收集器的可用组合</span></a></li></ol>
  
   </div>
 
