@@ -1,0 +1,658 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>基于snmp4j发送 V3 trap | Yuan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Luo Yuan">
+    
+
+    
+    <meta name="description" content="基于snmp4j收集数据或者发送v1版本的trap比较简单，可以自己动手网上搜索，这里展示下如何发送v3的trap（因为网络上搜索不到）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于snmp4j发送 V3 trap">
+<meta property="og:url" content="http://luoyuan800.github.io/2015/10/09/snmp4j-trap-v3/index.html">
+<meta property="og:site_name" content="Yuan">
+<meta property="og:description" content="基于snmp4j收集数据或者发送v1版本的trap比较简单，可以自己动手网上搜索，这里展示下如何发送v3的trap（因为网络上搜索不到）">
+<meta property="og:updated_time" content="2015-10-09T08:49:22.095Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于snmp4j发送 V3 trap">
+<meta name="twitter:description" content="基于snmp4j收集数据或者发送v1版本的trap比较简单，可以自己动手网上搜索，这里展示下如何发送v3的trap（因为网络上搜索不到）">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Yuan" title="Yuan"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Yuan">Yuan</a></h1>
+				<h2 class="blog-motto">一点一滴，技术积累</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search">
+							<label>Search</label>
+						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/09/snmp4j-trap-v3/" title="基于snmp4j发送 V3 trap" itemprop="url">基于snmp4j发送 V3 trap</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-09T08:10:14.000Z" itemprop="datePublished"> 发表于 2015-10-09</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#SNMP4J版本要求"><span class="toc-number">1.</span> <span class="toc-text">SNMP4J版本要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发送SNMP_v3_Trap的代码"><span class="toc-number">2.</span> <span class="toc-text">发送SNMP v3 Trap的代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接收_v3_trap_的代码"><span class="toc-number">3.</span> <span class="toc-text">接收 v3 trap 的代码</span></a></li></ol>
+		
+		</div>
+		
+		<p>基于snmp4j收集数据或者发送v1版本的trap比较简单，可以自己动手网上搜索，这里展示下如何发送v3的trap（因为网络上搜索不到）<br><a id="more"></a></p>
+<h2 id="SNMP4J版本要求">SNMP4J版本要求</h2><p>snmp4j 2.2.2及以上的版本都会支持使用snmp v3</p>
+<h2 id="发送SNMP_v3_Trap的代码">发送SNMP v3 Trap的代码</h2><pre><code><span class="preprocessor"><span class="keyword">import</span> org.snmp4j.PDU;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.ScopedPDU;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.Snmp;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.TransportMapping;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.UserTarget;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.mp.MPv3;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.mp.SnmpConstants;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.SecurityLevel;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.SecurityModels;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.SecurityProtocols;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.USM;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.UsmUser;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.UsmUserEntry;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.Address;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.GenericAddress;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.OID;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.OctetString;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.VariableBinding;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.transport.DefaultUdpTransportMapping;</span>
+
+<span class="preprocessor"><span class="keyword">import</span> java.io.IOException;</span>
+
+<span class="comment">/**
+* 本类用于发送v3 Trap信息
+*
+* @author luoyuan
+*/</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SnmpSendV3Trap</span> </span>{
+
+<span class="keyword">private</span> Snmp snmp = <span class="literal">null</span>;
+
+<span class="keyword">private</span> Address targetAddress = <span class="literal">null</span>;
+
+<span class="keyword">public</span> SnmpSendV3Trap(String target, int port) throws IOException {
+    <span class="comment">//配置EngineID</span>
+    OctetString localEngineID = <span class="keyword">new</span> OctetString(MPv3.createLocalEngineID());
+    <span class="comment">// 设置目的地的IP和端口</span>
+    targetAddress = GenericAddress.parse(String.format(<span class="string">"udp:%s/%s"</span>, target, port));
+    TransportMapping transport = <span class="keyword">new</span> DefaultUdpTransportMapping();
+    <span class="comment">//配置USM，传入 engine id</span>
+    USM usm = <span class="keyword">new</span> USM(SecurityProtocols.getInstance(), localEngineID, <span class="number">0</span>);
+    <span class="comment">//添加Usm user， 这里的配置的user， 目标接收端也正确认证才可以接受到这个trap</span>
+    <span class="comment">//这里创建User的是全部使用null是表示使用NOAUTH_NOPRIV的模式发送trap</span>
+    <span class="comment">//具体的Auth模式可以参考收集snmp数据，是一样配置的。</span>
+    usm.updateUser(<span class="keyword">new</span> UsmUserEntry(<span class="keyword">new</span> OctetString(<span class="string">"luo"</span>), <span class="keyword">new</span> UsmUser(<span class="keyword">new</span> OctetString(<span class="string">"luo"</span>),
+            <span class="literal">null</span>,
+            <span class="literal">null</span>,
+            <span class="literal">null</span>,
+            <span class="literal">null</span>)));
+    <span class="comment">//添加USM到Security Models中</span>
+    SecurityModels.getInstance().addSecurityModel(usm);
+    <span class="comment">//构建SNMP对象， 并且添加v3模式到其中</span>
+    snmp = <span class="keyword">new</span> Snmp(transport);
+    snmp.getMessageDispatcher().addMessageProcessingModel(<span class="keyword">new</span> MPv3(usm));
+    transport.listen();
+
+}
+
+<span class="comment">/**
+ * 向管理进程发送Trap报文
+ *
+ * @throws IOException
+ */</span>
+<span class="keyword">public</span> <span class="keyword">void</span> sendPDU() throws IOException {
+
+    <span class="comment">// 设置 target, v3trap 一定要使用UserTarget</span>
+    UserTarget target = <span class="keyword">new</span> UserTarget();
+    target.setAddress(targetAddress);
+    target.setVersion(SnmpConstants.version3);
+    <span class="comment">//设置用户认证信息</span>
+    target.setSecurityLevel(SecurityLevel.NOAUTH_NOPRIV);
+    target.setSecurityName(<span class="keyword">new</span> OctetString(<span class="string">"luo"</span>));
+
+    <span class="comment">// 创建 PDU, 注意这里要使用ScopedPDU</span>
+    ScopedPDU pdu = <span class="keyword">new</span> ScopedPDU();
+    pdu.add(<span class="keyword">new</span> VariableBinding(<span class="keyword">new</span> OID(<span class="string">".1.3.6.1.2.4407.11.1.1.1.1"</span>),
+            <span class="keyword">new</span> OctetString(<span class="string">"SnmpTrap"</span>)));
+    pdu.add(<span class="keyword">new</span> VariableBinding(<span class="keyword">new</span> OID(<span class="string">".1.3.6.1.2.4407.11.1.1.1.2"</span>),
+            <span class="keyword">new</span> OctetString(<span class="string">"v3"</span>)));
+    pdu.setType(PDU.TRAP);
+
+    <span class="comment">// 发送trap</span>
+    snmp.send(pdu, target);
+}
+
+<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(String[] args) {
+    <span class="keyword">try</span> {
+        SnmpSendV3Trap trapSender = <span class="keyword">new</span> SnmpSendV3Trap(<span class="string">"10.154.10.11"</span>, <span class="number">162</span>);
+        trapSender.sendPDU();
+    } <span class="keyword">catch</span> (IOException e) {
+        e.printStackTrace();
+    }
+}
+}
+</code></pre><h2 id="接收_v3_trap_的代码">接收 v3 trap 的代码</h2><pre><code><span class="preprocessor"><span class="keyword">import</span> org.snmp4j.CommandResponder;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.CommandResponderEvent;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.MessageDispatcherImpl;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.Snmp;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.TransportMapping;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.mp.MPv3;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.SecurityModels;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.SecurityProtocols;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.USM;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.UsmUser;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.UsmUserEntry;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.Address;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.GenericAddress;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.OctetString;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.TcpAddress;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.UdpAddress;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.VariableBinding;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.transport.DefaultTcpTransportMapping;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.transport.DefaultUdpTransportMapping;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.util.MultiThreadedMessageDispatcher;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.util.ThreadPool;</span>
+<span class="preprocessor"><span class="keyword">import</span> java.io.IOException;</span>
+<span class="preprocessor"><span class="keyword">import</span> java.util.Vector;</span>
+
+<span class="comment">/**
+ * 本类用于监听发送到本机的Trap信息
+ *
+ * @author luoyuan
+ */</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LocalTrapReceiver</span> <span class="keyword">implements</span> <span class="title">CommandResponder</span> </span>{
+
+    <span class="keyword">private</span> MultiThreadedMessageDispatcher dispatcher;
+    <span class="keyword">private</span> Snmp snmp = <span class="literal">null</span>;
+
+    <span class="keyword">private</span> LocalTrapReceiver() throws IOException {
+        dispatcher = <span class="keyword">new</span> MultiThreadedMessageDispatcher(ThreadPool.create(<span class="string">"snmp trap"</span>, <span class="number">2</span>),
+                <span class="keyword">new</span> MessageDispatcherImpl());
+        Address listenUdpAddress = GenericAddress.parse(<span class="string">"udp:0.0.0.0/162"</span>); <span class="comment">// udp监听端口</span>
+        Address listenTCPAddress = GenericAddress.parse(<span class="string">"tcp:0.0.0.0/162"</span>); <span class="comment">// tcp监听端口</span>
+        TransportMapping transport;
+        <span class="comment">// 对TCP与UDP协议进行处理</span>
+        DefaultUdpTransportMapping udpTransport = <span class="keyword">new</span> DefaultUdpTransportMapping(
+                (UdpAddress) listenUdpAddress);
+        DefaultTcpTransportMapping tcpTransport = <span class="keyword">new</span> DefaultTcpTransportMapping(
+                (TcpAddress) listenTCPAddress);
+
+        snmp = <span class="keyword">new</span> Snmp(dispatcher, udpTransport);
+        snmp.addTransportMapping(tcpTransport);
+
+        <span class="comment">//配置engine</span>
+        OctetString localEngineID = <span class="keyword">new</span> OctetString(MPv3.createLocalEngineID());
+        <span class="comment">//配置USM 和user，需要和发送trap的配置一样才可以成功接收trap</span>
+        USM usm = <span class="keyword">new</span> USM(SecurityProtocols.getInstance(), localEngineID, <span class="number">0</span>);
+        usm.updateUser(<span class="keyword">new</span> UsmUserEntry(<span class="keyword">new</span> OctetString(<span class="string">"luo"</span>), <span class="keyword">new</span> UsmUser(<span class="keyword">new</span> OctetString(<span class="string">"luo"</span>),
+                <span class="literal">null</span>,
+                <span class="literal">null</span>,
+                <span class="literal">null</span>,
+                <span class="literal">null</span>)));
+        SecurityModels.getInstance().addSecurityModel(usm);
+        snmp.getMessageDispatcher().addMessageProcessingModel(<span class="keyword">new</span> MPv3(usm));
+        snmp.listen();
+    }
+
+
+    <span class="keyword">public</span> <span class="keyword">void</span> run() {
+        <span class="keyword">try</span> {
+            snmp.addCommandResponder(<span class="keyword">this</span>);
+            System.out.println(<span class="string">"开始监听Trap信息!"</span>);
+        } <span class="keyword">catch</span> (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    <span class="comment">/**
+     * 当接收到trap时，会自动进入这个方法
+     *
+     * @param respEvnt
+     */</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> processPdu(CommandResponderEvent respEvnt) {
+        <span class="comment">// 解析Response并且直接打印出来</span>
+        <span class="keyword">if</span> (respEvnt != <span class="literal">null</span> &amp;&amp; respEvnt.getPDU() != <span class="literal">null</span>) {
+            System.out.println(<span class="string">"security name = "</span> + <span class="keyword">new</span> OctetString(respEvnt.getSecurityName()));
+            Vector&lt;? <span class="keyword">extends</span> VariableBinding&gt; recVBs = respEvnt.getPDU().getVariableBindings();
+            <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; recVBs.size(); i++) {
+                VariableBinding recVB = recVBs.elementAt(i);
+                System.out.println(recVB.getOid() + <span class="string">" : "</span> + recVB.getVariable());
+            }
+        }
+    }
+
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(String[] args) throws IOException {
+        LocalTrapReceiver localTrapReceiver = <span class="keyword">new</span> LocalTrapReceiver();
+        localTrapReceiver.run();
+    }
+
+}
+</code></pre>  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程-Java/">编程-Java</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://luoyuan800.github.io/2015/10/09/snmp4j-trap-v3/" data-title="基于snmp4j发送 V3 trap | Yuan" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/09/22/WinRm/"  title="启用WinRm">
+ <strong>下一篇：</strong><br/> 
+ <span>启用WinRm
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/10/09/snmp4j-trap-v3/" data-title="基于snmp4j发送 V3 trap" data-url="http://luoyuan800.github.io/2015/10/09/snmp4j-trap-v3/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#SNMP4J版本要求"><span class="toc-number">1.</span> <span class="toc-text">SNMP4J版本要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发送SNMP_v3_Trap的代码"><span class="toc-number">2.</span> <span class="toc-text">发送SNMP v3 Trap的代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接收_v3_trap_的代码"><span class="toc-number">3.</span> <span class="toc-text">接收 v3 trap 的代码</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Linux/" title="编程-Linux">编程-Linux<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-工具/" title="编程-工具">编程-工具<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-网络协议/" title="编程-网络协议">编程-网络协议<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-工具/" title="网站-工具">网站-工具<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-语言/" title="网站-语言">网站-语言<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Luo Yuan in Zhuhai. <br/>
+			Here is my place for knowledge accumulation.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:luoyuan800@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="Luo Yuan">Luo Yuan</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"luoyuan800"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F5529f030def9614f4dc83cc68b307ced' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: '32f8205e3ec577a3f6d4'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

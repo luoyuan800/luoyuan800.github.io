@@ -5,7 +5,7 @@
   <subtitle><![CDATA[一点一滴，技术积累]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://luoyuan800.github.io//"/>
-  <updated>2015-07-23T09:32:43.389Z</updated>
+  <updated>2015-10-09T08:49:22.095Z</updated>
   <id>http://luoyuan800.github.io//</id>
   
   <author>
@@ -14,6 +14,285 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[基于snmp4j发送 V3 trap]]></title>
+    <link href="http://luoyuan800.github.io/2015/10/09/snmp4j-trap-v3/"/>
+    <id>http://luoyuan800.github.io/2015/10/09/snmp4j-trap-v3/</id>
+    <published>2015-10-09T08:10:14.000Z</published>
+    <updated>2015-10-09T08:49:22.095Z</updated>
+    <content type="html"><![CDATA[<p>基于snmp4j收集数据或者发送v1版本的trap比较简单，可以自己动手网上搜索，这里展示下如何发送v3的trap（因为网络上搜索不到）<br><a id="more"></a></p>
+<h2 id="SNMP4J版本要求">SNMP4J版本要求</h2><p>snmp4j 2.2.2及以上的版本都会支持使用snmp v3</p>
+<h2 id="发送SNMP_v3_Trap的代码">发送SNMP v3 Trap的代码</h2><pre><code><span class="preprocessor"><span class="keyword">import</span> org.snmp4j.PDU;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.ScopedPDU;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.Snmp;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.TransportMapping;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.UserTarget;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.mp.MPv3;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.mp.SnmpConstants;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.SecurityLevel;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.SecurityModels;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.SecurityProtocols;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.USM;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.UsmUser;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.UsmUserEntry;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.Address;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.GenericAddress;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.OID;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.OctetString;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.VariableBinding;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.transport.DefaultUdpTransportMapping;</span>
+
+<span class="preprocessor"><span class="keyword">import</span> java.io.IOException;</span>
+
+<span class="comment">/**
+* 本类用于发送v3 Trap信息
+*
+* @author luoyuan
+*/</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SnmpSendV3Trap</span> </span>{
+
+<span class="keyword">private</span> Snmp snmp = <span class="literal">null</span>;
+
+<span class="keyword">private</span> Address targetAddress = <span class="literal">null</span>;
+
+<span class="keyword">public</span> SnmpSendV3Trap(String target, int port) throws IOException {
+    <span class="comment">//配置EngineID</span>
+    OctetString localEngineID = <span class="keyword">new</span> OctetString(MPv3.createLocalEngineID());
+    <span class="comment">// 设置目的地的IP和端口</span>
+    targetAddress = GenericAddress.parse(String.format(<span class="string">"udp:%s/%s"</span>, target, port));
+    TransportMapping transport = <span class="keyword">new</span> DefaultUdpTransportMapping();
+    <span class="comment">//配置USM，传入 engine id</span>
+    USM usm = <span class="keyword">new</span> USM(SecurityProtocols.getInstance(), localEngineID, <span class="number">0</span>);
+    <span class="comment">//添加Usm user， 这里的配置的user， 目标接收端也正确认证才可以接受到这个trap</span>
+    <span class="comment">//这里创建User的是全部使用null是表示使用NOAUTH_NOPRIV的模式发送trap</span>
+    <span class="comment">//具体的Auth模式可以参考收集snmp数据，是一样配置的。</span>
+    usm.updateUser(<span class="keyword">new</span> UsmUserEntry(<span class="keyword">new</span> OctetString(<span class="string">"luo"</span>), <span class="keyword">new</span> UsmUser(<span class="keyword">new</span> OctetString(<span class="string">"luo"</span>),
+            <span class="literal">null</span>,
+            <span class="literal">null</span>,
+            <span class="literal">null</span>,
+            <span class="literal">null</span>)));
+    <span class="comment">//添加USM到Security Models中</span>
+    SecurityModels.getInstance().addSecurityModel(usm);
+    <span class="comment">//构建SNMP对象， 并且添加v3模式到其中</span>
+    snmp = <span class="keyword">new</span> Snmp(transport);
+    snmp.getMessageDispatcher().addMessageProcessingModel(<span class="keyword">new</span> MPv3(usm));
+    transport.listen();
+
+}
+
+<span class="comment">/**
+ * 向管理进程发送Trap报文
+ *
+ * @throws IOException
+ */</span>
+<span class="keyword">public</span> <span class="keyword">void</span> sendPDU() throws IOException {
+
+    <span class="comment">// 设置 target, v3trap 一定要使用UserTarget</span>
+    UserTarget target = <span class="keyword">new</span> UserTarget();
+    target.setAddress(targetAddress);
+    target.setVersion(SnmpConstants.version3);
+    <span class="comment">//设置用户认证信息</span>
+    target.setSecurityLevel(SecurityLevel.NOAUTH_NOPRIV);
+    target.setSecurityName(<span class="keyword">new</span> OctetString(<span class="string">"luo"</span>));
+
+    <span class="comment">// 创建 PDU, 注意这里要使用ScopedPDU</span>
+    ScopedPDU pdu = <span class="keyword">new</span> ScopedPDU();
+    pdu.add(<span class="keyword">new</span> VariableBinding(<span class="keyword">new</span> OID(<span class="string">".1.3.6.1.2.4407.11.1.1.1.1"</span>),
+            <span class="keyword">new</span> OctetString(<span class="string">"SnmpTrap"</span>)));
+    pdu.add(<span class="keyword">new</span> VariableBinding(<span class="keyword">new</span> OID(<span class="string">".1.3.6.1.2.4407.11.1.1.1.2"</span>),
+            <span class="keyword">new</span> OctetString(<span class="string">"v3"</span>)));
+    pdu.setType(PDU.TRAP);
+
+    <span class="comment">// 发送trap</span>
+    snmp.send(pdu, target);
+}
+
+<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(String[] args) {
+    <span class="keyword">try</span> {
+        SnmpSendV3Trap trapSender = <span class="keyword">new</span> SnmpSendV3Trap(<span class="string">"10.154.10.11"</span>, <span class="number">162</span>);
+        trapSender.sendPDU();
+    } <span class="keyword">catch</span> (IOException e) {
+        e.printStackTrace();
+    }
+}
+}
+</code></pre><h2 id="接收_v3_trap_的代码">接收 v3 trap 的代码</h2><pre><code><span class="preprocessor"><span class="keyword">import</span> org.snmp4j.CommandResponder;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.CommandResponderEvent;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.MessageDispatcherImpl;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.Snmp;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.TransportMapping;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.mp.MPv3;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.SecurityModels;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.SecurityProtocols;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.USM;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.UsmUser;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.security.UsmUserEntry;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.Address;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.GenericAddress;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.OctetString;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.TcpAddress;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.UdpAddress;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.smi.VariableBinding;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.transport.DefaultTcpTransportMapping;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.transport.DefaultUdpTransportMapping;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.util.MultiThreadedMessageDispatcher;</span>
+<span class="preprocessor"><span class="keyword">import</span> org.snmp4j.util.ThreadPool;</span>
+<span class="preprocessor"><span class="keyword">import</span> java.io.IOException;</span>
+<span class="preprocessor"><span class="keyword">import</span> java.util.Vector;</span>
+
+<span class="comment">/**
+ * 本类用于监听发送到本机的Trap信息
+ *
+ * @author luoyuan
+ */</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LocalTrapReceiver</span> <span class="keyword">implements</span> <span class="title">CommandResponder</span> </span>{
+
+    <span class="keyword">private</span> MultiThreadedMessageDispatcher dispatcher;
+    <span class="keyword">private</span> Snmp snmp = <span class="literal">null</span>;
+
+    <span class="keyword">private</span> LocalTrapReceiver() throws IOException {
+        dispatcher = <span class="keyword">new</span> MultiThreadedMessageDispatcher(ThreadPool.create(<span class="string">"snmp trap"</span>, <span class="number">2</span>),
+                <span class="keyword">new</span> MessageDispatcherImpl());
+        Address listenUdpAddress = GenericAddress.parse(<span class="string">"udp:0.0.0.0/162"</span>); <span class="comment">// udp监听端口</span>
+        Address listenTCPAddress = GenericAddress.parse(<span class="string">"tcp:0.0.0.0/162"</span>); <span class="comment">// tcp监听端口</span>
+        TransportMapping transport;
+        <span class="comment">// 对TCP与UDP协议进行处理</span>
+        DefaultUdpTransportMapping udpTransport = <span class="keyword">new</span> DefaultUdpTransportMapping(
+                (UdpAddress) listenUdpAddress);
+        DefaultTcpTransportMapping tcpTransport = <span class="keyword">new</span> DefaultTcpTransportMapping(
+                (TcpAddress) listenTCPAddress);
+
+        snmp = <span class="keyword">new</span> Snmp(dispatcher, udpTransport);
+        snmp.addTransportMapping(tcpTransport);
+
+        <span class="comment">//配置engine</span>
+        OctetString localEngineID = <span class="keyword">new</span> OctetString(MPv3.createLocalEngineID());
+        <span class="comment">//配置USM 和user，需要和发送trap的配置一样才可以成功接收trap</span>
+        USM usm = <span class="keyword">new</span> USM(SecurityProtocols.getInstance(), localEngineID, <span class="number">0</span>);
+        usm.updateUser(<span class="keyword">new</span> UsmUserEntry(<span class="keyword">new</span> OctetString(<span class="string">"luo"</span>), <span class="keyword">new</span> UsmUser(<span class="keyword">new</span> OctetString(<span class="string">"luo"</span>),
+                <span class="literal">null</span>,
+                <span class="literal">null</span>,
+                <span class="literal">null</span>,
+                <span class="literal">null</span>)));
+        SecurityModels.getInstance().addSecurityModel(usm);
+        snmp.getMessageDispatcher().addMessageProcessingModel(<span class="keyword">new</span> MPv3(usm));
+        snmp.listen();
+    }
+
+
+    <span class="keyword">public</span> <span class="keyword">void</span> run() {
+        <span class="keyword">try</span> {
+            snmp.addCommandResponder(<span class="keyword">this</span>);
+            System.out.println(<span class="string">"开始监听Trap信息!"</span>);
+        } <span class="keyword">catch</span> (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    <span class="comment">/**
+     * 当接收到trap时，会自动进入这个方法
+     *
+     * @param respEvnt
+     */</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> processPdu(CommandResponderEvent respEvnt) {
+        <span class="comment">// 解析Response并且直接打印出来</span>
+        <span class="keyword">if</span> (respEvnt != <span class="literal">null</span> &amp;&amp; respEvnt.getPDU() != <span class="literal">null</span>) {
+            System.out.println(<span class="string">"security name = "</span> + <span class="keyword">new</span> OctetString(respEvnt.getSecurityName()));
+            Vector&lt;? <span class="keyword">extends</span> VariableBinding&gt; recVBs = respEvnt.getPDU().getVariableBindings();
+            <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; recVBs.size(); i++) {
+                VariableBinding recVB = recVBs.elementAt(i);
+                System.out.println(recVB.getOid() + <span class="string">" : "</span> + recVB.getVariable());
+            }
+        }
+    }
+
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(String[] args) throws IOException {
+        LocalTrapReceiver localTrapReceiver = <span class="keyword">new</span> LocalTrapReceiver();
+        localTrapReceiver.run();
+    }
+
+}
+</code></pre>]]></content>
+    <summary type="html">
+    <![CDATA[<p>基于snmp4j收集数据或者发送v1版本的trap比较简单，可以自己动手网上搜索，这里展示下如何发送v3的trap（因为网络上搜索不到）<br>]]>
+    
+    </summary>
+    
+      <category term="编程-Java" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[启用WinRm]]></title>
+    <link href="http://luoyuan800.github.io/2015/09/22/WinRm/"/>
+    <id>http://luoyuan800.github.io/2015/09/22/WinRm/</id>
+    <published>2015-09-22T06:45:50.000Z</published>
+    <updated>2015-09-23T01:54:11.487Z</updated>
+    <content type="html"><![CDATA[<p>如何在Windows上配置启用WinRm<a id="more"></a></p>
+<h2 id="在windows_server_system上配置WinRm">在windows server system上配置WinRm</h2><ol>
+<li>使用Administrator账号登陆目标机器（不是Administrator用户组，而是Administrator账号）。</li>
+<li>使用命令<code>winrm enumerate winrm/config/listener</code>查看WinRm在当前的机器上是否因配置过。</li>
+<li>如果没有返回消息，就表明WinRm没有成功配置。</li>
+<li>执行 <code>winrm quickconfig</code> 初始化WinRm</li>
+<li>执行命令<code>winrm set winrm/config/service/auth @{Basic=&quot;true&quot;}</code> 配置登陆方式</li>
+<li>执行 <code>winrm set winrm/config/service @{AllowUnencrypted=&quot;true&quot;}</code> 配置加密方式</li>
+<li>执行 <code>winrm enumerate winrm/config/listener</code> 查看WinR是否成功配置</li>
+<li>如果发现还是不能执行WinRm命令的话，打开端口http和https<ol>
+<li><code>winrm quickconfig -transport:https</code></li>
+<li><code>winrm quickconfig -transport:http</code></li>
+</ol>
+</li>
+<li>如果发现以上命令执行不成功，那么尝试参考下面的步骤： 更换登陆方式为negotiate</li>
+</ol>
+<h2 id="WinRm_登陆方式设置">WinRm 登陆方式设置</h2><h3 id="默认的WinRm登陆是使用Basic的，但是Basic模式下是不能修改WinRm的配置，只能读取数据。如果需要修改配置，首先我们需要配置登陆模式为negotiate。">默认的WinRm登陆是使用Basic的，但是Basic模式下是不能修改WinRm的配置，只能读取数据。如果需要修改配置，首先我们需要配置登陆模式为negotiate。</h3><ol>
+<li>首先需要打开注册表<code>regedit</code></li>
+<li>找到注册表<code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WSMAN\Service</code></li>
+<li>修改键 <code>auth-negotiate</code> 为 1， <code>suth-basic</code> 为 0</li>
+<li>重启系统</li>
+</ol>
+<h3 id="如果需要切换回Basic的登陆方式">如果需要切换回Basic的登陆方式</h3><ol>
+<li>首先在Negotiate模式下执行<code>winrm set winrm/config/service/auth @{Basic=&quot;true&quot;}</code></li>
+<li>然后再执行<code>winrm set winrm/config/service/auth @{Negotiate=&quot;false&quot;}</code></li>
+</ol>
+<h2 id="WinRm的用户组设置">WinRm的用户组设置</h2><ol>
+<li>设定WinR用户组，我们可以指定特定的用户组具有访问WinRm的权限<ol>
+<li>命令行执行lusrmgr.msc</li>
+<li>在弹出窗口中选择users，然后选择你要给予权限的用户，点击右键选择properties</li>
+<li>选择Member of的选项卡，在其中添加当前用户到某个指定用户组</li>
+</ol>
+</li>
+<li>配置用户组权限<ol>
+<li>有些情况下用户组权限是不能访问WinRm的，所以需要修改用户组的权限</li>
+<li>执行命令<code>winrm set winrm/config/service @{RootSDDL=&quot;O:NSG:BAD:P(A;;GA;;;BA)(A;;GA;;;S-1-5-32-558)S:P(AU;FA;GA;;;WD)(AU;SA;GWGX;;;WD)&quot;}</code></li>
+<li>这个命令是个SID为<code>S-1-5-32-558</code> 的用户组添加WinRm的控制权限</li>
+</ol>
+</li>
+<li>还需要给将这个用户组添加到指定Namespace中<ol>
+<li>命令行执行<code>wmimgmt.msc</code></li>
+<li>弹出窗口中在 WMI Control上点击右键选择properties</li>
+<li>选择Security 选项卡</li>
+<li>找到root/cimv2, root, root/mscluster(这个是cluster环境下才有的）</li>
+<li>分别选择namespaces 然后选择Security之后添加用户组到里面，并且要给予全部的权限（全部打勾）</li>
+</ol>
+</li>
+<li>用户组额外的权限设置<ol>
+<li>如果某些WinRm查询接口无法获得数据，可能是因为权限导致的</li>
+<li>使用<code>sc sdshow SCMANAGER</code> 查看当前的权限</li>
+<li>使用<code>sc sdset SCMANAGER D:(A;;CCLCRPRC;;;用户组SID)(A;;CC;;;AU)(A;;CCLCRPRC;;;IU)(A;;CCLCRPRC;;;SU)(A;;CCLCRPWPRC;;;SY)(A;;KA;;;BA)S:(AU;FA;KA;;;WD)(AU;OIIOFA;GA;;;WD)</code> 使得用户组获得权限</li>
+<li>参考资料：<a href="http://blogs.msmvps.com/erikr/2007/09/26/set-permissions-on-a-specific-service-windows" target="_blank" rel="external">http://blogs.msmvps.com/erikr/2007/09/26/set-permissions-on-a-specific-service-windows</a>, and <a href="http://www.netid.washington.edu/documentation/domains/sddl.aspx" target="_blank" rel="external">http://www.netid.washington.edu/documentation/domains/sddl.aspx</a>.</li>
+</ol>
+</li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>如何在Windows上配置启用WinRm]]>
+    
+    </summary>
+    
+      <category term="编程-网络协议" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[JVM 启动参数设置]]></title>
