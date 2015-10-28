@@ -5,7 +5,7 @@
   <subtitle><![CDATA[一点一滴，技术积累]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://luoyuan800.github.io//"/>
-  <updated>2015-10-09T08:49:22.095Z</updated>
+  <updated>2015-10-28T07:06:02.415Z</updated>
   <id>http://luoyuan800.github.io//</id>
   
   <author>
@@ -14,6 +14,165 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Android自动更新推送的实现]]></title>
+    <link href="http://luoyuan800.github.io/2015/10/28/android_auto_update/"/>
+    <id>http://luoyuan800.github.io/2015/10/28/android_auto_update/</id>
+    <published>2015-10-28T03:39:21.000Z</published>
+    <updated>2015-10-28T07:06:02.415Z</updated>
+    <content type="html"><![CDATA[<p>当发布了一个Android app之后，我们最需要使用的功能就是如何实现当有更新的是推送给用户。<br><a id="more"></a></p>
+<h2 id="实现思路">实现思路</h2><ol>
+<li>首先是要申请一个可以直接访问的网盘放置你的更新文件</li>
+<li>放置一个文件，里面注明更新后的版本号</li>
+<li>在app的代码中每次启动的时候去下载那个标识有版本号的文件，然后匹配当前app的版本和，如果不一致，提示用户更新。</li>
+</ol>
+<h2 id="代码相关">代码相关</h2><h3 id="读取网络文件">读取网络文件</h3><p>首先是如何下载网络上文件。 Android不允许在UI主线程进行网络访问的操作，所以我们需要构建一个线程，无论是用<code>new Thread</code>还是用<code>handler.put(Runnable)</code> 都是可以的，在线程的run方法中进行网络访问或者下载：</p>
+<pre><code><span class="keyword">private</span> <span class="keyword">void</span> checkUpdate() {
+    <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() {
+        <span class="keyword">public</span> <span class="keyword">void</span> run() {
+            <span class="keyword">try</span> {
+                PackageInfo pInfo = getPackageManager().getPackageInfo(
+                        getPackageName(), <span class="number">0</span>);<span class="comment">//获取当前的版本信息</span>
+                currentVersion = pInfo.versionName.<span class="built_in">trim</span>();
+                <span class="comment">// 构造URL</span>
+                URL url = <span class="keyword">new</span> URL(VERSION_CHECK_URL);
+                <span class="comment">// 打开连接</span>
+                URLConnection con = url.openConnection();
+                <span class="comment">//获得文件的长度</span>
+                <span class="built_in">int</span> contentLength = con.getContentLength();
+                <span class="comment">// 输入流</span>
+                InputStream is = con.getInputStream();
+                <span class="keyword">BufferedReader</span> br = <span class="keyword">new</span> <span class="keyword">BufferedReader</span>(<span class="keyword">new</span> InputStreamReader(is));
+
+                <span class="built_in">int</span> curVersionCode = pInfo.versionCode;
+                updateVersion = br.readLine().replace((<span class="built_in">char</span>) <span class="number">65279</span>, <span class="string">' '</span>).<span class="built_in">trim</span>();
+                <span class="comment">//请注意这一行，只是为了防止网络上的文件使用了win的带BOM的编码文本，BOM文本第一行开头会有一个特殊的字符。</span>
+
+                <span class="keyword">if</span> (updateVersion.equalsIgnoreCase(currentVersion)) {
+                    <span class="comment">//不需要升级通知</span>
+                } <span class="keyword">else</span> {
+                    <span class="keyword">String</span> info = br.readLine();
+                    versionUpdateInfo = <span class="keyword">new</span> StringBuilder(<span class="string">"新版本:"</span> + updateVersion);
+                    <span class="keyword">while</span> (info != <span class="keyword">null</span> &amp;&amp; !info.isEmpty()) {
+                    <span class="comment">//获取升级信息，你可以在升级的文本里面第一行写上版本号，第二行开始写上升级的详细信息。</span>
+                        versionUpdateInfo.<span class="built_in">append</span>(<span class="string">"\n"</span>).<span class="built_in">append</span>(info);
+                        info = br.readLine();
+                    }
+                   <span class="comment">//弹出一个窗口，提示用户可以进行升级</span>
+                }
+                br.close();
+            } <span class="keyword">catch</span> (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }).start();
+}
+</code></pre><h3 id="下载更新包">下载更新包</h3><p> 下载升级包并且保存到本地SD卡，首先必须要设置SD卡的权限，这里不在赘述。以下代码是下载安装包并且保存到本地SD卡：</p>
+<pre><code><span class="keyword">public</span> <span class="keyword">boolean</span> downloadPAK(Handler handler) {
+    <span class="keyword">try</span> {
+        <span class="comment">// 构造URL</span>
+        URL url = <span class="keyword">new</span> URL(PACKAGE_DOWNLOAD_URL);
+        <span class="comment">// 打开连接</span>
+        URLConnection con = url.openConnection();
+        <span class="comment">//获得文件的长度</span>
+        <span class="keyword">int</span> contentLength = con.getContentLength();
+
+        <span class="comment">// 输入流</span>
+        InputStream is = con.getInputStream();
+        BufferedInputStream br = <span class="keyword">new</span> BufferedInputStream(is);
+        <span class="keyword">byte</span>[] data = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];
+        <span class="keyword">int</span> len;
+        <span class="comment">// 输出的文件流</span>
+        <span class="keyword">File</span> <span class="keyword">file</span> = <span class="keyword">new</span> <span class="keyword">File</span>(APK_PATH + <span class="string">"/appName.apk"</span>);
+        <span class="keyword">if</span> (<span class="keyword">file</span>.exists()) {
+            <span class="keyword">file</span>.<span class="keyword">delete</span>();
+        }
+        <span class="keyword">File</span> path = <span class="keyword">new</span> <span class="keyword">File</span>(APK_PATH);
+        <span class="keyword">if</span> (!path.exists()) {
+            path.mkdirs();
+        }
+        <span class="keyword">file</span>.createNewFile();
+        OutputStream os = <span class="keyword">new</span> FileOutputStream(<span class="keyword">file</span>);
+        <span class="comment">// 开始读取</span>
+        <span class="keyword">int</span> alreadySize = <span class="number">0</span>;
+        <span class="keyword">while</span> ((len = is.<span class="keyword">read</span>(data)) != -<span class="number">1</span>) {
+            os.<span class="keyword">write</span>(data, <span class="number">0</span>, len);
+        }
+        os.flush();
+        os.close();
+        br.close();
+        <span class="comment">//通知用户下载成功</span>
+        <span class="keyword">return</span> <span class="keyword">true</span>;
+    } <span class="keyword">catch</span> (Exception e) {
+        e.printStackTrace();
+        Log.e(TAG, <span class="string">"DownloadUpdate"</span>, e);
+    }
+       <span class="comment">//通知用户下载失败</span>
+    <span class="keyword">return</span> <span class="keyword">false</span>;
+}
+</code></pre><h3 id="自动安装APK">自动安装APK</h3><p>下载完成后我们要弹出安装提示给用户，并且保证安装能够完成：</p>
+<pre><code><span class="keyword">private</span> void installAPK() {
+    <span class="type">Intent</span> <span class="type">intent</span> = new <span class="type">Intent</span>(<span class="type">Intent</span>.ACTION_VIEW);
+    <span class="type">intent</span>.setDataAndType(Uri.fromFile(new <span class="keyword">File</span>(APK_PATH + <span class="string">"/appName.apk"</span>)),
+            <span class="string">"application/vnd.android.package-archive"</span>);
+    <span class="type">intent</span>.addFlags(<span class="type">Intent</span>.FLAG_ACTIVITY_NEW_TASK);//必须要加上这一句话才能保证安装完成后不会跳出到主界面
+    context.startActivity(<span class="type">intent</span>);
+}
+</code></pre>]]></content>
+    <summary type="html">
+    <![CDATA[<p>当发布了一个Android app之后，我们最需要使用的功能就是如何实现当有更新的是推送给用户。<br>]]>
+    
+    </summary>
+    
+      <category term="编程-Android" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[初识Android]]></title>
+    <link href="http://luoyuan800.github.io/2015/10/28/start_android/"/>
+    <id>http://luoyuan800.github.io/2015/10/28/start_android/</id>
+    <published>2015-10-28T00:39:21.000Z</published>
+    <updated>2015-10-28T07:30:56.942Z</updated>
+    <content type="html"><![CDATA[<p>以下是一些零散初级的Android相关知识。<br><a id="more"></a></p>
+<h2 id="界面类">界面类</h2><p>展示在屏幕上的东西。在安卓中的基类为Activity。所有界面都是需要实现这个接口，并且实现相应的onCreate方法。</p>
+<h2 id="布局">布局</h2><p>android中界面类是布局是分来来设定的，布局可以在一个放到res/layout文件夹中的xml文件来描述。布局文件的标识是一个整型的id：R.layout.id。需要在一个Activity的onCreate方法中使用setContentView方法将对应的布局文件绑定到这个Activity中。</p>
+<h2 id="Local_String">Local String</h2><p>在界面中暂时的静态文字（不会动态改变的文字）是可以抽取到一个放置在res/value文件夹中的strings.xml中定义，可以在布局描述文件中使用id号来引用这个文字。</p>
+<h2 id="主文件">主文件</h2><p>Android中的主文件，也就是Android程序的入口文件不是java类，而是AndroidManifest.xml文件，该文件中会描述到这个Android程序支持的版本，程序具有的手机操作权限。同时，如果我们定义了一个Activity类，那么需要将这个类名在Androidmanifest.xml中用<activity>标签声明一次，在程序运行的过程中才可以使用到这个界面。在文件中的<uses-sdk android:minsdkversion="11">标签限制了当前android项目开发中能够使用的功能的最低版本，而且也限制了生成的程序能够安装的最低版本。</uses-sdk></activity></p>
+<h2 id="控件">控件</h2><p>Android中能显示给用户看的界面上基本元素就是控件，能够使用的控件对象在android.widget包内。可以在布局文件中通过和控件同名的标签来引用控件与定义控件属性。</p>
+<h2 id="Activity切换">Activity切换</h2><p>从一个Activity切换到另外一个activity有两种场景：<br>需要使用到Intent主动设置切换的目的界面，然后调用startActivity（Intent）生成目的界面的实例。<br>当前界面被结束的时候，比如按下了手机的后退键，会被动的切换到上一个界面，如果没有上级界面就会退出程序。因为Intent是构建是需要制定源界面实例和目的界面类，所以可以实现后退的功能。<br>Activity的界面切换效果展示，默认的界面切换是直接展示下一个界面，我们可以设定界面切换动画，从而使得切换过程更加频繁。动画效果是用一个xml文件来描述，并且必须被放置在res/anim文件夹内。可以在发生界面切换的地方调用overridePendingTransition(进入的动画id, 退出的动画id)来设置切换动画。会发生界面切换地方包括：</p>
+<p>1.调用了startActivity方法之后;</p>
+<ol>
+<li>在Activity的finished方法中调用了super.finished()之后。</li>
+</ol>
+<h2 id="ListView">ListView</h2><p>在Android中如果你需要展示一个列表，并且希望可以产生列表项的点击动作，那么可以选择一个ListView。可以在一个layout的xml文件中定义ListView。同时定义list_item的xml文件。最简便的而且推荐的方法是，是实现一个继承自ListActivity的类，那么这个Activity就实现了ListView的功能了，我们只需要定义一个List Item的layout文件就可以展示列表数据了。<br>ListView中要展示的数据是通过Adapter类来传入的，要展示到ListView中的数据组需要先放置到Adapter中，然后将Adapter设置给ListView实例。<br>ListView并不是直接使用Adapter的数据去构建直接的Item来展示数据，而是在Adapter中有getView的方法，这个方法会返回某个Item的展示View实例。一般情况下我们需要自己构建一个Adapter类的子类复写getView方法来设定用什么样的格式展示数据。<br>网络上说的很多的View缓存技术，就是对应大量List数据的展示并不是每一个Item都创建一个ItemView，而是将一个屏幕显示数量的View缓存起来，每次滚动ListView的时候，都是更新View，而不是重新创建，这样可以节省系统资源。这个功能就是通过Adapter的getView方法来实现的。</p>
+<h2 id="R">R</h2><p>在Android的项目代码编写中，R这个静态常量是可以引用到我们定义在layout、value、anim…等文件夹中的XML资源的。<br>注意的是android.R引用到的是Android本身内置的资源。</p>
+<h2 id="res文件夹">res文件夹</h2><p>res文件夹内的文件不能用数字命名</p>
+<h3 id="anim">anim</h3><p>这个文件夹下放置动画效果的文件，如果你的项目中没有这个文件夹，可以手动创建。</p>
+<h3 id="drawable">drawable</h3><p>这个文件夹内放置图片文件</p>
+<h2 id="安装Android开发IDE_Android_Studio">安装Android开发IDE Android Studio</h2><ol>
+<li><p>因为google被墙，所以我们需要在host文件中增加（HOSTS文件位置：C:\Windows\system32\drivers\etc\hosts）：</p>
+<p> 74.125.237.1 dl-ssl.google.com</p>
+</li>
+<li><p>在Android Studio的安装文件BIN文件夹里打找到“idea.properties”，最后一行添加：<code>disable.android.first.run=true</code></p>
+</li>
+</ol>
+<h2 id="启动Android虚拟机失败">启动Android虚拟机失败</h2><p>如果提示 Failed to obtain GLES 1.x extensions string!<br>有可能是因为远程操作电脑导致的这个问题,解决办法是打开虚拟机的配置，去掉Use Host GPU前面的√</p>
+<h2 id="Android_开发过程中遇到的异常信息">Android 开发过程中遇到的异常信息</h2><h3 id="android-os-NetworkOnMainThreadException">android.os.NetworkOnMainThreadException</h3><p>Android4.0之后开始不允许在主线程内访问网络，所以只需要使用一个子线程去访问网络，并且使用消息机制返回网络访问的结果就可以避开这个异常了。</p>
+<h3 id="ndroid-view-WindowLeaked">ndroid.view.WindowLeaked</h3><p>按字面了解，Window Leaked大概就是说一个窗体泄漏了，也就是我们常说的内存泄漏，为什么窗体会泄漏呢？产生原因：<br>我们知道Android的每一个Activity都有个WindowManager窗体管理器，同样，构建在某个Activity之上的对话框、PopupWindow也有相应的WindowManager窗体管理器。因为对话框、PopupWindown不能脱离Activity而单独存在着，所以当某个Dialog或者某个PopupWindow正在显示的时候我们去finish()了承载该Dialog(或PopupWindow)的Activity时，就会抛Window Leaked异常了，因为这个Dialog(或PopupWindow)的WindowManager已经没有谁可以附属了，所以它的窗体管理器已经泄漏了。<br>解决方法是关闭(finish)某个Activity前，要确保附属在上面的Dialog或PopupWindow已经关闭(dismiss)了。</p>
+<h3 id="Android_showDialog时报错">Android showDialog时报错</h3><p>错误信息是<code>requestFeature() must be called before adding content</code></p>
+<p>出现此问题是由于dialog.show()之前调用了dialog.setContentView()或者dialog.getwindow()等，正确的应该是dialog.show()之后调用dialog.setContentView()</p>
+<h3 id="Service_Intent_must_be_explicit">Service Intent must be explicit</h3><p>android5.0 api=21以上要求启动service要设置packagename。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>以下是一些零散初级的Android相关知识。<br>]]>
+    
+    </summary>
+    
+      <category term="编程-Android" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Android/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[基于snmp4j发送 V3 trap]]></title>
@@ -1051,7 +1210,7 @@ war {
     <link href="http://luoyuan800.github.io/2015/07/02/git-study/"/>
     <id>http://luoyuan800.github.io/2015/07/02/git-study/</id>
     <published>2015-07-02T02:00:01.000Z</published>
-    <updated>2015-07-03T08:33:39.944Z</updated>
+    <updated>2015-10-19T09:24:16.860Z</updated>
     <content type="html"><![CDATA[<p>一些git命令的使用tips，关于git的原理解释就不在此处提及了<a id="more"></a></p>
 <h2 id="复制远程代码到本地">复制远程代码到本地</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> &lt;版本库网址&gt;  &lt;本地文件夹&gt; <span class="comment">## 这个命令是默认建立master分支</span></span><br></pre></td></tr></table></figure>
 <p>在clone出master分支之后，在对应的master文件夹下面使用checkout命令可以下载分支的代码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b branch origin/branch  <span class="comment">## 这个命令会在当前目录下载指定分支</span></span><br></pre></td></tr></table></figure></p>
@@ -1068,8 +1227,9 @@ war {
 <p>这个命令会产生一个新的commit。</p>
 <h2 id="撤销上一次提交">撤销上一次提交</h2><p>如果在提交之前忘记pull最新的代码下来会导致无法push本地修改的代码到远程，这个时候可以先撤销上一次的提交，更新本地代码之后再从那时提交一次就可以了。<br>reset命令是可以撤销本地的提交，记得reset之后要pull，把远程的更新拉到本地。注意这个命令不会产生新的commit。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git reset HEAD~<span class="number">1</span></span><br><span class="line">$ git pull</span><br></pre></td></tr></table></figure></p>
 <h2 id="Merge操作">Merge操作</h2><p>Merge是将一个分支的修改内容合并到另外一个分支。首先切换到要进行merge的branch目录下，并且使用checkout命令设置当前的branch为需要进行合并的那个branch<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout localbranch</span><br><span class="line">$ git merge origin/remotebranch</span><br></pre></td></tr></table></figure></p>
-<p>执行完命令后如果没有冲突，那么remoteBranch的修改就会merge到当前的branch中了。如果发生了冲突的话可以尝试使用<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git mergetool</span><br></pre></td></tr></table></figure></p>
+<p>执行完命令后如果没有冲突，那么remoteBranch的修改就会merge到当前的branch中了。如果发生了冲突的话可以尝试使用<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git mergetool</span><br></pre></td></tr></table></figure></p>
 <p>这个命令可以在图形化的界面下进行冲突处理。</p>
+<h2 id="强制覆盖本地文件">强制覆盖本地文件</h2><p>相信很多人都很烦恼merge的问题，有时候干脆直接用服务器上代码更新本地的代码。<br>````bash<br>$ git fetch —all<br>$ git reset —hard<br>$ git pull</p>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>一些git命令的使用tips，关于git的原理解释就不在此处提及了]]>
@@ -1509,110 +1669,6 @@ NDC.remove<span class="params">()</span>;<span class="comment">//在结束当前
     </summary>
     
       <category term="编程-Linux" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[基于Hexo构建博客并且部署到Github上]]></title>
-    <link href="http://luoyuan800.github.io/2015/06/30/Hexo-GitHub/"/>
-    <id>http://luoyuan800.github.io/2015/06/30/Hexo-GitHub/</id>
-    <published>2015-06-30T00:53:00.000Z</published>
-    <updated>2015-07-01T07:20:08.489Z</updated>
-    <content type="html"><![CDATA[<p>一个简单的Hexo构建博客的入门资料<a id="more"></a></p>
-<h2 id="环境准备">环境准备</h2><ol>
-<li>注册一个Github账号<br>这一步就忽略不说了</li>
-<li>下载Node安装（如果有需要可以配置path路径）<br>Node可以下载对应操作系统的安装版本，安装后会自动设置path</li>
-<li><p>安装hexo<br>执行命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>初始化hexo<br>创建自定义目录用来存放hexo项目，在这个目录下执行命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="构建博客页面">构建博客页面</h2><ol>
-<li><p>在之前生成的hexo项目的目录下执行命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo g  <span class="comment"># 这个是命令 hexo generate 的简写</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>可以看到在当前目录下生成了一个public的目录，这个目录就是你博客页面</p>
-</li>
-<li><p>启动本地server查看页面 执行命令： </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$hexo</span> s  <span class="comment"># 这个命令是hexo server的简写</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>在浏览器输入 localhost:4000查看效果</p>
-</li>
-</ol>
-<h2 id="博客风格设置">博客风格设置</h2><h3 id="拷贝别人已经设计好的风格">拷贝别人已经设计好的风格</h3><p>1.1 下载别人写好的风格文件夹并且放到项目目录的themes 目录下面</p>
-<p>1.2 然后更改项目根目录下的_config.yml的文件中的 theme: thems_name</p>
-<h3 id="修改博客的theme">修改博客的theme</h3><p>2.1 找到你当前使用的theme的文件夹，在其中有一个_config.yml文件。</p>
-<p>2.2 打开这个文件进行编辑即可以修改页面布局和一些其他的内容。</p>
-<h2 id="发表或者编辑文章">发表或者编辑文章</h2><ol>
-<li>在项目目录的 ./source/_posts 目录下的 *.md文件就是文章内容，可以是用文本编辑器打开编辑</li>
-<li><p>文件的格式：（注意所有冒号后面都要有一个空格）</p>
-<pre><code><span class="label">title:</span> postName <span class="preprocessor">#文章页面上的显示名称，可以任意修改，不会出现在URL中</span>
-<span class="label">date:</span> <span class="number">2013</span>-<span class="number">12</span>-<span class="number">02</span> <span class="number">15</span>:<span class="number">30</span>:<span class="number">16</span> <span class="preprocessor">#文章生成时间，一般不改，当然也可以任意修改</span>
-<span class="label">categories:</span> example <span class="preprocessor">#分类 可选，设置了的会自动归类</span>
-<span class="label">tags:</span> [tag1,tag2,tag3] <span class="preprocessor">#文章标签，可空，多标签请用格式，注意:后面有个空格</span>
----
-这里是正文
-</code></pre></li>
-</ol>
-<ol>
-<li><p>摘要显示可以是用&lt;!--more-->放在作为摘要的文字后面</p>
-<pre><code>title: Hello
----
-这里是摘要<span class="comment">&lt;!--more--&gt;</span>
-这里是正文
-</code></pre></li>
-</ol>
-<h2 id="部署博客到网络上">部署博客到网络上</h2><ul>
-<li>使用github提供的空间可以部署刚刚用hexo构建的博客：</li>
-<li>在github上创建衣和用户名相关的项目（名字格式是固定的）, 例如：luoyuan800.github.io</li>
-<li>将刚刚构建的hexo项目下的public文件夹中的都push到git项目中（拷贝后push）</li>
-<li>访问 <a href="http://luoyuan800.github.io">http://luoyuan800.github.io</a> 即可以查看博客。（将其中的luoyuan800换成你的用户名）</li>
-<li>如果发现不能访问的话，确认名称的格式，还有git用户中要配置一个已经verify的邮箱。</li>
-</ul>
-<h2 id="配置评论系统">配置评论系统</h2><p>默认的静态网页是不提供评论的，而Hexo这个框架搭建的博客默认是可以简单设置使用disqus搭建评论<br>而国内用户没办法是用disqus，可以选择使用多说（duoshuo）。</p>
-<ol>
-<li>去多说的网站<a href="http://duoshuo.com/" target="_blank" rel="external">http://duoshuo.com/</a> 注册一个账号（可以使用第三方QQ微博之类的登录）然后注册一个shortname</li>
-<li>我是使用Jacman（Theme）的模块搭建博客的，那么只需要打开这个Theme的文件下面的_config.yml文件，找到其中的#### Comment这一段，然后在对应的duoshuo_shortname后面添加你的shortname就可以加载评论模块了</li>
-</ol>
-<h2 id="配置站内搜索">配置站内搜索</h2><p>我使用的是jacman主题，这个主题可以简单的配置基于Google，百度， tinysou这个三种站内搜索工具。<br>因为Google访问比较麻烦，百度检索的收录速度超级慢，我选择了tinysou这个工具。</p>
-<ul>
-<li>打开<a href="http://tinysou.com/plan.html" target="_blank" rel="external">tinysou</a></li>
-<li>选择立即注册（免费版），用邮箱注册一个账号并且验证</li>
-<li>进入控制台创建一个Engines</li>
-<li>进入你创建的Engines的管理页面，点击爬虫选项卡，在其中添加博客的域名（luoyuan800.github.io)</li>
-<li>打开hexo项目中themes文件夹中的jacman文件夹中的_config.yml文件， 修改一下内容：<pre><code><span class="string">tinysou_search:</span>     ## <span class="string">http:</span><span class="comment">//tinysou.com/</span>
-<span class="label">  enable:</span> <span class="literal">true</span>
-<span class="label">  id:</span> engine key ## e.g. <span class="string">"4ac092ad8d749fdc6293"</span> <span class="keyword">for</span> your tiny search id
-</code></pre></li>
-<li>在Hexo项目目录下的sources文件夹下面创建一个search文件夹</li>
-<li>在刚刚创建的文件夹下面创建一个index.md文件，其中填写内容<pre><code>layout: search 
-<span class="header">title: search
----</span>
-</code></pre></li>
-</ul>
-<h2 id="添加RSS功能">添加RSS功能</h2><p>jacman主题漠然开启RSS模块，不过如果你直接使用点击RSS只会返回404。因为HEXO默认是没有生成RSS文件的</p>
-<ul>
-<li><p>安装hexo的rss插件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br><span class="line">`</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>编辑项目文件下的_config.yml文件添加如下内容<br>  feed:</p>
-<pre><code>type: atom       <span class="hexcolor">#fee</span>d 类型 (atom/rss2)
-path: atom<span class="class">.xml</span>   <span class="id">#rss</span> 路径
-limit: <span class="number">20</span>        #在 rss 中最多生成的文章数(<span class="number">0</span>显示所有)
-</code></pre></li>
-<li>重新构建网站并且上传到你的网站空间<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hexo g</span><br><span class="line">``</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>注：以上所有修改完成后都需要重新构建项目然后发布public文件下的文件才可以看到效果。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>一个简单的Hexo构建博客的入门资料]]>
-    
-    </summary>
-    
-      <category term="网站-工具" scheme="http://luoyuan800.github.io/categories/%E7%BD%91%E7%AB%99-%E5%B7%A5%E5%85%B7/"/>
     
   </entry>
   

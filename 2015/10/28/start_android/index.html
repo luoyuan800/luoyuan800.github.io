@@ -1,0 +1,507 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>初识Android | Yuan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Luo Yuan">
+    
+
+    
+    <meta name="description" content="以下是一些零散初级的Android相关知识。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识Android">
+<meta property="og:url" content="http://luoyuan800.github.io/2015/10/28/start_android/index.html">
+<meta property="og:site_name" content="Yuan">
+<meta property="og:description" content="以下是一些零散初级的Android相关知识。">
+<meta property="og:updated_time" content="2015-10-28T07:30:56.942Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="初识Android">
+<meta name="twitter:description" content="以下是一些零散初级的Android相关知识。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Yuan" title="Yuan"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Yuan">Yuan</a></h1>
+				<h2 class="blog-motto">一点一滴，技术积累</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search">
+							<label>Search</label>
+						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/28/start_android/" title="初识Android" itemprop="url">初识Android</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-28T00:39:21.000Z" itemprop="datePublished"> 发表于 2015-10-28</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#界面类"><span class="toc-number">1.</span> <span class="toc-text">界面类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#布局"><span class="toc-number">2.</span> <span class="toc-text">布局</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Local_String"><span class="toc-number">3.</span> <span class="toc-text">Local String</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#主文件"><span class="toc-number">4.</span> <span class="toc-text">主文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#控件"><span class="toc-number">5.</span> <span class="toc-text">控件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Activity切换"><span class="toc-number">6.</span> <span class="toc-text">Activity切换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ListView"><span class="toc-number">7.</span> <span class="toc-text">ListView</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#R"><span class="toc-number">8.</span> <span class="toc-text">R</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#res文件夹"><span class="toc-number">9.</span> <span class="toc-text">res文件夹</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#anim"><span class="toc-number">9.1.</span> <span class="toc-text">anim</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#drawable"><span class="toc-number">9.2.</span> <span class="toc-text">drawable</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装Android开发IDE_Android_Studio"><span class="toc-number">10.</span> <span class="toc-text">安装Android开发IDE Android Studio</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启动Android虚拟机失败"><span class="toc-number">11.</span> <span class="toc-text">启动Android虚拟机失败</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Android_开发过程中遇到的异常信息"><span class="toc-number">12.</span> <span class="toc-text">Android 开发过程中遇到的异常信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#android-os-NetworkOnMainThreadException"><span class="toc-number">12.1.</span> <span class="toc-text">android.os.NetworkOnMainThreadException</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ndroid-view-WindowLeaked"><span class="toc-number">12.2.</span> <span class="toc-text">ndroid.view.WindowLeaked</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Android_showDialog时报错"><span class="toc-number">12.3.</span> <span class="toc-text">Android showDialog时报错</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Service_Intent_must_be_explicit"><span class="toc-number">12.4.</span> <span class="toc-text">Service Intent must be explicit</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>以下是一些零散初级的Android相关知识。<br><a id="more"></a></p>
+<h2 id="界面类">界面类</h2><p>展示在屏幕上的东西。在安卓中的基类为Activity。所有界面都是需要实现这个接口，并且实现相应的onCreate方法。</p>
+<h2 id="布局">布局</h2><p>android中界面类是布局是分来来设定的，布局可以在一个放到res/layout文件夹中的xml文件来描述。布局文件的标识是一个整型的id：R.layout.id。需要在一个Activity的onCreate方法中使用setContentView方法将对应的布局文件绑定到这个Activity中。</p>
+<h2 id="Local_String">Local String</h2><p>在界面中暂时的静态文字（不会动态改变的文字）是可以抽取到一个放置在res/value文件夹中的strings.xml中定义，可以在布局描述文件中使用id号来引用这个文字。</p>
+<h2 id="主文件">主文件</h2><p>Android中的主文件，也就是Android程序的入口文件不是java类，而是AndroidManifest.xml文件，该文件中会描述到这个Android程序支持的版本，程序具有的手机操作权限。同时，如果我们定义了一个Activity类，那么需要将这个类名在Androidmanifest.xml中用<activity>标签声明一次，在程序运行的过程中才可以使用到这个界面。在文件中的<uses-sdk android:minsdkversion="11">标签限制了当前android项目开发中能够使用的功能的最低版本，而且也限制了生成的程序能够安装的最低版本。</uses-sdk></activity></p>
+<h2 id="控件">控件</h2><p>Android中能显示给用户看的界面上基本元素就是控件，能够使用的控件对象在android.widget包内。可以在布局文件中通过和控件同名的标签来引用控件与定义控件属性。</p>
+<h2 id="Activity切换">Activity切换</h2><p>从一个Activity切换到另外一个activity有两种场景：<br>需要使用到Intent主动设置切换的目的界面，然后调用startActivity（Intent）生成目的界面的实例。<br>当前界面被结束的时候，比如按下了手机的后退键，会被动的切换到上一个界面，如果没有上级界面就会退出程序。因为Intent是构建是需要制定源界面实例和目的界面类，所以可以实现后退的功能。<br>Activity的界面切换效果展示，默认的界面切换是直接展示下一个界面，我们可以设定界面切换动画，从而使得切换过程更加频繁。动画效果是用一个xml文件来描述，并且必须被放置在res/anim文件夹内。可以在发生界面切换的地方调用overridePendingTransition(进入的动画id, 退出的动画id)来设置切换动画。会发生界面切换地方包括：</p>
+<p>1.调用了startActivity方法之后;</p>
+<ol>
+<li>在Activity的finished方法中调用了super.finished()之后。</li>
+</ol>
+<h2 id="ListView">ListView</h2><p>在Android中如果你需要展示一个列表，并且希望可以产生列表项的点击动作，那么可以选择一个ListView。可以在一个layout的xml文件中定义ListView。同时定义list_item的xml文件。最简便的而且推荐的方法是，是实现一个继承自ListActivity的类，那么这个Activity就实现了ListView的功能了，我们只需要定义一个List Item的layout文件就可以展示列表数据了。<br>ListView中要展示的数据是通过Adapter类来传入的，要展示到ListView中的数据组需要先放置到Adapter中，然后将Adapter设置给ListView实例。<br>ListView并不是直接使用Adapter的数据去构建直接的Item来展示数据，而是在Adapter中有getView的方法，这个方法会返回某个Item的展示View实例。一般情况下我们需要自己构建一个Adapter类的子类复写getView方法来设定用什么样的格式展示数据。<br>网络上说的很多的View缓存技术，就是对应大量List数据的展示并不是每一个Item都创建一个ItemView，而是将一个屏幕显示数量的View缓存起来，每次滚动ListView的时候，都是更新View，而不是重新创建，这样可以节省系统资源。这个功能就是通过Adapter的getView方法来实现的。</p>
+<h2 id="R">R</h2><p>在Android的项目代码编写中，R这个静态常量是可以引用到我们定义在layout、value、anim…等文件夹中的XML资源的。<br>注意的是android.R引用到的是Android本身内置的资源。</p>
+<h2 id="res文件夹">res文件夹</h2><p>res文件夹内的文件不能用数字命名</p>
+<h3 id="anim">anim</h3><p>这个文件夹下放置动画效果的文件，如果你的项目中没有这个文件夹，可以手动创建。</p>
+<h3 id="drawable">drawable</h3><p>这个文件夹内放置图片文件</p>
+<h2 id="安装Android开发IDE_Android_Studio">安装Android开发IDE Android Studio</h2><ol>
+<li><p>因为google被墙，所以我们需要在host文件中增加（HOSTS文件位置：C:\Windows\system32\drivers\etc\hosts）：</p>
+<p> 74.125.237.1 dl-ssl.google.com</p>
+</li>
+<li><p>在Android Studio的安装文件BIN文件夹里打找到“idea.properties”，最后一行添加：<code>disable.android.first.run=true</code></p>
+</li>
+</ol>
+<h2 id="启动Android虚拟机失败">启动Android虚拟机失败</h2><p>如果提示 Failed to obtain GLES 1.x extensions string!<br>有可能是因为远程操作电脑导致的这个问题,解决办法是打开虚拟机的配置，去掉Use Host GPU前面的√</p>
+<h2 id="Android_开发过程中遇到的异常信息">Android 开发过程中遇到的异常信息</h2><h3 id="android-os-NetworkOnMainThreadException">android.os.NetworkOnMainThreadException</h3><p>Android4.0之后开始不允许在主线程内访问网络，所以只需要使用一个子线程去访问网络，并且使用消息机制返回网络访问的结果就可以避开这个异常了。</p>
+<h3 id="ndroid-view-WindowLeaked">ndroid.view.WindowLeaked</h3><p>按字面了解，Window Leaked大概就是说一个窗体泄漏了，也就是我们常说的内存泄漏，为什么窗体会泄漏呢？产生原因：<br>我们知道Android的每一个Activity都有个WindowManager窗体管理器，同样，构建在某个Activity之上的对话框、PopupWindow也有相应的WindowManager窗体管理器。因为对话框、PopupWindown不能脱离Activity而单独存在着，所以当某个Dialog或者某个PopupWindow正在显示的时候我们去finish()了承载该Dialog(或PopupWindow)的Activity时，就会抛Window Leaked异常了，因为这个Dialog(或PopupWindow)的WindowManager已经没有谁可以附属了，所以它的窗体管理器已经泄漏了。<br>解决方法是关闭(finish)某个Activity前，要确保附属在上面的Dialog或PopupWindow已经关闭(dismiss)了。</p>
+<h3 id="Android_showDialog时报错">Android showDialog时报错</h3><p>错误信息是<code>requestFeature() must be called before adding content</code></p>
+<p>出现此问题是由于dialog.show()之前调用了dialog.setContentView()或者dialog.getwindow()等，正确的应该是dialog.show()之后调用dialog.setContentView()</p>
+<h3 id="Service_Intent_must_be_explicit">Service Intent must be explicit</h3><p>android5.0 api=21以上要求启动service要设置packagename。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程-Android/">编程-Android</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://luoyuan800.github.io/2015/10/28/start_android/" data-title="初识Android | Yuan" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/10/28/android_auto_update/" title="Android自动更新推送的实现">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Android自动更新推送的实现</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/10/09/snmp4j-trap-v3/"  title="基于snmp4j发送 V3 trap">
+ <strong>下一篇：</strong><br/> 
+ <span>基于snmp4j发送 V3 trap
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/10/28/start_android/" data-title="初识Android" data-url="http://luoyuan800.github.io/2015/10/28/start_android/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#界面类"><span class="toc-number">1.</span> <span class="toc-text">界面类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#布局"><span class="toc-number">2.</span> <span class="toc-text">布局</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Local_String"><span class="toc-number">3.</span> <span class="toc-text">Local String</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#主文件"><span class="toc-number">4.</span> <span class="toc-text">主文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#控件"><span class="toc-number">5.</span> <span class="toc-text">控件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Activity切换"><span class="toc-number">6.</span> <span class="toc-text">Activity切换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ListView"><span class="toc-number">7.</span> <span class="toc-text">ListView</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#R"><span class="toc-number">8.</span> <span class="toc-text">R</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#res文件夹"><span class="toc-number">9.</span> <span class="toc-text">res文件夹</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#anim"><span class="toc-number">9.1.</span> <span class="toc-text">anim</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#drawable"><span class="toc-number">9.2.</span> <span class="toc-text">drawable</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装Android开发IDE_Android_Studio"><span class="toc-number">10.</span> <span class="toc-text">安装Android开发IDE Android Studio</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启动Android虚拟机失败"><span class="toc-number">11.</span> <span class="toc-text">启动Android虚拟机失败</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Android_开发过程中遇到的异常信息"><span class="toc-number">12.</span> <span class="toc-text">Android 开发过程中遇到的异常信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#android-os-NetworkOnMainThreadException"><span class="toc-number">12.1.</span> <span class="toc-text">android.os.NetworkOnMainThreadException</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ndroid-view-WindowLeaked"><span class="toc-number">12.2.</span> <span class="toc-text">ndroid.view.WindowLeaked</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Android_showDialog时报错"><span class="toc-number">12.3.</span> <span class="toc-text">Android showDialog时报错</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Service_Intent_must_be_explicit"><span class="toc-number">12.4.</span> <span class="toc-text">Service Intent must be explicit</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/编程-Android/" title="编程-Android">编程-Android<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Linux/" title="编程-Linux">编程-Linux<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-工具/" title="编程-工具">编程-工具<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-网络协议/" title="编程-网络协议">编程-网络协议<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-工具/" title="网站-工具">网站-工具<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-语言/" title="网站-语言">网站-语言<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Luo Yuan in Zhuhai. <br/>
+			Here is my place for knowledge accumulation.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:luoyuan800@163.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="Luo Yuan">Luo Yuan</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"luoyuan800"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F5529f030def9614f4dc83cc68b307ced' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: '32f8205e3ec577a3f6d4'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
