@@ -5,7 +5,7 @@
   <subtitle><![CDATA[一点一滴，技术积累]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://luoyuan800.github.io//"/>
-  <updated>2015-10-28T07:06:02.415Z</updated>
+  <updated>2015-11-25T01:41:44.546Z</updated>
   <id>http://luoyuan800.github.io//</id>
   
   <author>
@@ -14,6 +14,55 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Ubuntu学习积累]]></title>
+    <link href="http://luoyuan800.github.io/2015/11/25/ubuntu/"/>
+    <id>http://luoyuan800.github.io/2015/11/25/ubuntu/</id>
+    <published>2015-11-25T01:44:14.000Z</published>
+    <updated>2015-11-25T01:41:44.546Z</updated>
+    <content type="html"><![CDATA[<p>自己用到过和遇见过得Ubuntu命令和异常陈列<a id="more"></a></p>
+<h2 id="Permission_denied">Permission denied</h2><p><code>sudo chmod -R 777 dell</code></p>
+<p>此命令设置所有用户都有权限访问这个文件夹，其中<code>777=111111111</code>。</p>
+<h2 id="如何安装bin文件">如何安装bin文件</h2><p><code>sudo chmod u+x name.bin</code></p>
+<p>这个命令给予这个bin文件读写的权限</p>
+<p><code>sudo name.bin</code></p>
+<p>这个命令执行安装</p>
+<h2 id="创建新用户">创建新用户</h2><p><code>sudo adduser &lt;username&gt;</code></p>
+<h2 id="切换用户">切换用户</h2><p><code>su &lt;username&gt;</code></p>
+<p>输入密码后就切换到对应的user了</p>
+<p><code>su - &lt;username&gt;</code></p>
+<p>这个命令会把当前设置的环境变量也带过去</p>
+<h2 id="修改默认root用户的密码">修改默认root用户的密码</h2><p>如果安装时候直接设置了自己的用户名，那么root用户的密码就会是随机的（Ubuntu默认不开放root用户)。</p>
+<p><code>sudo passwd</code></p>
+<p>之后按照提示输入密码就可以修改root用户的密码了</p>
+<h2 id="为特定用户添加sudo命令权限">为特定用户添加sudo命令权限</h2><p>有些用户没有运行sudo的权限，执行sudo的话会提示<code>username is not in the sudoers file</code><br>修改sudoers文件可以解决这个问题<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ su -root <span class="comment">## 切换root用户`</span></span><br><span class="line">$ chmod u+w /etc/sudoers <span class="comment"># 添加写权限</span></span><br><span class="line">$  /etc/sudoers </span><br><span class="line">$ <span class="comment"># 在打开的文本编辑器中，找到r**oot ALL=(ALL) ALL在下面添加一行 username ALL=(ALL) ALL</span></span><br><span class="line">$ <span class="comment"># 保存后记得关闭sudoers的写权限</span></span><br><span class="line">$ chmod u-w /etc/sudoers</span><br></pre></td></tr></table></figure></p>
+<h2 id="挂载远程文件系统(mount_remote_filesystem_NFS)">挂载远程文件系统(mount remote filesystem NFS)</h2><ol>
+<li>实现本机的文件系统可以被别的机器挂载</li>
+</ol>
+<p>1.1. 安装nfs服务器</p>
+<p><code>sudo apt-get install nfs-kernel-server</code></p>
+<p>1.2. 修改权限配置文件</p>
+<p><code>vi /etc/exports</code></p>
+<p>根据其中的范例添加你想要共享出去的文件目录（mount point）</p>
+<p>1.3. 重启服务使得配置生效<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$sudo</span> /etc/init.d/portmap restart</span><br><span class="line"><span class="variable">$sudo</span> /etc/init.d/nfs-kernel-server restart</span><br></pre></td></tr></table></figure></p>
+<p>1.4. 你可以使用 <code>showmount -e</code> 命令查看共享成功的文件系统</p>
+<ol>
+<li>挂载命令</li>
+</ol>
+<p><code>sudo mount -t nfs localhost:/home /mnt</code></p>
+<p>其中-t nfs 可以省略，会使用默认支持的nfs文件类型挂载。</p>
+<h2 id="一些基本的命令提示‘command_not_found’">一些基本的命令提示‘command not found’</h2><p>（这个问题一般会出现在redhat 红帽系统中）<br>例如输入命令：<code>ifconfig</code><br>显示<code>bash: ifconfig: command not found</code><br>可能是路径问题，如果然后输入<br><code>/sbin/ifconfig</code>  就会显示IP地址等信息。<br>那么解决办法是<br>执行<code>cat ~/.bash_profile</code> 看自己的PATH，然后再执行：<br><code>gedit /etc/profile</code> 在最后一行后面添加：<br>PATH=$PATH:sbin<br>export PATH=$PATH:/sbin<br>保存退出。<br>然后在初始化一下：<code>source /etc/profile</code> 你再直接输入：<code>ifconfig</code> 就会直接显示IP等信息了</p>
+<h2 id="error_while_loading_shared_libraries">error while loading shared libraries</h2><p>error while loading shared libraries：<strong>**</strong> ：cannot restore segment prot after reloc: Permission denied。<br>网上查了一下，原因是selinux的问题，selinux的设置太过严格导致的。解决的办法是在root用户下，修改/etc/selinux/config 文件<br>把SELINUX=enforcing 改成 SELINUX=disabled。<br>然后，保存关闭，重启机器就可以了。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>自己用到过和遇见过得Ubuntu命令和异常陈列]]>
+    
+    </summary>
+    
+      <category term="编程-Linux" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Android自动更新推送的实现]]></title>
@@ -1211,7 +1260,7 @@ war {
     <link href="http://luoyuan800.github.io/2015/07/02/git-study/"/>
     <id>http://luoyuan800.github.io/2015/07/02/git-study/</id>
     <published>2015-07-02T02:00:01.000Z</published>
-    <updated>2015-11-20T08:34:34.660Z</updated>
+    <updated>2015-11-25T01:43:21.741Z</updated>
     <content type="html"><![CDATA[<p>一些git命令的使用tips，关于git的原理解释就不在此处提及了<a id="more"></a></p>
 <h2 id="复制远程代码到本地">复制远程代码到本地</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> &lt;版本库网址&gt;  &lt;本地文件夹&gt; <span class="comment">## 这个命令是默认建立master分支</span></span><br></pre></td></tr></table></figure>
 <p>在clone出master分支之后，在对应的master文件夹下面使用checkout命令可以下载分支的代码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b branch origin/branch  <span class="comment">## 这个命令会在当前目录下载指定分支</span></span><br></pre></td></tr></table></figure></p>
@@ -1227,9 +1276,11 @@ war {
 <h2 id="撤销上一次的提交（已经push上远程仓库）">撤销上一次的提交（已经push上远程仓库）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git revert HEAD</span><br><span class="line">$ git push</span><br></pre></td></tr></table></figure>
 <p>这个命令会产生一个新的commit。</p>
 <h2 id="撤销上一次提交">撤销上一次提交</h2><p>如果在提交之前忘记pull最新的代码下来会导致无法push本地修改的代码到远程，这个时候可以先撤销上一次的提交，更新本地代码之后再从那时提交一次就可以了。<br>reset命令是可以撤销本地的提交，记得reset之后要pull，把远程的更新拉到本地。注意这个命令不会产生新的commit。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git reset HEAD~<span class="number">1</span></span><br><span class="line">$ git pull</span><br></pre></td></tr></table></figure></p>
-<h2 id="Merge操作">Merge操作</h2><p>Merge是将一个分支的修改内容合并到另外一个分支。首先切换到要进行merge的branch目录下，并且使用checkout命令设置当前的branch为需要进行合并的那个branch<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout localbranch</span><br><span class="line">$ git merge origin/remotebranch</span><br></pre></td></tr></table></figure></p>
-<p>执行完命令后如果没有冲突，那么remoteBranch的修改就会merge到当前的branch中了。</p>
-<h2 id="强制覆盖本地文件">强制覆盖本地文件</h2><p>相信很多人都很烦恼merge的问题，有时候干脆直接用服务器上代码更新本地的代码。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git fetch --all</span><br><span class="line">$ git reset --hard</span><br><span class="line">$ git pull</span><br></pre></td></tr></table></figure></p>
+<h2 id="Merge操作">Merge操作</h2><h3 id="Merge">Merge</h3><p>是将一个分支的修改内容合并到另外一个分支。首先切换到要进行merge的branch目录下，并且使用checkout命令设置当前的branch为需要进行合并的那个branch<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout localbranch</span><br><span class="line">$ git merge origin/remotebranch</span><br></pre></td></tr></table></figure></p>
+<h3 id="Cherry">Cherry</h3><p>Cherry 命令可以挑选一个分支上的某些commit合并到当前分支上。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout localbranch</span><br><span class="line">$ git cherry-pick <span class="number">12345</span> <span class="comment">##12345为commit id</span></span><br></pre></td></tr></table></figure></p>
+<p>如果是要同时挑选多个commit可以使用-n<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout localbranch</span><br><span class="line">$ git cherry-pick -n <span class="number">12345</span> <span class="comment">##12345为commit id</span></span><br><span class="line">$ git cherry-pick -n <span class="number">13333</span> <span class="comment">##1333为commit id</span></span><br><span class="line">$ git commit -m <span class="string">"cherry test"</span></span><br></pre></td></tr></table></figure></p>
+<p>执行完merge相关命令后如果没有冲突，那么remoteBranch的修改就会merge到当前的branch中了。<br>如果发生了冲突，就需要先打开文件解决冲突，然后把修改好的冲突文件add之后再commit一次就可以了</p>
+<h2 id="强制覆盖本地文件">强制覆盖本地文件</h2><p>相信很多人都很烦恼merge的问题，如果发生了很蛋疼的冲入，我就会接用服务器上代码更新本地的代码。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git fetch --all</span><br><span class="line">$ git reset --hard</span><br><span class="line">$ git pull</span><br></pre></td></tr></table></figure></p>
 <h2 id="删除untrak文件">删除untrak文件</h2><p>不小心批量添加了文件，在没有提交之前可以一次性全部删除</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git clean <span class="operator">-f</span>  <span class="comment">## 删除 untracked files</span></span><br><span class="line">$ git clean -fd <span class="comment">## 删除文件的同时也会删除文件夹</span></span><br><span class="line">$ git clean -xfd <span class="comment">## gitignore 的也会被删除</span></span><br></pre></td></tr></table></figure>
 <p>在命令前加上-n可以查看会被删除掉的文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git clean -nxfd</span><br></pre></td></tr></table></figure></p>
@@ -1571,103 +1622,6 @@ NDC.remove<span class="params">()</span>;<span class="comment">//在结束当前
 ]]></content>
     <summary type="html">
     <![CDATA[<p>Cron is use in Linux for the time schedule]]>
-    
-    </summary>
-    
-      <category term="编程-Linux" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Cron 表达式入门]]></title>
-    <link href="http://luoyuan800.github.io/2015/06/30/QuartZ-Cron/"/>
-    <id>http://luoyuan800.github.io/2015/06/30/QuartZ-Cron/</id>
-    <published>2015-06-30T01:28:52.000Z</published>
-    <updated>2015-06-30T03:47:38.873Z</updated>
-    <content type="html"><![CDATA[<p>关于cron表达式的基本概念介绍。<a id="more"></a></p>
-<h2 id="Cron表达式简介">Cron表达式简介</h2><p>Cron是Linux中的计划任务管理系统，cron表达式可以用来定义一个计划时间来约定执行工作。<br>Cron表达式使用空格进行各个时间段的分隔，每个字段的范例格式如下表：<br>（年份可以留空，但是其他不可留空）</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Second</th>
-<th style="text-align:center">Minut</th>
-<th style="text-align:center">Hours</th>
-<th style="text-align:center">DysofMounth</th>
-<th style="text-align:center">Mounth</th>
-<th style="text-align:center">DayofWeek</th>
-<th style="text-align:center">Year</th>
-<th style="text-align:right">Means</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">0</td>
-<td style="text-align:center">5,15</td>
-<td style="text-align:center">*</td>
-<td style="text-align:center">*</td>
-<td style="text-align:center">*</td>
-<td style="text-align:center">?</td>
-<td style="text-align:center"></td>
-<td style="text-align:right">每个小时的第五分钟，第十五分钟触发</td>
-</tr>
-</tbody>
-</table>
-<h2 id="Cron表达式中各个字段的可用字符">Cron表达式中各个字段的可用字符</h2><table>
-<thead>
-<tr>
-<th>字段名称</th>
-<th>字段可用字符</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Seconds Minutes</td>
-<td>, - * / 0-59</td>
-</tr>
-<tr>
-<td>Hours</td>
-<td>, - * / 0-23</td>
-</tr>
-<tr>
-<td>DayofMonth</td>
-<td>, - * / ? L W C 0-31</td>
-</tr>
-<tr>
-<td>Month</td>
-<td>, - * / 1-12 JAN-DEc</td>
-</tr>
-<tr>
-<td>DayofWeek</td>
-<td>, - * / ? L C # 1-7 SUN-SAT (1表示星期天，2表示星期一， 依次类推 )</td>
-</tr>
-<tr>
-<td>Year</td>
-<td>, - * / 1970-2099</td>
-</tr>
-</tbody>
-</table>
-<h2 id="特殊字符含义">特殊字符含义</h2><ol>
-<li><strong>*</strong> 表示匹配该域的任意值，假如在Minutes域使用*, 即表示每分钟都会触发事件。</li>
-<li><strong>?</strong> 只能用在DayofMonth和DayofWeek两个域。它也匹配域的任意值，但实际不会。因为DayofMonth和 DayofWeek会相互影响。例如想在每月的20日触发调度，不管20日到底是星期几，则只能使用如下写法： 13 13 15 20 * ?, 其中最后一位只能用？，而不能使用*。 </li>
-<li><strong>-</strong> 表示范围，例如在Minutes域使用5-20，表示从当前小时内的第5分到20分钟每分钟触发一次 </li>
-<li><strong>/</strong> 表示起始时间开始触发，然后每隔固定时间触发一次，例如在Minutes域使用5/20,则意味着第5分钟触发一次，而第25，第45等分别触发一次. </li>
-<li><strong>,</strong>  表示列出枚举值值。例如：在Minutes域使用5,20，则意味着在第5和第20分每分钟触发一次。 </li>
-<li><strong>L</strong> 表示最后，只能出现在DayofWeek和DayofMonth域，如果在DayofWeek域使用5L,意味着在当前月份的最后的一个星期四触发。 </li>
-<li><strong>W</strong> 表示有效工作日(周一到周五),只能出现在DayofMonth域，系统将在离指定日期的最近的有效工作日触发事件。例如：在 DayofMonth使用5W，如果5日是星期六，则将在最近的工作日：星期五，即4日触发。如果5日是星期天，则在6日(周一)触发；如果5日在星期一 到星期五中的一天，则就在5日触发。另外一点，W的最近寻找不会跨过月份 </li>
-<li><strong>LW</strong> 这两个字符可以连用，表示在某个月最后一个工作日，即最后一个星期五。 </li>
-<li><strong>#</strong> 用于确定每个月第几个星期几，只能出现在DayofWeek域。例如在4#2，表示某月的第二个星期三。</li>
-<li>由于”DayofMonth “和”DayofWeek”这两个元素互斥的,必须要对其中一个设置?</li>
-<li>\?字符仅被用于天（月）和天（星期）两个子表达式，表示不指定值。当2个子表达式其中之一被指定了值以后，为了避免冲突，需要将另一个子表达式的值设为“？”</li>
-<li>L 字符仅被用于天（月）和天（星期）两个子表达式，它是单词“last”的缩写。但是它在两个子表达式里的含义是不同的。</li>
-<li>在天（月）子表达式中，“L”表示一个月的最后一天</li>
-<li>在天（星期）自表达式中，“L”表示一个星期的最后一天，也就是SAT</li>
-<li>如果在“L”前有具体的内容，它就具有其他的含义了。例如：“6L”表示这个月的倒数第６天，“FRIL”表示这个月的最一个星期五</li>
-</ol>
-<h2 id="举例">举例</h2><p>“0 0 10,14,16 * * ?” 每天上午10点，下午2点，4点<br>“0 0/30 9-17 * * ?” 朝九晚五工作时间内每半小时<br>“0 0 12 ? * WED” 表示每个星期三中午12点<br>“0 0 12 * * ?” 每天中午12点触发<br>“0 15 10 ? * *“ 每天上午10:15触发<br>“0 15 10 * * ?” 每天上午10:15触发<br>“0 15 10 * * ? <em>“ 每天上午10:15触发<br>“0 15 10 \</em> * ? 2005” 2005年的每天上午10:15触发<br>“0 * 14 * * ?” 在每天下午2点到下午2:59期间的每1分钟触发<br>“0 0/5 14 * * ?” 在每天下午2点到下午2:55期间的每5分钟触发<br>“0 0/5 14,18 * * ?” 在每天下午2点到2:55期间和下午6点到6:55期间的每5分钟触发<br>“0 0-5 14 * * ?” 在每天下午2点到下午2:05期间的每1分钟触发<br>“0 10,44 14 ? 3 WED” 每年三月的星期三的下午2:10和2:44触发<br>“0 15 10 ? * MON-FRI” 周一至周五的上午10:15触发<br>“0 15 10 15 * ?” 每月15日上午10:15触发<br>“0 15 10 L * ?” 每月最后一日的上午10:15触发<br>“0 15 10 ? * 6L” 每月的最后一个星期五上午10:15触发<br>“0 15 10 ? * 6L 2002-2005” 2002年至2005年的每月的最后一个星期五上午10:15触发<br>“0 15 10 ? * 6#3” 每月的第三个星期五上午10:15触发 </p>
-<h2 id="英文版">英文版</h2><p><a href="../Cron-English">cron-English</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>关于cron表达式的基本概念介绍。]]>
     
     </summary>
     

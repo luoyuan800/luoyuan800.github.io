@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Log4J中的继承关系 | Yuan</title>
+    <title>Ubuntu学习积累 | Yuan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Luo Yuan">
     
 
     
-    <meta name="description" content="Java代码中可以通过继承关系来扩展类的功能，在Log4J也有类似的机制。">
+    <meta name="description" content="自己用到过和遇见过得Ubuntu命令和异常陈列">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Log4J中的继承关系">
-<meta property="og:url" content="http://luoyuan800.github.io/2015/07/06/Log4J-Inherit/index.html">
+<meta property="og:title" content="Ubuntu学习积累">
+<meta property="og:url" content="http://luoyuan800.github.io/2015/11/25/ubuntu/index.html">
 <meta property="og:site_name" content="Yuan">
-<meta property="og:description" content="Java代码中可以通过继承关系来扩展类的功能，在Log4J也有类似的机制。">
-<meta property="og:updated_time" content="2015-07-06T01:30:42.264Z">
+<meta property="og:description" content="自己用到过和遇见过得Ubuntu命令和异常陈列">
+<meta property="og:updated_time" content="2015-11-25T01:41:44.546Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Log4J中的继承关系">
-<meta name="twitter:description" content="Java代码中可以通过继承关系来扩展类的功能，在Log4J也有类似的机制。">
+<meta name="twitter:title" content="Ubuntu学习积累">
+<meta name="twitter:description" content="自己用到过和遇见过得Ubuntu命令和异常陈列">
 
     
     <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
@@ -79,14 +79,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/06/Log4J-Inherit/" title="Log4J中的继承关系" itemprop="url">Log4J中的继承关系</a>
+      <a href="/2015/11/25/ubuntu/" title="Ubuntu学习积累" itemprop="url">Ubuntu学习积累</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-06T01:06:35.000Z" itemprop="datePublished"> 发表于 2015-07-06</time>
+    <time datetime="2015-11-25T01:44:14.000Z" itemprop="datePublished"> 发表于 2015-11-25</time>
     
   </p>
 </header>
@@ -95,45 +95,43 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Logger的理解"><span class="toc-number">1.</span> <span class="toc-text">Logger的理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#继承关系"><span class="toc-number">2.</span> <span class="toc-text">继承关系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#父类"><span class="toc-number">2.1.</span> <span class="toc-text">父类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用户自定义的Logger"><span class="toc-number">2.2.</span> <span class="toc-text">用户自定义的Logger</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码中直接定义子类"><span class="toc-number">2.3.</span> <span class="toc-text">代码中直接定义子类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#继承关系的用处"><span class="toc-number">3.</span> <span class="toc-text">继承关系的用处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RootLogger"><span class="toc-number">4.</span> <span class="toc-text">RootLogger</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类实例Logger"><span class="toc-number">5.</span> <span class="toc-text">类实例Logger</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Permission_denied"><span class="toc-number">1.</span> <span class="toc-text">Permission denied</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何安装bin文件"><span class="toc-number">2.</span> <span class="toc-text">如何安装bin文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建新用户"><span class="toc-number">3.</span> <span class="toc-text">创建新用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#切换用户"><span class="toc-number">4.</span> <span class="toc-text">切换用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改默认root用户的密码"><span class="toc-number">5.</span> <span class="toc-text">修改默认root用户的密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为特定用户添加sudo命令权限"><span class="toc-number">6.</span> <span class="toc-text">为特定用户添加sudo命令权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#挂载远程文件系统(mount_remote_filesystem_NFS)"><span class="toc-number">7.</span> <span class="toc-text">挂载远程文件系统(mount remote filesystem NFS)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一些基本的命令提示‘command_not_found’"><span class="toc-number">8.</span> <span class="toc-text">一些基本的命令提示‘command not found’</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#error_while_loading_shared_libraries"><span class="toc-number">9.</span> <span class="toc-text">error while loading shared libraries</span></a></li></ol>
 		
 		</div>
 		
-		<p>Java代码中可以通过继承关系来扩展类的功能，在Log4J也有类似的机制。<br><a id="more"></a></p>
-<h2 id="Logger的理解">Logger的理解</h2><p>在log4j的使用中，我们是使用<code>Logger.getLogger(name)</code>来获取Logger实例，这里的Logger实例中的名字是有name来指定，这个那么就限定了我们这个logger会使用什么配置。个人的理解是，在log4j中的Logger的实例是根据名字来唯一存在的，一个名字只会存在一个Logger实例。大概可以这样理解，每一个<code>getLogger</code>返回的都是Logger的一个子类，这个子类是静态，每个子类之间是根据名字来区分的。</p>
-<h2 id="继承关系">继承关系</h2><h3 id="父类">父类</h3><p>既然是继承，那么需要一个父类，Logger是不能直接实例化，而我们可以通过<code>Logger.getRootLogger()</code>方式来取一个名字标识为rootLogger的Logger子类，这个类我们可以看做其他Logger子类的父类，所有的Logger子类都会继承自它。</p>
-<h3 id="用户自定义的Logger">用户自定义的Logger</h3><p>用户自定义的Logger其实际意义就是指定Log4J生成一个指定名称和配置的子类。<br>比如在<em>log4j.properties</em>文件中定义了这么一句</p>
-<pre><code>log4j<span class="class">.logger</span><span class="class">.father</span>=DEBUG, fatherConfig
-</code></pre><p>那么这句话的意思是说定义一个名字为father的logger类，在代码中可以通过<code>Logger.getLogger(“father”);</code> 来获取这个father对应Logger类。那如果我们需要定义一个这个father的子类就应该：</p>
-<pre><code>log4j<span class="class">.logger</span><span class="class">.father</span><span class="class">.children</span>=INFO,childrenConfig
-</code></pre><p>那么在定义上这个father.children就是一个子类，并且获取方式为：</p>
-<pre><code><span class="tag">Logger</span><span class="class">.getLogger</span>(“<span class="tag">father</span><span class="class">.children</span>”);
-</code></pre><h3 id="代码中直接定义子类">代码中直接定义子类</h3><p>即使没有在配置文件中显示的写出子类的定义，我们也可以在代码中通过名称来指定logger实例的继承关系：</p>
-<pre><code><span class="tag">Logger</span><span class="class">.getLogger</span>(“<span class="tag">father</span><span class="class">.children</span><span class="class">.children</span>”);
-</code></pre><p>上面这个语句就使得我们获得了一个继承自father.children的子类father.children.children。</p>
-<h2 id="继承关系的用处">继承关系的用处</h2><p>继承的存在对我们最显著的影响是什么呢？</p>
-<ul>
-<li><p>个人理解是记录到子类上的log也会被父类接收！是的，正常情况，如果使用子类的实例记录一个log信息，那么这个子类的所有父类都会接收到log信息并且记录。如果我们把子类和父类的输出目的地都设置为一样，那么就会发现重复的log信息。<br>比如我们使用以下代码段，并且把<code>father，father.children</code>的输出<em>appender</em>都设置为控制台输出(org.apache.log4j.ConsoleAppender)</p>
-<pre><code>Logger logger=Logger.getLogger(“father.children.children”)<span class="comment">;</span>
-Logger.info(“这是一个子类的子类log信息”)<span class="comment">;</span>
-</code></pre><p>我们可以在控制台看到3条log信息，分别是由<em>father.children.children、father.children、father</em>上log进行了输出。<br>这里要注意，father的级别被定义为DEBUG，但是我们输出的INFO信息页被father记录了，这个就表明了father接受到子类的log信息之后father的级别限定会被子类的覆盖掉。</p>
-</li>
-<li><p>其实我个人并不是很理解这个继承关系会给我们带来什么样的好处，或许是某些部分的信息我们希望不仅被自己的log记录，还希望能被其他的log接收到。另外一个好处就是我们使用名字限定的方式在代码中动态获得一个没有在配置文件中指定的logger实例的时候，这个logger会继承那个父类的log配置。</p>
-</li>
-</ul>
-<h2 id="RootLogger">RootLogger</h2><p>还有需要注意的一点是，我们经常可以看到别人使用的配置文件里面会定义个：</p>
-<pre><code>lo<span class="keyword">g4</span>j.rootLogger=DEBUG, appe<span class="label">nd1</span>, appe<span class="label">nd2</span>
-</code></pre><ul>
-<li>这里是对最高级的父类进行了<strong>rootLogger</strong>进行了配置限定，如果没有显式定义其他的Logger的话，那么所有代码中获取到的Logger实例都会继承这个配置。</li>
-<li><p>如果同时定义了其他Logger，并且那个Logger有一个继承的子Logger，那么那个子类Logger的继承关系是：</p>
-<pre><code>children-&gt; father -&gt;rootLogger
-</code></pre></li>
-<li><p>可以使用log4j.additivity.LOGNAME=false来屏蔽掉这种关系（注意LOGNAME是LOG的名称不是LOG的配置名）。</p>
-</li>
-</ul>
-<h2 id="类实例Logger">类实例Logger</h2><p>我们经常使用的<code>Logg.getLoggger(class)</code>获取的Logger实例,如果需要配置这些Logger，在配置文件中定义其log规范使用class name来定位。</p>
-<pre><code>Log4j<span class="class">.logger</span><span class="class">.className</span>= class_full_name
-</code></pre><p>其含义就是使用class的全限定名来作为logger的名称，这样如果有需要的话我们可以对每个类都定义自己的log规范。<br>当然如果没有在配置文件里面配置这个全限定名字的logger，这个logger会继承rootLogger的配置，如果连rootLogger都没配置，那么log信息是无法被接收的。</p>
+		<p>自己用到过和遇见过得Ubuntu命令和异常陈列<a id="more"></a></p>
+<h2 id="Permission_denied">Permission denied</h2><p><code>sudo chmod -R 777 dell</code></p>
+<p>此命令设置所有用户都有权限访问这个文件夹，其中<code>777=111111111</code>。</p>
+<h2 id="如何安装bin文件">如何安装bin文件</h2><p><code>sudo chmod u+x name.bin</code></p>
+<p>这个命令给予这个bin文件读写的权限</p>
+<p><code>sudo name.bin</code></p>
+<p>这个命令执行安装</p>
+<h2 id="创建新用户">创建新用户</h2><p><code>sudo adduser &lt;username&gt;</code></p>
+<h2 id="切换用户">切换用户</h2><p><code>su &lt;username&gt;</code></p>
+<p>输入密码后就切换到对应的user了</p>
+<p><code>su - &lt;username&gt;</code></p>
+<p>这个命令会把当前设置的环境变量也带过去</p>
+<h2 id="修改默认root用户的密码">修改默认root用户的密码</h2><p>如果安装时候直接设置了自己的用户名，那么root用户的密码就会是随机的（Ubuntu默认不开放root用户)。</p>
+<p><code>sudo passwd</code></p>
+<p>之后按照提示输入密码就可以修改root用户的密码了</p>
+<h2 id="为特定用户添加sudo命令权限">为特定用户添加sudo命令权限</h2><p>有些用户没有运行sudo的权限，执行sudo的话会提示<code>username is not in the sudoers file</code><br>修改sudoers文件可以解决这个问题<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ su -root <span class="comment">## 切换root用户`</span></span><br><span class="line">$ chmod u+w /etc/sudoers <span class="comment"># 添加写权限</span></span><br><span class="line">$  /etc/sudoers </span><br><span class="line">$ <span class="comment"># 在打开的文本编辑器中，找到r**oot ALL=(ALL) ALL在下面添加一行 username ALL=(ALL) ALL</span></span><br><span class="line">$ <span class="comment"># 保存后记得关闭sudoers的写权限</span></span><br><span class="line">$ chmod u-w /etc/sudoers</span><br></pre></td></tr></table></figure></p>
+<h2 id="挂载远程文件系统(mount_remote_filesystem_NFS)">挂载远程文件系统(mount remote filesystem NFS)</h2><ol>
+<li>实现本机的文件系统可以被别的机器挂载</li>
+</ol>
+<p>1.1. 安装nfs服务器</p>
+<p><code>sudo apt-get install nfs-kernel-server</code></p>
+<p>1.2. 修改权限配置文件</p>
+<p><code>vi /etc/exports</code></p>
+<p>根据其中的范例添加你想要共享出去的文件目录（mount point）</p>
+<p>1.3. 重启服务使得配置生效<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$sudo</span> /etc/init.d/portmap restart</span><br><span class="line"><span class="variable">$sudo</span> /etc/init.d/nfs-kernel-server restart</span><br></pre></td></tr></table></figure></p>
+<p>1.4. 你可以使用 <code>showmount -e</code> 命令查看共享成功的文件系统</p>
+<ol>
+<li>挂载命令</li>
+</ol>
+<p><code>sudo mount -t nfs localhost:/home /mnt</code></p>
+<p>其中-t nfs 可以省略，会使用默认支持的nfs文件类型挂载。</p>
+<h2 id="一些基本的命令提示‘command_not_found’">一些基本的命令提示‘command not found’</h2><p>（这个问题一般会出现在redhat 红帽系统中）<br>例如输入命令：<code>ifconfig</code><br>显示<code>bash: ifconfig: command not found</code><br>可能是路径问题，如果然后输入<br><code>/sbin/ifconfig</code>  就会显示IP地址等信息。<br>那么解决办法是<br>执行<code>cat ~/.bash_profile</code> 看自己的PATH，然后再执行：<br><code>gedit /etc/profile</code> 在最后一行后面添加：<br>PATH=$PATH:sbin<br>export PATH=$PATH:/sbin<br>保存退出。<br>然后在初始化一下：<code>source /etc/profile</code> 你再直接输入：<code>ifconfig</code> 就会直接显示IP等信息了</p>
+<h2 id="error_while_loading_shared_libraries">error while loading shared libraries</h2><p>error while loading shared libraries：<strong>**</strong> ：cannot restore segment prot after reloc: Permission denied。<br>网上查了一下，原因是selinux的问题，selinux的设置太过严格导致的。解决的办法是在root用户下，修改/etc/selinux/config 文件<br>把SELINUX=enforcing 改成 SELINUX=disabled。<br>然后，保存关闭，重启机器就可以了。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -141,7 +139,7 @@ Logger.info(“这是一个子类的子类log信息”)<span class="comment">;</
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程-Java/">编程-Java</a>
+  <a class="article-category-link" href="/categories/编程-Linux/">编程-Linux</a>
 </div>
 
 
@@ -151,7 +149,7 @@ Logger.info(“这是一个子类的子类log信息”)<span class="comment">;</
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://luoyuan800.github.io/2015/07/06/Log4J-Inherit/" data-title="Log4J中的继承关系 | Yuan" data-tsina="null" class="share clearfix">
+	  <div data-url="http://luoyuan800.github.io/2015/11/25/ubuntu/" data-title="Ubuntu学习积累 | Yuan" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -164,19 +162,11 @@ Logger.info(“这是一个子类的子类log信息”)<span class="comment">;</
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/07/06/SNMP-snmp4j/" title="SNMP框架介绍（基于snmp4j）">
-  <strong>上一篇：</strong><br/>
-  <span>
-  SNMP框架介绍（基于snmp4j）</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/07/03/gradle/"  title="Gradle使用入门">
+<a href="/2015/10/28/android_auto_update/"  title="Android自动更新推送的实现">
  <strong>下一篇：</strong><br/> 
- <span>Gradle使用入门
+ <span>Android自动更新推送的实现
 </span>
 </a>
 </div>
@@ -185,7 +175,7 @@ Logger.info(“这是一个子类的子类log信息”)<span class="comment">;</
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/07/06/Log4J-Inherit/" data-title="Log4J中的继承关系" data-url="http://luoyuan800.github.io/2015/07/06/Log4J-Inherit/"></div>
+	<div class="ds-thread" data-thread-key="2015/11/25/ubuntu/" data-title="Ubuntu学习积累" data-url="http://luoyuan800.github.io/2015/11/25/ubuntu/"></div>
 </section>
 
 
@@ -195,7 +185,7 @@ Logger.info(“这是一个子类的子类log信息”)<span class="comment">;</
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Logger的理解"><span class="toc-number">1.</span> <span class="toc-text">Logger的理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#继承关系"><span class="toc-number">2.</span> <span class="toc-text">继承关系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#父类"><span class="toc-number">2.1.</span> <span class="toc-text">父类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用户自定义的Logger"><span class="toc-number">2.2.</span> <span class="toc-text">用户自定义的Logger</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码中直接定义子类"><span class="toc-number">2.3.</span> <span class="toc-text">代码中直接定义子类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#继承关系的用处"><span class="toc-number">3.</span> <span class="toc-text">继承关系的用处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RootLogger"><span class="toc-number">4.</span> <span class="toc-text">RootLogger</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类实例Logger"><span class="toc-number">5.</span> <span class="toc-text">类实例Logger</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Permission_denied"><span class="toc-number">1.</span> <span class="toc-text">Permission denied</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何安装bin文件"><span class="toc-number">2.</span> <span class="toc-text">如何安装bin文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建新用户"><span class="toc-number">3.</span> <span class="toc-text">创建新用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#切换用户"><span class="toc-number">4.</span> <span class="toc-text">切换用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改默认root用户的密码"><span class="toc-number">5.</span> <span class="toc-text">修改默认root用户的密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为特定用户添加sudo命令权限"><span class="toc-number">6.</span> <span class="toc-text">为特定用户添加sudo命令权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#挂载远程文件系统(mount_remote_filesystem_NFS)"><span class="toc-number">7.</span> <span class="toc-text">挂载远程文件系统(mount remote filesystem NFS)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一些基本的命令提示‘command_not_found’"><span class="toc-number">8.</span> <span class="toc-text">一些基本的命令提示‘command not found’</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#error_while_loading_shared_libraries"><span class="toc-number">9.</span> <span class="toc-text">error while loading shared libraries</span></a></li></ol>
  
   </div>
 
