@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://luoyuan800.github.io/2015/07/03/gradle/index.html">
 <meta property="og:site_name" content="Yuan">
 <meta property="og:description" content="Gradle是一个基于Groovy实现的，类似于Ant工具的项目构建文件，其设计目标是用更简单的语法和方式来配置一个项目的构建，而不需要像Ant工具一样那么麻烦 。">
-<meta property="og:updated_time" content="2015-07-10T01:28:53.589Z">
+<meta property="og:updated_time" content="2015-12-22T02:01:49.110Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Gradle使用入门">
 <meta name="twitter:description" content="Gradle是一个基于Groovy实现的，类似于Ant工具的项目构建文件，其设计目标是用更简单的语法和方式来配置一个项目的构建，而不需要像Ant工具一样那么麻烦 。">
@@ -95,7 +95,7 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何配置Gradle："><span class="toc-number">1.</span> <span class="toc-text">如何配置Gradle：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用Gradle_打包项目"><span class="toc-number">2.</span> <span class="toc-text">用Gradle 打包项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gradle_构建war项目："><span class="toc-number">3.</span> <span class="toc-text">Gradle 构建war项目：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#默认的项目结构："><span class="toc-number">3.1.</span> <span class="toc-text">默认的项目结构：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一个简单脚本示例："><span class="toc-number">3.2.</span> <span class="toc-text">一个简单脚本示例：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#标签含义介绍"><span class="toc-number">3.3.</span> <span class="toc-text">标签含义介绍</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用gradle关联本地的jar包"><span class="toc-number">4.</span> <span class="toc-text">使用gradle关联本地的jar包</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何配置Gradle："><span class="toc-number">1.</span> <span class="toc-text">如何配置Gradle：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用Gradle_打包项目"><span class="toc-number">2.</span> <span class="toc-text">用Gradle 打包项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gradle_构建war项目："><span class="toc-number">3.</span> <span class="toc-text">Gradle 构建war项目：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#默认的项目结构："><span class="toc-number">3.1.</span> <span class="toc-text">默认的项目结构：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一个简单脚本示例："><span class="toc-number">3.2.</span> <span class="toc-text">一个简单脚本示例：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#标签含义介绍"><span class="toc-number">3.3.</span> <span class="toc-text">标签含义介绍</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用gradle关联本地的jar包"><span class="toc-number">4.</span> <span class="toc-text">使用gradle关联本地的jar包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Build_Fat_Jar"><span class="toc-number">5.</span> <span class="toc-text">Build Fat Jar</span></a></li></ol>
 		
 		</div>
 		
@@ -216,7 +216,15 @@ war {
 }
 </code></pre></li>
 </ul>
-  
+<h2 id="Build_Fat_Jar">Build Fat Jar</h2><p>gradle默认build出来的jar是不包含其他的关联jar包的，所以可能会出现build出来的jar包无法直接运行。如果我们考虑移植的方便性，并且不考虑的jar容量大小的话，可以直接build一个包含输油关联第三方jar的FatJar出来，在gradle的build文件中定义：</p>
+<pre><code><span class="keyword">task</span> fatJar(type: Jar) {
+    manifest {
+    <span class="comment">//这里可以定义jar包中的manifest的内容</span>
+    }
+    baseName = <span class="keyword">project</span>.name + <span class="string">'-all'</span>
+    <span class="keyword">from</span> { <span class="keyword">configurations</span>.<span class="keyword">compile</span>.<span class="keyword">collect</span> { it.isDirectory() ? it : zipTree(it) } }
+}
+</code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -277,7 +285,7 @@ war {
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何配置Gradle："><span class="toc-number">1.</span> <span class="toc-text">如何配置Gradle：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用Gradle_打包项目"><span class="toc-number">2.</span> <span class="toc-text">用Gradle 打包项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gradle_构建war项目："><span class="toc-number">3.</span> <span class="toc-text">Gradle 构建war项目：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#默认的项目结构："><span class="toc-number">3.1.</span> <span class="toc-text">默认的项目结构：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一个简单脚本示例："><span class="toc-number">3.2.</span> <span class="toc-text">一个简单脚本示例：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#标签含义介绍"><span class="toc-number">3.3.</span> <span class="toc-text">标签含义介绍</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用gradle关联本地的jar包"><span class="toc-number">4.</span> <span class="toc-text">使用gradle关联本地的jar包</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何配置Gradle："><span class="toc-number">1.</span> <span class="toc-text">如何配置Gradle：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用Gradle_打包项目"><span class="toc-number">2.</span> <span class="toc-text">用Gradle 打包项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gradle_构建war项目："><span class="toc-number">3.</span> <span class="toc-text">Gradle 构建war项目：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#默认的项目结构："><span class="toc-number">3.1.</span> <span class="toc-text">默认的项目结构：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一个简单脚本示例："><span class="toc-number">3.2.</span> <span class="toc-text">一个简单脚本示例：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#标签含义介绍"><span class="toc-number">3.3.</span> <span class="toc-text">标签含义介绍</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用gradle关联本地的jar包"><span class="toc-number">4.</span> <span class="toc-text">使用gradle关联本地的jar包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Build_Fat_Jar"><span class="toc-number">5.</span> <span class="toc-text">Build Fat Jar</span></a></li></ol>
  
   </div>
 
@@ -291,7 +299,7 @@ war {
 		<ul>
 		
 		  
-			<li><a href="/categories/编程-Android/" title="编程-Android">编程-Android<sup>2</sup></a></li>
+			<li><a href="/categories/编程-Android/" title="编程-Android">编程-Android<sup>3</sup></a></li>
 		  
 		
 		  
@@ -384,7 +392,7 @@ war {
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
 		
 		<a href="/about" target="_blank" title="Luo Yuan">Luo Yuan</a>
 		

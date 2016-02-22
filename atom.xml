@@ -5,7 +5,7 @@
   <subtitle><![CDATA[一点一滴，技术积累]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://luoyuan800.github.io//"/>
-  <updated>2015-11-25T01:41:44.546Z</updated>
+  <updated>2016-01-31T03:47:50.111Z</updated>
   <id>http://luoyuan800.github.io//</id>
   
   <author>
@@ -14,6 +14,259 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Android ListView]]></title>
+    <link href="http://luoyuan800.github.io/2016/01/31/android_ListView/"/>
+    <id>http://luoyuan800.github.io/2016/01/31/android_ListView/</id>
+    <published>2016-01-31T03:39:21.000Z</published>
+    <updated>2016-01-31T03:47:50.111Z</updated>
+    <content type="html"><![CDATA[<p>简单记录下ListView的使用方式。<br><a id="more"></a></p>
+<h2 id="使用方式">使用方式</h2><p>创建ListView对象之后需要设置一个Adapter才可以显示数据。</p>
+<h2 id="Adapter">Adapter</h2><p>ListView的Adapter是要展示的对象集合。一般使用的时候都会自己创建一个自定义的Adapter继承自BaseAdapter，在其中定义显示的内容和方式。</p>
+<ol>
+<li>getCount() 方法</li>
+</ol>
+<p>必须实现这个方法返回Adapter中数据的个数，需要这个个数来判断ListView是否需要显示滚动条。</p>
+<ol>
+<li>getItem(int position) 方法</li>
+</ol>
+<p>必须实现这个方法返回某个位置显示的对象</p>
+<ol>
+<li>getItemId(int position) 方法</li>
+</ol>
+<p>返回某个指定位置上显示的对象的唯一标示</p>
+<ol>
+<li>getView(final int position, View convertView, ViewGroup parent) 方法<br>返回用来显示单个数据的view。在这个方法中创建View对象并且设置显示的数据样式。参数里面 传进来的convertView是当前（position）说使用的View，这个是给View重用提供方便的。如果当前位置已经显示过了，那么这个View不为空，可以更新这个view的显示数据；如果当前位置是第一次显示，这个参数为空，需要在方法中手动创建。</li>
+</ol>
+<h2 id="ViewHolder">ViewHolder</h2><p>在网上找到的很多示例都会在Adapter中使用ViewHolder对象。<br>这个并不是android提供的一种机制，而是开发者约定俗成的重用View的一种方式。ListView可以实现View重用（拉动滚动条的时候，直接更新当前已经显示的view），使用一个额外的类ViewHolder来存储额外的数据，可以在update view显示新的数据的时候更加方便。</p>
+<h2 id="一个简单的示例">一个简单的示例</h2><pre><code><span class="comment">/**
+ * Copyright 2015 gluo.
+ * ALL RIGHTS RESERVED.
+ * Created by gluo on 11/2/2015.
+ */</span>
+ListView view = <span class="keyword">new</span> ListView(context);
+view.setAdapter(<span class="keyword">new</span> BaseAdapter {
+
+    <span class="function"><span class="keyword">public</span> <span class="title">PetAdapter</span><span class="params">(ArrayList&lt;String&gt;data)</span> </span>{
+        adapterData = data;
+    }
+
+    <span class="keyword">private</span> List&lt;String&gt; adapterData;
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="function"><span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>{
+        <span class="keyword">return</span> adapterData != <span class="keyword">null</span> ? adapterData.size() : 0;
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="function">String <span class="title">getItem</span><span class="params">(<span class="keyword">int</span> position)</span> </span>{
+        <span class="keyword">if</span> (position &gt;= getCount()) position = <span class="number">0</span>;
+        <span class="function"><span class="keyword">return</span> adapterData.<span class="title">get</span><span class="params">(position)</span></span>;
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="function"><span class="keyword">long</span> <span class="title">getItemId</span><span class="params">(<span class="keyword">int</span> position)</span> </span>{
+        <span class="keyword">return</span> position;
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="function">View <span class="title">getView</span><span class="params">(<span class="keyword">final</span> <span class="keyword">int</span> position, View convertView, ViewGroup parent)</span> </span>{
+        PetViewHolder holder;
+        <span class="keyword">if</span> (convertView == <span class="keyword">null</span>) {
+            holder = <span class="keyword">new</span> PetViewHolder();
+            convertView = holder.view;
+            convertView.setTag(holder);
+        } <span class="keyword">else</span> {
+            holder = (PetViewHolder) convertView.getTag();
+        }
+        String pet = getItem(position);
+        holder.updatePet(pet);
+        <span class="keyword">return</span> convertView;
+    }
+
+    <span class="class"><span class="keyword">class</span> <span class="title">PetViewHolder</span> </span>{
+        <span class="keyword">private</span> TextView view = <span class="keyword">new</span> TextView(context);
+        <span class="keyword">private</span> String pet;
+
+        <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">updatePet</span><span class="params">(<span class="keyword">final</span> String pet)</span> </span>{
+            <span class="keyword">this</span>.pet = pet;
+            view.setText(pet);           
+        }
+    }
+}
+</code></pre><h2 id="局限">局限</h2><p>ListView只能上下滚动，并且一行只会显示一条数据。如果需要一行显示多个数据的话需要在自定义View上下文章。但是要是实现自动换行是很复杂的。</p>
+<h2 id="扩展">扩展</h2><p>有时候一次性加载太多数据到一个ListView中是很耗内存的。所以上拉加载更多就应运而生。Android原生不支持上拉加载更多。需要自己实现：</p>
+<ol>
+<li>一开始只加载有限的条数数据</li>
+<li>判断上拉的时候是否到达底部</li>
+<li>ListView中添加自定义的footView显示是否可以加载更多，或者一个按钮可以点击加载更多。</li>
+<li><p>一个简单的例子</p>
+<pre><code>package cn.gavin.utils.ui;
+
+<span class="keyword">import</span> android.content.Context;
+<span class="keyword">import</span> android.util.AttributeSet;
+<span class="keyword">import</span> android.view.LayoutInflater;
+<span class="keyword">import</span> android.view.View;
+<span class="keyword">import</span> android.view.View.OnClickListener;
+<span class="keyword">import</span> android.view.ViewGroup;
+<span class="keyword">import</span> android.widget.AbsListView;
+<span class="keyword">import</span> android.widget.AbsListView.OnScrollListener;
+<span class="keyword">import</span> android.widget.ListView;
+<span class="keyword">import</span> android.widget.TextView;
+
+<span class="keyword">import</span> cn.gavin.R;
+
+public <span class="class"><span class="keyword">class</span> <span class="title">LoadMoreListView</span> <span class="keyword">extends</span> <span class="title">ListView</span> <span class="title">implements</span> <span class="title">OnScrollListener</span>,
+        <span class="title">OnClickListener</span> </span>{
+    <span class="comment">// 点击加载更多枚举所有状态</span>
+    private enum DListViewLoadingMore {
+        LV_LOADING, <span class="comment">// 普通状态</span>
+        LV_NORMAL, <span class="comment">// 加载状态</span>
+        LV_OVER <span class="comment">// 结束状态</span>
+    }
+
+    <span class="comment">/**
+     * 自定义接口
+     */</span>
+    public interface OnRefreshLoadingMoreListener {
+        <span class="comment">/**
+         * 点击加载更多
+         */</span>
+        <span class="keyword">void</span> onLoadMore();
+
+    }
+</code></pre></li>
+</ol>
+<pre><code>    <span class="keyword">private</span> DListViewLoadingMore loadingMoreState = DListViewLoadingMore.LV_NORMAL;<span class="comment">// 加载更多默认状态.</span>
+
+    <span class="keyword">private</span> View mLoadingView;<span class="comment">// 加载中...View(mFootView)</span>
+
+    <span class="keyword">private</span> TextView mLoadMoreTextView;<span class="comment">// 加载更多.(mFootView)</span>
+
+    <span class="keyword">private</span> OnRefreshLoadingMoreListener onRefreshLoadingMoreListener;<span class="comment">// 下拉刷新接口（自定义）</span>
+
+    <span class="function"><span class="keyword">public</span> <span class="title">LoadMoreListView</span><span class="params">(Context context)</span> </span>{
+        <span class="keyword">super</span>(context, <span class="keyword">null</span>);
+        initDragListView(context);
+    }
+
+    <span class="function"><span class="keyword">public</span> <span class="title">LoadMoreListView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>{
+        <span class="keyword">super</span>(context, attrs);
+        initDragListView(context);
+    }
+
+    <span class="comment">/**
+     * 初始化ListView
+     */</span>
+    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">initDragListView</span><span class="params">(Context context)</span> </span>{
+        initLoadMoreView(context);<span class="comment">// 初始化footer</span>
+
+        setOnScrollListener(<span class="keyword">this</span>);<span class="comment">// ListView滚动监听</span>
+    }
+
+
+    <span class="comment">/**
+     * 初始化底部加载更多控件
+     */</span>
+    <span class="keyword">private</span> <span class="function"><span class="keyword">void</span> <span class="title">initLoadMoreView</span><span class="params">(Context context)</span> </span>{
+        View mFootView = LayoutInflater.from(context).inflate(R.layout.footer, (ViewGroup) <span class="keyword">this</span>.findViewById(R.id.load_more_view));
+
+        View mLoadMoreView = mFootView.findViewById(R.id.load_more_view);
+
+        mLoadMoreTextView = (TextView) mFootView
+                .findViewById(R.id.load_more_tv);
+
+        mLoadingView = mFootView
+                .findViewById(R.id.loading_layout);
+
+        mLoadMoreView.setOnClickListener(<span class="keyword">this</span>);
+
+        addFooterView(mFootView);
+    }
+
+
+    <span class="comment">/**
+     * 底部点击事件
+     */</span>
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>{
+        <span class="comment">// 防止重复点击</span>
+        <span class="keyword">if</span> (onRefreshLoadingMoreListener != <span class="keyword">null</span>
+                &amp;&amp; loadingMoreState == DListViewLoadingMore.LV_NORMAL) {
+            switchFooterViewState(DListViewLoadingMore.LV_LOADING);
+            onRefreshLoadingMoreListener.onLoadMore();<span class="comment">// 对外提供方法加载更多.</span>
+        }
+
+    }
+
+    <span class="comment">/**
+     * 点击加载更多
+     *
+     * <span class="doctag">@param</span> flag 数据是否已全部加载完毕
+     */</span>
+    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onLoadMoreComplete</span><span class="params">(<span class="keyword">boolean</span> flag)</span> </span>{
+        <span class="keyword">if</span> (flag) {
+            switchFooterViewState(DListViewLoadingMore.LV_OVER);
+        } <span class="keyword">else</span> {
+            switchFooterViewState(DListViewLoadingMore.LV_NORMAL);
+        }
+
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onScroll</span><span class="params">(AbsListView view, <span class="keyword">int</span> firstVisibleItem,
+                         <span class="keyword">int</span> visibleItemCount, <span class="keyword">int</span> totalItemCount)</span> </span>{
+    }
+
+    <span class="comment">/**
+     * ListView 滑动监听
+     */</span>
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onScrollStateChanged</span><span class="params">(AbsListView view, <span class="keyword">int</span> scrollState)</span> </span>{
+
+    }
+
+    <span class="comment">// 更新Footview视图</span>
+    <span class="keyword">private</span> <span class="function"><span class="keyword">void</span> <span class="title">switchFooterViewState</span><span class="params">(DListViewLoadingMore state)</span> </span>{
+        <span class="keyword">switch</span> (state) {
+            <span class="comment">// 普通状态</span>
+            <span class="keyword">case</span> LV_NORMAL:
+                mLoadingView.setVisibility(View.GONE);
+                mLoadMoreTextView.setVisibility(View.VISIBLE);
+                mLoadMoreTextView.setText(<span class="string">"查看更多"</span>);
+                <span class="keyword">break</span>;
+            <span class="comment">// 加载中状态</span>
+            <span class="keyword">case</span> LV_LOADING:
+                mLoadingView.setVisibility(View.VISIBLE);
+                mLoadMoreTextView.setVisibility(View.GONE);
+                <span class="keyword">break</span>;
+            <span class="comment">// 加载完毕状态</span>
+            <span class="keyword">case</span> LV_OVER:
+                mLoadingView.setVisibility(View.GONE);
+                mLoadMoreTextView.setVisibility(View.VISIBLE);
+                mLoadMoreTextView.setText(<span class="string">"加载完毕"</span>);
+                <span class="keyword">break</span>;
+            <span class="keyword">default</span>:
+                <span class="keyword">break</span>;
+        }
+        loadingMoreState = state;
+    }
+
+
+    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">setOnLoadListener</span><span class="params">(OnRefreshLoadingMoreListener loadListener)</span></span>{
+        <span class="keyword">this</span>.onRefreshLoadingMoreListener = loadListener;
+    }
+}
+</code></pre>]]></content>
+    <summary type="html">
+    <![CDATA[<p>简单记录下ListView的使用方式。<br>]]>
+    
+    </summary>
+    
+      <category term="编程-Android" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Android/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Ubuntu学习积累]]></title>
@@ -1127,7 +1380,7 @@ Logger.info(“这是一个子类的子类log信息”)<span class="comment">;</
     <link href="http://luoyuan800.github.io/2015/07/03/gradle/"/>
     <id>http://luoyuan800.github.io/2015/07/03/gradle/</id>
     <published>2015-07-03T09:17:14.000Z</published>
-    <updated>2015-07-10T01:28:53.589Z</updated>
+    <updated>2015-12-22T02:01:49.110Z</updated>
     <content type="html"><![CDATA[<p>Gradle是一个基于Groovy实现的，类似于Ant工具的项目构建文件，其设计目标是用更简单的语法和方式来配置一个项目的构建，而不需要像Ant工具一样那么麻烦 。<a id="more"></a></p>
 <h2 id="如何配置Gradle：">如何配置Gradle：</h2><ul>
 <li>下载<a href="http://gradle.org/" target="_blank" rel="external">Gradle</a>解压到自定义文件夹</li>
@@ -1245,7 +1498,15 @@ war {
 }
 </code></pre></li>
 </ul>
-]]></content>
+<h2 id="Build_Fat_Jar">Build Fat Jar</h2><p>gradle默认build出来的jar是不包含其他的关联jar包的，所以可能会出现build出来的jar包无法直接运行。如果我们考虑移植的方便性，并且不考虑的jar容量大小的话，可以直接build一个包含输油关联第三方jar的FatJar出来，在gradle的build文件中定义：</p>
+<pre><code><span class="keyword">task</span> fatJar(type: Jar) {
+    manifest {
+    <span class="comment">//这里可以定义jar包中的manifest的内容</span>
+    }
+    baseName = <span class="keyword">project</span>.name + <span class="string">'-all'</span>
+    <span class="keyword">from</span> { <span class="keyword">configurations</span>.<span class="keyword">compile</span>.<span class="keyword">collect</span> { it.isDirectory() ? it : zipTree(it) } }
+}
+</code></pre>]]></content>
     <summary type="html">
     <![CDATA[<p>Gradle是一个基于Groovy实现的，类似于Ant工具的项目构建文件，其设计目标是用更简单的语法和方式来配置一个项目的构建，而不需要像Ant工具一样那么麻烦 。]]>
     
@@ -1260,7 +1521,7 @@ war {
     <link href="http://luoyuan800.github.io/2015/07/02/git-study/"/>
     <id>http://luoyuan800.github.io/2015/07/02/git-study/</id>
     <published>2015-07-02T02:00:01.000Z</published>
-    <updated>2015-11-25T01:43:21.741Z</updated>
+    <updated>2016-01-05T02:25:06.878Z</updated>
     <content type="html"><![CDATA[<p>一些git命令的使用tips，关于git的原理解释就不在此处提及了<a id="more"></a></p>
 <h2 id="复制远程代码到本地">复制远程代码到本地</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> &lt;版本库网址&gt;  &lt;本地文件夹&gt; <span class="comment">## 这个命令是默认建立master分支</span></span><br></pre></td></tr></table></figure>
 <p>在clone出master分支之后，在对应的master文件夹下面使用checkout命令可以下载分支的代码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b branch origin/branch  <span class="comment">## 这个命令会在当前目录下载指定分支</span></span><br></pre></td></tr></table></figure></p>
@@ -1284,6 +1545,7 @@ war {
 <h2 id="删除untrak文件">删除untrak文件</h2><p>不小心批量添加了文件，在没有提交之前可以一次性全部删除</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git clean <span class="operator">-f</span>  <span class="comment">## 删除 untracked files</span></span><br><span class="line">$ git clean -fd <span class="comment">## 删除文件的同时也会删除文件夹</span></span><br><span class="line">$ git clean -xfd <span class="comment">## gitignore 的也会被删除</span></span><br></pre></td></tr></table></figure>
 <p>在命令前加上-n可以查看会被删除掉的文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git clean -nxfd</span><br></pre></td></tr></table></figure></p>
+<h2 id="分享本地仓库">分享本地仓库</h2><p>当你从远程仓库clone代码之后，你本地其实也同时建立了一个完整的仓库。你可以将这个仓库作为团队开发时的共享仓库<br>在windows系统下，你只需要共享你clone的项目的文件夹，然后让其他组员通过<code>git clone file:///$你的共享项目路径</code>就可以了。<br>如果其他组员也下载了远程仓库的代码，那么可以让他们修改.git文件夹内的config文件，将其中的[remote “origin”]下的ulr地址改成你的共享文件夹目录就可以了，记得加上file:///，并且在你的共享地址前面加上\进行转义，所以url的值应该看起来是这样的：<br>file:///\\hostname\file_path。<br>当你共享了自己的仓库给其他用户之后，记得开启写权限给他们。<br>还有一个一定要注意的问题，如果你和你组员都需要提交到同样的branch，那么你不能占用那个branch，你必须也重新建立一个branch来进行你的工作。否则，如果其他人要提交的branch在你的工作环境中是check out的状态的话，别人提交会有 unpacker err。</p>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>一些git命令的使用tips，关于git的原理解释就不在此处提及了]]>
@@ -1577,55 +1839,6 @@ NDC.remove<span class="params">()</span>;<span class="comment">//在结束当前
     </summary>
     
       <category term="编程-Java" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Java/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[About the Cron Expression]]></title>
-    <link href="http://luoyuan800.github.io/2015/06/30/Cron-English/"/>
-    <id>http://luoyuan800.github.io/2015/06/30/Cron-English/</id>
-    <published>2015-06-30T03:44:14.000Z</published>
-    <updated>2015-06-30T03:52:34.173Z</updated>
-    <content type="html"><![CDATA[<p>Cron is use in Linux for the time schedule <a id="more"></a></p>
-<h2 id="Format">Format</h2><p>Seconds Minutes Hours DayofMonth DayofWeek [Year]<br>The value of each row </p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Second</th>
-<th style="text-align:center">Minute</th>
-<th style="text-align:center">Hours</th>
-<th style="text-align:center">DayofMonth</th>
-<th style="text-align:center">DayofWeek</th>
-<th style="text-align:center">Year</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">, - * / 0-59</td>
-<td style="text-align:center">, - * / 0-59</td>
-<td style="text-align:center">, - * / 0-23</td>
-<td style="text-align:center">, - * / 1-12 JAN-DEc</td>
-<td style="text-align:center">, - * / ? L C # 1-7 SUN-SAT</td>
-<td style="text-align:center">, - * / 1970-2099</td>
-</tr>
-</tbody>
-</table>
-<h2 id="Special_character:">Special character:</h2><pre><code>1. \* every
-2. ? If the DayofMonth <span class="operator"><span class="keyword">use</span> \*, the <span class="keyword">DayofWeek</span> must <span class="keyword">use</span> ? <span class="keyword">to</span> <span class="keyword">match</span> <span class="keyword">any</span>
-<span class="number">3.</span> \- Rang <span class="number">5</span>\-<span class="number">7</span> means5, <span class="number">6</span>, <span class="number">7</span> <span class="keyword">match</span>
-<span class="number">4.</span> / <span class="built_in">interval</span> <span class="keyword">for</span> <span class="keyword">each</span>, <span class="number">0</span>/<span class="number">30</span> means <span class="keyword">start</span> <span class="keyword">when</span> <span class="number">0</span> <span class="keyword">and</span> <span class="keyword">each</span> <span class="number">30</span> will <span class="keyword">match</span>.
-<span class="number">5.</span> , It <span class="keyword">use</span> <span class="keyword">for</span> list
-<span class="number">6.</span> L Means <span class="keyword">Last</span>
-<span class="number">7.</span> W <span class="keyword">Work</span> <span class="keyword">day</span></span>
-</code></pre><h2 id="Sample">Sample</h2><p>0 5,15, * * * ? every week every month each hours 5 and 15 minute match.<br>0 0 10,14,16 * * ? Every day 10am, 2pm, 4 pm match.<br>0 15 10 L * ? The last day of each month at 10:15 am </p>
-<h2 id="Chinese_version_for_this_blog">Chinese version for this blog</h2><p><a href="../QuartZ-Cron">中文版</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>Cron is use in Linux for the time schedule]]>
-    
-    </summary>
-    
-      <category term="编程-Linux" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux/"/>
     
   </entry>
   
