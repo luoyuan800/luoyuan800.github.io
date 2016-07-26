@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Log4j中的NDC和MDC | Yuan</title>
+    <title>Unix系统中的SHELL | Yuan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Luo Yuan">
     
 
     
-    <meta name="description" content="Log4j中的NDC和MDC两个功能类似，都是用于存储上下文的信息。">
+    <meta name="description" content="关于各个版本shell的介绍">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Log4j中的NDC和MDC">
-<meta property="og:url" content="http://luoyuan800.github.io/2015/06/30/Log4j-N-MDC/index.html">
+<meta property="og:title" content="Unix系统中的SHELL">
+<meta property="og:url" content="http://luoyuan800.github.io/2016/07/22/unix-shell/index.html">
 <meta property="og:site_name" content="Yuan">
-<meta property="og:description" content="Log4j中的NDC和MDC两个功能类似，都是用于存储上下文的信息。">
-<meta property="og:updated_time" content="2015-06-30T04:52:27.606Z">
+<meta property="og:description" content="关于各个版本shell的介绍">
+<meta property="og:updated_time" content="2016-07-26T03:45:12.850Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Log4j中的NDC和MDC">
-<meta name="twitter:description" content="Log4j中的NDC和MDC两个功能类似，都是用于存储上下文的信息。">
+<meta name="twitter:title" content="Unix系统中的SHELL">
+<meta name="twitter:description" content="关于各个版本shell的介绍">
 
     
     <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
@@ -79,14 +79,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/06/30/Log4j-N-MDC/" title="Log4j中的NDC和MDC" itemprop="url">Log4j中的NDC和MDC</a>
+      <a href="/2016/07/22/unix-shell/" title="Unix系统中的SHELL" itemprop="url">Unix系统中的SHELL</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-30T04:08:35.000Z" itemprop="datePublished"> 发表于 2015-06-30</time>
+    <time datetime="2016-07-22T01:44:14.000Z" itemprop="datePublished"> 发表于 2016-07-22</time>
     
   </p>
 </header>
@@ -95,36 +95,108 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本概念"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NDC与MDC的区别"><span class="toc-number">2.</span> <span class="toc-text">NDC与MDC的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用方式"><span class="toc-number">3.</span> <span class="toc-text">使用方式</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#首先是各个操作系统上自带的shell的列表"><span class="toc-number">1.</span> <span class="toc-text">首先是各个操作系统上自带的shell的列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#不同shell的个人看法"><span class="toc-number">2.</span> <span class="toc-text">不同shell的个人看法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于shell的注意事项"><span class="toc-number">3.</span> <span class="toc-text">关于shell的注意事项</span></a></li></ol>
 		
 		</div>
 		
-		<p>Log4j中的NDC和MDC两个功能类似，都是用于存储上下文的信息。<a id="more"></a></p>
-<h2 id="基本概念">基本概念</h2><p>NDC（Nested Diagnostic Context）MDC（Mapped Diagnostic Context）是一种嵌套诊断环境的机制。这种机制的提出，主要为了减少多线程的系统为每个客户单独记录日志的系统开销。就是说在多线程和多并发系统中年，这个模式可以只使用一个logger实例，记录每个线程的日志信息，并且会带上各个线程独特的标识信息。更多的时候这两张机制是作用在一个网络应用上，特别是一个服务平台要同时提过服务给多个客户的时候，需要追踪每个客户的信息并且记录日志的时候，使用客户的唯一标识放入到NDC或者MDC中，从而使得在log信息中更容易查看到哪一个客户触发了log事件。个人理解这个两个功能是存储额外的信息，并且可以在新版本的log4j是用MDCFilter或者NDCFilter来级能进行log文本的过滤。</p>
-<h2 id="NDC与MDC的区别">NDC与MDC的区别</h2><p>NDC与MDC的区别在于存储方式的不同。<br>NDC是使用 栈的机制来存储信息，而MDC使用map的机制来存储信息。所以NDC可以通过%x来进行获取，而MDC需要通过%x{key}来获取</p>
-<h2 id="使用方式">使用方式</h2><p>在log的pattern的配置中使用%x来 显示NDC 或者MDC信息。<br>在代码中设定NDC或者MDC必须在调用logger的记录方法之前，而且要保证在退出当前环境（当前代码段）的时候将信息移除，以免造成内存溢出</p>
-<pre><code>……
-NDC.push<span class="params">(message)</span>;
-……
-logger.info<span class="params">()</span>;
-NDC.pop<span class="params">()</span>;
-……
-NDC.remove<span class="params">()</span>;<span class="comment">//在结束当前线程执行的时候要调用这个方法</span>
-</code></pre><p>使用MDC的方式大致相同，只不过是需要提供key来作为信息的映射。</p>
-<pre><code>……
-<span class="tag">MDC</span><span class="class">.put</span>(<span class="tag">key</span>,<span class="tag">message</span>);
-……
-<span class="tag">logger</span><span class="class">.infog</span>();
-……
-<span class="tag">MDC</span><span class="class">.remove</span>(<span class="tag">key</span>);
-</code></pre>  
+		<p>关于各个版本shell的介绍<a id="more"></a></p>
+<h2 id="首先是各个操作系统上自带的shell的列表">首先是各个操作系统上自带的shell的列表</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>SHELL</th>
+<th>Solaris</th>
+<th>HP-UX</th>
+<th>AIX</th>
+<th>LINUX</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BSH</td>
+<td>/usr/bin/sh</td>
+<td>-</td>
+<td>/usr/bin/bsh</td>
+<td>/bin/ash</td>
+<td></td>
+</tr>
+<tr>
+<td>CSH</td>
+<td>/usr/bin/csh</td>
+<td>/usr/bin/csh</td>
+<td>/usr/bin/csh</td>
+<td>/bin/csh</td>
+<td></td>
+</tr>
+<tr>
+<td>TCSH</td>
+<td>/usr/bin/tcsh</td>
+<td>-</td>
+<td>-</td>
+<td>/bin/tcsh</td>
+<td></td>
+</tr>
+<tr>
+<td>KSH88</td>
+<td>/usr/bin/ksh</td>
+<td>/usr/bin/ksh</td>
+<td>/usr/bin/ksh</td>
+<td>-</td>
+</tr>
+<tr>
+<td>KSH93</td>
+<td>/usr/dt/bin/dtksh</td>
+<td>dtksh</td>
+<td>/usr/bin/ksh93</td>
+<td>-</td>
+</tr>
+<tr>
+<td>BASH</td>
+<td>/usr/bin/bash</td>
+<td>-</td>
+<td>-</td>
+<td>/bin/bash</td>
+</tr>
+<tr>
+<td>PDKSH</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>/bin/ksh</td>
+</tr>
+<tr>
+<td>POSIXSH</td>
+<td>/usr/xpg4/bin/sh</td>
+<td>/bin/sh</td>
+<td>/usr/bin/psh</td>
+<td>/bin/sh</td>
+</tr>
+<tr>
+<td>ZSH</td>
+<td>/usr/bin/zsh</td>
+<td>-</td>
+<td>-</td>
+<td>/bin/zsh</td>
+</tr>
+</tbody>
+</table>
+<p>默认情况下在上表中路径为/bin/sh的shell操作系统命令行默认的shell（可以通过修改配置文件改变）。<br>如果要切换到不同的shell，输入对应的shell即可启动。</p>
+<h2 id="不同shell的个人看法">不同shell的个人看法</h2><ul>
+<li>ksh适用与script开发，因为比较规范。</li>
+<li>bash比较多人用，因为是Linux的默认shell，并且各种操作比较符合正常人使用。</li>
+<li>zsh功能比较齐全，可以算是bash的扩展，但是坑人的是它不能使用退格键删除输入</li>
+<li>bsh比较反人类操作，不支持方向键和删除键</li>
+<li>csh虽然各个平台都有安装，但是不太适用需要编写script的人</li>
+</ul>
+<h2 id="关于shell的注意事项">关于shell的注意事项</h2><p>不要改变默认root用户登陆的shell，因为不是系统静态绑定的shell是可以被删除的，如果修改成非静态的shell会有root用户无法登陆的风险。</p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程-Java/">编程-Java</a>
+  <a class="article-category-link" href="/categories/编程-Linux-Unix/">编程-Linux/Unix</a>
 </div>
 
 
@@ -134,7 +206,7 @@ NDC.remove<span class="params">()</span>;<span class="comment">//在结束当前
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://luoyuan800.github.io/2015/06/30/Log4j-N-MDC/" data-title="Log4j中的NDC和MDC | Yuan" data-tsina="null" class="share clearfix">
+	  <div data-url="http://luoyuan800.github.io/2016/07/22/unix-shell/" data-title="Unix系统中的SHELL | Yuan" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -148,18 +220,18 @@ NDC.remove<span class="params">()</span>;<span class="comment">//在结束当前
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/07/01/IPMI/" title="IPMI">
+ <a href="/2016/07/25/ubuntu/" title="Linux学习积累">
   <strong>上一篇：</strong><br/>
   <span>
-  IPMI</span>
+  Linux学习积累</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/06/30/Cron-English/"  title="About the Cron Expression">
+<a href="/2016/01/31/android_ListView/"  title="Android ListView">
  <strong>下一篇：</strong><br/> 
- <span>About the Cron Expression
+ <span>Android ListView
 </span>
 </a>
 </div>
@@ -168,7 +240,7 @@ NDC.remove<span class="params">()</span>;<span class="comment">//在结束当前
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/06/30/Log4j-N-MDC/" data-title="Log4j中的NDC和MDC" data-url="http://luoyuan800.github.io/2015/06/30/Log4j-N-MDC/"></div>
+	<div class="ds-thread" data-thread-key="2016/07/22/unix-shell/" data-title="Unix系统中的SHELL" data-url="http://luoyuan800.github.io/2016/07/22/unix-shell/"></div>
 </section>
 
 
@@ -178,7 +250,7 @@ NDC.remove<span class="params">()</span>;<span class="comment">//在结束当前
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本概念"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NDC与MDC的区别"><span class="toc-number">2.</span> <span class="toc-text">NDC与MDC的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用方式"><span class="toc-number">3.</span> <span class="toc-text">使用方式</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#首先是各个操作系统上自带的shell的列表"><span class="toc-number">1.</span> <span class="toc-text">首先是各个操作系统上自带的shell的列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#不同shell的个人看法"><span class="toc-number">2.</span> <span class="toc-text">不同shell的个人看法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于shell的注意事项"><span class="toc-number">3.</span> <span class="toc-text">关于shell的注意事项</span></a></li></ol>
  
   </div>
 

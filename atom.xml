@@ -5,7 +5,7 @@
   <subtitle><![CDATA[一点一滴，技术积累]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://luoyuan800.github.io//"/>
-  <updated>2016-01-31T03:47:50.111Z</updated>
+  <updated>2016-07-26T05:54:19.093Z</updated>
   <id>http://luoyuan800.github.io//</id>
   
   <author>
@@ -14,6 +14,181 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Linux学习积累]]></title>
+    <link href="http://luoyuan800.github.io/2016/07/25/ubuntu/"/>
+    <id>http://luoyuan800.github.io/2016/07/25/ubuntu/</id>
+    <published>2016-07-25T01:44:14.000Z</published>
+    <updated>2016-07-26T05:54:19.093Z</updated>
+    <content type="html"><![CDATA[<p>自己用到过和遇见过得命令和异常陈列，基本是Ubuntu之类操作系统。<a id="more"></a></p>
+<h2 id="Permission_denied">Permission denied</h2><p><code>sudo chmod -R 777 dell</code></p>
+<p>此命令设置所有用户都有权限访问这个文件夹，其中<code>777=111111111</code>。</p>
+<h2 id="如何安装bin文件">如何安装bin文件</h2><p><code>sudo chmod u+x name.bin</code></p>
+<p>这个命令给予这个bin文件读写的权限</p>
+<p><code>sudo name.bin</code></p>
+<p>这个命令执行安装</p>
+<h2 id="创建新用户">创建新用户</h2><p><code>sudo adduser &lt;username&gt;</code></p>
+<h2 id="切换用户">切换用户</h2><p><code>su &lt;username&gt;</code></p>
+<p>输入密码后就切换到对应的user了</p>
+<p><code>su - &lt;username&gt;</code></p>
+<p>这个命令会把当前设置的环境变量也带过去</p>
+<h2 id="修改默认root用户的密码">修改默认root用户的密码</h2><p>如果安装时候直接设置了自己的用户名，那么root用户的密码就会是随机的（Ubuntu默认不开放root用户)。</p>
+<p><code>sudo passwd</code></p>
+<p>之后按照提示输入密码就可以修改root用户的密码了</p>
+<h2 id="为特定用户添加sudo命令权限">为特定用户添加sudo命令权限</h2><p>有些用户没有运行sudo的权限，执行sudo的话会提示<code>username is not in the sudoers file</code><br>修改sudoers文件可以解决这个问题<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ su -root <span class="comment">## 切换root用户`</span></span><br><span class="line">$ chmod u+w /etc/sudoers <span class="comment"># 添加写权限</span></span><br><span class="line">$  /etc/sudoers </span><br><span class="line">$ <span class="comment"># 在打开的文本编辑器中，找到r**oot ALL=(ALL) ALL在下面添加一行 username ALL=(ALL) ALL</span></span><br><span class="line">$ <span class="comment"># 保存后记得关闭sudoers的写权限</span></span><br><span class="line">$ chmod u-w /etc/sudoers</span><br></pre></td></tr></table></figure></p>
+<h2 id="挂载远程文件系统(mount_remote_filesystem_NFS)">挂载远程文件系统(mount remote filesystem NFS)</h2><ol>
+<li>实现本机的文件系统可以被别的机器挂载</li>
+</ol>
+<p>1.1. 安装nfs服务器</p>
+<p><code>sudo apt-get install nfs-kernel-server</code></p>
+<p>1.2. 修改权限配置文件</p>
+<p><code>vi /etc/exports</code></p>
+<p>根据其中的范例添加你想要共享出去的文件目录（mount point）</p>
+<p>1.3. 重启服务使得配置生效<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$sudo</span> /etc/init.d/portmap restart</span><br><span class="line"><span class="variable">$sudo</span> /etc/init.d/nfs-kernel-server restart</span><br></pre></td></tr></table></figure></p>
+<p>1.4. 你可以使用 <code>showmount -e</code> 命令查看共享成功的文件系统</p>
+<ol>
+<li>挂载命令</li>
+</ol>
+<p><code>sudo mount -t nfs localhost:/home /mnt</code></p>
+<p>其中-t nfs 可以省略，会使用默认支持的nfs文件类型挂载。</p>
+<h2 id="一些基本的命令提示‘command_not_found’">一些基本的命令提示‘command not found’</h2><p>（这个问题一般会出现在redhat 红帽系统中）<br>例如输入命令：<code>ifconfig</code><br>显示<code>bash: ifconfig: command not found</code><br>可能是路径问题，如果然后输入<br><code>/sbin/ifconfig</code>  就会显示IP地址等信息。<br>那么解决办法是<br>执行<code>cat ~/.bash_profile</code> 看自己的PATH，然后再执行：<br><code>gedit /etc/profile</code> 在最后一行后面添加：<br>PATH=$PATH:sbin<br>export PATH=$PATH:/sbin<br>保存退出。<br>然后在初始化一下：<code>source /etc/profile</code> 你再直接输入：<code>ifconfig</code> 就会直接显示IP等信息了</p>
+<h2 id="error_while_loading_shared_libraries">error while loading shared libraries</h2><p>error while loading shared libraries：<strong>**</strong> ：cannot restore segment prot after reloc: Permission denied。<br>网上查了一下，原因是selinux的问题，selinux的设置太过严格导致的。解决的办法是在root用户下，修改/etc/selinux/config 文件<br>把SELINUX=enforcing 改成 SELINUX=disabled。<br>然后，保存关闭，重启机器就可以了。</p>
+<h2 id="Linux开启ssh服务">Linux开启ssh服务</h2><ul>
+<li>开启服务执行 /etc/init.d/sshd start</li>
+<li>如果还是不能连接，尝试关闭防火墙<br><strong> 输入 setup
+</strong> 在弹出界面选择firewall<br>** 选择 no firewall。</li>
+</ul>
+<h2 id="修改ssh的最大连接并发数">修改ssh的最大连接并发数</h2><ul>
+<li>打开文件进行编辑 ： vi /etc.ssh/sshd_config</li>
+<li>找到 MazStartups 去掉注释，并且修改大最小和最大的数值。</li>
+<li>重启ssh服务，可以尝试以下命令（不同内核）<br><strong> sudo systemctl restart sshd 
+</strong> /etc/rc.d/init.d/sshd restart<br>** service sshd restart</li>
+</ul>
+<h2 id="Linux_解压">Linux 解压</h2><ul>
+<li>tar<br><strong> 解压： tar xvf fileName.tar
+</strong> 打包： tar cvf vffileNametar dirName</li>
+<li>.gz<br><strong> 解压： gunzip FileName.gz
+</strong> 解压： gzip -d FileName.gz<br>** 打包： gzip FileName dirName</li>
+<li>.tar.gz 和 .tgz<br><strong> 解压： tar zxvf FileName.tar.gz
+</strong> 打包： tar zcvf FileName.tar.gz DirName</li>
+</ul>
+<h2 id="Linux中的复制命令（必须先给指定的dir创建文件夹）">Linux中的复制命令（必须先给指定的dir创建文件夹）</h2><p>cp -rf source_dir target_dir</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>自己用到过和遇见过得命令和异常陈列，基本是Ubuntu之类操作系统。]]>
+    
+    </summary>
+    
+      <category term="编程-Linux/Unix" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux-Unix/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Unix系统中的SHELL]]></title>
+    <link href="http://luoyuan800.github.io/2016/07/22/unix-shell/"/>
+    <id>http://luoyuan800.github.io/2016/07/22/unix-shell/</id>
+    <published>2016-07-22T01:44:14.000Z</published>
+    <updated>2016-07-26T03:45:12.850Z</updated>
+    <content type="html"><![CDATA[<p>关于各个版本shell的介绍<a id="more"></a></p>
+<h2 id="首先是各个操作系统上自带的shell的列表">首先是各个操作系统上自带的shell的列表</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>SHELL</th>
+<th>Solaris</th>
+<th>HP-UX</th>
+<th>AIX</th>
+<th>LINUX</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BSH</td>
+<td>/usr/bin/sh</td>
+<td>-</td>
+<td>/usr/bin/bsh</td>
+<td>/bin/ash</td>
+<td></td>
+</tr>
+<tr>
+<td>CSH</td>
+<td>/usr/bin/csh</td>
+<td>/usr/bin/csh</td>
+<td>/usr/bin/csh</td>
+<td>/bin/csh</td>
+<td></td>
+</tr>
+<tr>
+<td>TCSH</td>
+<td>/usr/bin/tcsh</td>
+<td>-</td>
+<td>-</td>
+<td>/bin/tcsh</td>
+<td></td>
+</tr>
+<tr>
+<td>KSH88</td>
+<td>/usr/bin/ksh</td>
+<td>/usr/bin/ksh</td>
+<td>/usr/bin/ksh</td>
+<td>-</td>
+</tr>
+<tr>
+<td>KSH93</td>
+<td>/usr/dt/bin/dtksh</td>
+<td>dtksh</td>
+<td>/usr/bin/ksh93</td>
+<td>-</td>
+</tr>
+<tr>
+<td>BASH</td>
+<td>/usr/bin/bash</td>
+<td>-</td>
+<td>-</td>
+<td>/bin/bash</td>
+</tr>
+<tr>
+<td>PDKSH</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>/bin/ksh</td>
+</tr>
+<tr>
+<td>POSIXSH</td>
+<td>/usr/xpg4/bin/sh</td>
+<td>/bin/sh</td>
+<td>/usr/bin/psh</td>
+<td>/bin/sh</td>
+</tr>
+<tr>
+<td>ZSH</td>
+<td>/usr/bin/zsh</td>
+<td>-</td>
+<td>-</td>
+<td>/bin/zsh</td>
+</tr>
+</tbody>
+</table>
+<p>默认情况下在上表中路径为/bin/sh的shell操作系统命令行默认的shell（可以通过修改配置文件改变）。<br>如果要切换到不同的shell，输入对应的shell即可启动。</p>
+<h2 id="不同shell的个人看法">不同shell的个人看法</h2><ul>
+<li>ksh适用与script开发，因为比较规范。</li>
+<li>bash比较多人用，因为是Linux的默认shell，并且各种操作比较符合正常人使用。</li>
+<li>zsh功能比较齐全，可以算是bash的扩展，但是坑人的是它不能使用退格键删除输入</li>
+<li>bsh比较反人类操作，不支持方向键和删除键</li>
+<li>csh虽然各个平台都有安装，但是不太适用需要编写script的人</li>
+</ul>
+<h2 id="关于shell的注意事项">关于shell的注意事项</h2><p>不要改变默认root用户登陆的shell，因为不是系统静态绑定的shell是可以被删除的，如果修改成非静态的shell会有root用户无法登陆的风险。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>关于各个版本shell的介绍]]>
+    
+    </summary>
+    
+      <category term="编程-Linux/Unix" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux-Unix/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Android ListView]]></title>
@@ -265,55 +440,6 @@ public <span class="class"><span class="keyword">class</span> <span class="title
     </summary>
     
       <category term="编程-Android" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Android/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Ubuntu学习积累]]></title>
-    <link href="http://luoyuan800.github.io/2015/11/25/ubuntu/"/>
-    <id>http://luoyuan800.github.io/2015/11/25/ubuntu/</id>
-    <published>2015-11-25T01:44:14.000Z</published>
-    <updated>2015-11-25T01:41:44.546Z</updated>
-    <content type="html"><![CDATA[<p>自己用到过和遇见过得Ubuntu命令和异常陈列<a id="more"></a></p>
-<h2 id="Permission_denied">Permission denied</h2><p><code>sudo chmod -R 777 dell</code></p>
-<p>此命令设置所有用户都有权限访问这个文件夹，其中<code>777=111111111</code>。</p>
-<h2 id="如何安装bin文件">如何安装bin文件</h2><p><code>sudo chmod u+x name.bin</code></p>
-<p>这个命令给予这个bin文件读写的权限</p>
-<p><code>sudo name.bin</code></p>
-<p>这个命令执行安装</p>
-<h2 id="创建新用户">创建新用户</h2><p><code>sudo adduser &lt;username&gt;</code></p>
-<h2 id="切换用户">切换用户</h2><p><code>su &lt;username&gt;</code></p>
-<p>输入密码后就切换到对应的user了</p>
-<p><code>su - &lt;username&gt;</code></p>
-<p>这个命令会把当前设置的环境变量也带过去</p>
-<h2 id="修改默认root用户的密码">修改默认root用户的密码</h2><p>如果安装时候直接设置了自己的用户名，那么root用户的密码就会是随机的（Ubuntu默认不开放root用户)。</p>
-<p><code>sudo passwd</code></p>
-<p>之后按照提示输入密码就可以修改root用户的密码了</p>
-<h2 id="为特定用户添加sudo命令权限">为特定用户添加sudo命令权限</h2><p>有些用户没有运行sudo的权限，执行sudo的话会提示<code>username is not in the sudoers file</code><br>修改sudoers文件可以解决这个问题<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ su -root <span class="comment">## 切换root用户`</span></span><br><span class="line">$ chmod u+w /etc/sudoers <span class="comment"># 添加写权限</span></span><br><span class="line">$  /etc/sudoers </span><br><span class="line">$ <span class="comment"># 在打开的文本编辑器中，找到r**oot ALL=(ALL) ALL在下面添加一行 username ALL=(ALL) ALL</span></span><br><span class="line">$ <span class="comment"># 保存后记得关闭sudoers的写权限</span></span><br><span class="line">$ chmod u-w /etc/sudoers</span><br></pre></td></tr></table></figure></p>
-<h2 id="挂载远程文件系统(mount_remote_filesystem_NFS)">挂载远程文件系统(mount remote filesystem NFS)</h2><ol>
-<li>实现本机的文件系统可以被别的机器挂载</li>
-</ol>
-<p>1.1. 安装nfs服务器</p>
-<p><code>sudo apt-get install nfs-kernel-server</code></p>
-<p>1.2. 修改权限配置文件</p>
-<p><code>vi /etc/exports</code></p>
-<p>根据其中的范例添加你想要共享出去的文件目录（mount point）</p>
-<p>1.3. 重启服务使得配置生效<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$sudo</span> /etc/init.d/portmap restart</span><br><span class="line"><span class="variable">$sudo</span> /etc/init.d/nfs-kernel-server restart</span><br></pre></td></tr></table></figure></p>
-<p>1.4. 你可以使用 <code>showmount -e</code> 命令查看共享成功的文件系统</p>
-<ol>
-<li>挂载命令</li>
-</ol>
-<p><code>sudo mount -t nfs localhost:/home /mnt</code></p>
-<p>其中-t nfs 可以省略，会使用默认支持的nfs文件类型挂载。</p>
-<h2 id="一些基本的命令提示‘command_not_found’">一些基本的命令提示‘command not found’</h2><p>（这个问题一般会出现在redhat 红帽系统中）<br>例如输入命令：<code>ifconfig</code><br>显示<code>bash: ifconfig: command not found</code><br>可能是路径问题，如果然后输入<br><code>/sbin/ifconfig</code>  就会显示IP地址等信息。<br>那么解决办法是<br>执行<code>cat ~/.bash_profile</code> 看自己的PATH，然后再执行：<br><code>gedit /etc/profile</code> 在最后一行后面添加：<br>PATH=$PATH:sbin<br>export PATH=$PATH:/sbin<br>保存退出。<br>然后在初始化一下：<code>source /etc/profile</code> 你再直接输入：<code>ifconfig</code> 就会直接显示IP等信息了</p>
-<h2 id="error_while_loading_shared_libraries">error while loading shared libraries</h2><p>error while loading shared libraries：<strong>**</strong> ：cannot restore segment prot after reloc: Permission denied。<br>网上查了一下，原因是selinux的问题，selinux的设置太过严格导致的。解决的办法是在root用户下，修改/etc/selinux/config 文件<br>把SELINUX=enforcing 改成 SELINUX=disabled。<br>然后，保存关闭，重启机器就可以了。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>自己用到过和遇见过得Ubuntu命令和异常陈列]]>
-    
-    </summary>
-    
-      <category term="编程-Linux" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux/"/>
     
   </entry>
   
@@ -974,7 +1100,7 @@ Matcher matcher = pattern.matcher<span class="params">(“aaaa123aaaa”)</span>
     <link href="http://luoyuan800.github.io/2015/07/11/Linux-progress-status/"/>
     <id>http://luoyuan800.github.io/2015/07/11/Linux-progress-status/</id>
     <published>2015-07-11T09:21:15.000Z</published>
-    <updated>2015-07-10T09:27:04.348Z</updated>
+    <updated>2016-07-26T03:46:26.003Z</updated>
     <content type="html"><![CDATA[<p>Linux系统进程状态注解<a id="more"></a></p>
 <h2 id="Deep_Sleep">Deep Sleep</h2><p>D Uninterruptible sleep (usually IO)<br>不可中断的深度睡眠，一般由IO引起，同步IO在做读或写操作时，此进程不能做其它事情，只能等待，这时进程处于这种状态，如果程序采用异步IO，这种状态应该就很少见到了</p>
 <h2 id="Running">Running</h2><p>R Running or runnable (on run queue)<br>进程处于运行或就绪状态</p>
@@ -989,7 +1115,7 @@ Matcher matcher = pattern.matcher<span class="params">(“aaaa123aaaa”)</span>
     
     </summary>
     
-      <category term="编程-Linux" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux/"/>
+      <category term="编程-Linux/Unix" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux-Unix/"/>
     
   </entry>
   
@@ -998,7 +1124,7 @@ Matcher matcher = pattern.matcher<span class="params">(“aaaa123aaaa”)</span>
     <link href="http://luoyuan800.github.io/2015/07/10/Linux-partition/"/>
     <id>http://luoyuan800.github.io/2015/07/10/Linux-partition/</id>
     <published>2015-07-10T08:47:16.000Z</published>
-    <updated>2015-07-10T09:27:04.345Z</updated>
+    <updated>2016-07-26T03:46:31.766Z</updated>
     <content type="html"><![CDATA[<p>简单了解Linux文件系统的管理（磁盘管理）。<a id="more"></a></p>
 <h2 id="设备管理">设备管理</h2><p>在 Linux 中，每一个硬件设备都映射到一个系统的文件，对于硬盘、光驱等 IDE 或 SCSI 设备也不例外。Linux把各种 IDE 设备分配了一个由 hd 前缀组成的文件；而对于各种 SCSI 设备，则分配了一个由 sd 前缀组成的文件。<br>对于ide硬盘，驱动器标识符为“hdx~”,其中“hd”表明分区所在设备的类型，这里是指ide硬盘了。“x”为盘号（a为基本盘，b为基本从属盘，c为辅助主盘，d为辅助从属盘）,“~”代表分区，前四个分区用数字1到4表示，它们是主分区或扩展分区，从5开始就是逻辑分区。例，hda3表示为第一个ide硬盘上的第三个主分区或扩展分区,hdb2表示为第二个ide硬盘上的第二个主分区或扩展分区。对于scsi硬盘则标识为“sdx~”，scsi硬盘是用“sd”来表示分区所在设备的类型的，其余则和ide硬盘的表示方法一样，不在多说。<br>例如，第一个 IDE 设备，Linux 就定义为 hda；第二个 IDE 设备就定义为 hdb；下面以此类推。而 SCSI 设备就应该是 sda、sdb、sdc 等。</p>
 <h2 id="分区编号">分区编号</h2><p>要进行分区就必须针对每一个硬件设备进行操作，这就有可能是一块IDE硬盘或是一块SCSI硬盘。对于每一个硬盘（IDE 或 SCSI）设备，Linux 分配了一个 1 到 16 的序列号码，这就代表了这块硬盘上面的分区号码。</p>
@@ -1060,7 +1186,7 @@ gvfs-fuse-daemon on /home/kysnail/.gvfs <span class="keyword">type</span> fuse.g
     
     </summary>
     
-      <category term="编程-Linux" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux/"/>
+      <category term="编程-Linux/Unix" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux-Unix/"/>
     
   </entry>
   
@@ -1561,7 +1687,7 @@ war {
     <link href="http://luoyuan800.github.io/2015/07/01/linux-filesystem-types/"/>
     <id>http://luoyuan800.github.io/2015/07/01/linux-filesystem-types/</id>
     <published>2015-07-01T07:38:50.000Z</published>
-    <updated>2015-07-02T00:44:09.240Z</updated>
+    <updated>2016-07-26T03:46:37.812Z</updated>
     <content type="html"><![CDATA[<p>Linux操作系统下可用的各种文件系统类型注解<a id="more"></a></p>
 <h2 id="ufs">ufs</h2><p><em>The Unix file system (UFS; also called the Berkeley Fast File System, the BSD Fast File System or FFS) is a file system used by many Unix and Unix-like operating systems. It is a distant descendant of the original filesystem used by Version 7 Unix.</em><br>UFS是UNIX文件系统的简称，它来源于4.3Tahoe发行版中提供的BSD Fat Fast File System（FFS）系统，属于FFS的演化版本。UFS几乎是大部分UNIX类操作系统默认的基于磁盘的文件系统，包括Solaris、Free BSD、Open BSD、Net BSD、HP-UX等，甚至Apple的OS X也能支持UFS文件系统。<br>在UFS文件系统中，“块”(“块”是UFS文件系统中文件分配和存储的基本单位，类似于FAT文件系统和NTFS文件系统中“簇”的概念）有多种类型，每种类型的块都具有特定的功能。UFS文件系统主要具有四种类型的块：引导块、超级块、i-节点、数据块。</p>
 <ul>
@@ -1600,7 +1726,7 @@ war {
     
     </summary>
     
-      <category term="编程-Linux" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux/"/>
+      <category term="编程-Linux/Unix" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux-Unix/"/>
     
   </entry>
   
@@ -1805,40 +1931,6 @@ ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="
     </summary>
     
       <category term="编程-网络协议" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Log4j中的NDC和MDC]]></title>
-    <link href="http://luoyuan800.github.io/2015/06/30/Log4j-N-MDC/"/>
-    <id>http://luoyuan800.github.io/2015/06/30/Log4j-N-MDC/</id>
-    <published>2015-06-30T04:08:35.000Z</published>
-    <updated>2015-06-30T04:52:27.606Z</updated>
-    <content type="html"><![CDATA[<p>Log4j中的NDC和MDC两个功能类似，都是用于存储上下文的信息。<a id="more"></a></p>
-<h2 id="基本概念">基本概念</h2><p>NDC（Nested Diagnostic Context）MDC（Mapped Diagnostic Context）是一种嵌套诊断环境的机制。这种机制的提出，主要为了减少多线程的系统为每个客户单独记录日志的系统开销。就是说在多线程和多并发系统中年，这个模式可以只使用一个logger实例，记录每个线程的日志信息，并且会带上各个线程独特的标识信息。更多的时候这两张机制是作用在一个网络应用上，特别是一个服务平台要同时提过服务给多个客户的时候，需要追踪每个客户的信息并且记录日志的时候，使用客户的唯一标识放入到NDC或者MDC中，从而使得在log信息中更容易查看到哪一个客户触发了log事件。个人理解这个两个功能是存储额外的信息，并且可以在新版本的log4j是用MDCFilter或者NDCFilter来级能进行log文本的过滤。</p>
-<h2 id="NDC与MDC的区别">NDC与MDC的区别</h2><p>NDC与MDC的区别在于存储方式的不同。<br>NDC是使用 栈的机制来存储信息，而MDC使用map的机制来存储信息。所以NDC可以通过%x来进行获取，而MDC需要通过%x{key}来获取</p>
-<h2 id="使用方式">使用方式</h2><p>在log的pattern的配置中使用%x来 显示NDC 或者MDC信息。<br>在代码中设定NDC或者MDC必须在调用logger的记录方法之前，而且要保证在退出当前环境（当前代码段）的时候将信息移除，以免造成内存溢出</p>
-<pre><code>……
-NDC.push<span class="params">(message)</span>;
-……
-logger.info<span class="params">()</span>;
-NDC.pop<span class="params">()</span>;
-……
-NDC.remove<span class="params">()</span>;<span class="comment">//在结束当前线程执行的时候要调用这个方法</span>
-</code></pre><p>使用MDC的方式大致相同，只不过是需要提供key来作为信息的映射。</p>
-<pre><code>……
-<span class="tag">MDC</span><span class="class">.put</span>(<span class="tag">key</span>,<span class="tag">message</span>);
-……
-<span class="tag">logger</span><span class="class">.infog</span>();
-……
-<span class="tag">MDC</span><span class="class">.remove</span>(<span class="tag">key</span>);
-</code></pre>]]></content>
-    <summary type="html">
-    <![CDATA[<p>Log4j中的NDC和MDC两个功能类似，都是用于存储上下文的信息。]]>
-    
-    </summary>
-    
-      <category term="编程-Java" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Java/"/>
     
   </entry>
   
