@@ -5,7 +5,7 @@
   <subtitle><![CDATA[一点一滴，技术积累]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://luoyuan800.github.io//"/>
-  <updated>2016-07-26T05:54:19.093Z</updated>
+  <updated>2016-09-26T03:02:13.972Z</updated>
   <id>http://luoyuan800.github.io//</id>
   
   <author>
@@ -14,6 +14,165 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Groovy中unique方法性能分析]]></title>
+    <link href="http://luoyuan800.github.io/2016/09/26/groovy_unique_performance/"/>
+    <id>http://luoyuan800.github.io/2016/09/26/groovy_unique_performance/</id>
+    <published>2016-09-26T02:59:21.000Z</published>
+    <updated>2016-09-26T03:02:13.972Z</updated>
+    <content type="html"><![CDATA[<p>最近发现使用Groovy中的集合去重unique方法似乎会导致运行时间变长。身为一个java程序员一直比较习惯用HashSet去过滤重复的数据，看到groovy中有这么一个去重复的方法，觉得挺方便，所以就很开心的用上了。但是测试以后发现，这个方法性能真的是很差劲的…… <a id="more"></a></p>
+<h2 id="数字列表的去重">数字列表的去重</h2><h3 id="测试代码">测试代码</h3><p>首先是测试数值的比较，我以下代码分别测速list的大小为100， 10000， 1000000。</p>
+<pre><code>random = new Random<span class="params">()</span>;
+performanceReport<span class="params">(<span class="number">100</span>)</span>
+performanceReport<span class="params">(<span class="number">10000</span>)</span>
+performanceReport<span class="params">(<span class="number">10000000</span>)</span>
+def performanceReport<span class="params">(int size)</span> {
+    println<span class="params">(<span class="string">"Report for list size $size"</span>)</span>
+    def list = [];
+    <span class="params">(<span class="number">1</span>..size)</span>.each {
+        list.add<span class="params">(random.nextInt<span class="params">(<span class="number">1000</span>)</span>)</span>
+    }
+    def start = System.currentTimeMillis<span class="params">()</span>;
+    list.unique<span class="params">()</span>;
+    def end = System.currentTimeMillis<span class="params">()</span>;
+    def dur = end - start;
+    dur /= <span class="number">1000</span>;
+    println<span class="params">(<span class="string">"unique use time $dur s"</span>)</span>;
+    list.clear<span class="params">()</span>;
+    <span class="params">(<span class="number">1</span>..size)</span>.each {
+        list.add<span class="params">(random.nextInt<span class="params">(<span class="number">1000</span>)</span>)</span>
+    }
+    start = System.currentTimeMillis<span class="params">()</span>;
+    def uSet = new HashSet<span class="params">(list.size<span class="params">()</span>)</span>;
+    <span class="keyword">for</span> <span class="params">(e in list)</span> {
+        uSet.add<span class="params">(e)</span>;
+    }
+    end = System.currentTimeMillis<span class="params">()</span>;
+    dur = end - start;
+    dur /= <span class="number">1000</span>;
+    println<span class="params">(<span class="string">"hash set use time $dur s"</span>)</span>;
+    println<span class="params">('---------------------')</span>;
+}
+</code></pre><h3 id="测试结果">测试结果</h3><pre><code><span class="keyword">Report</span> <span class="keyword">for</span> <span class="keyword">list</span> size 100
+unique <span class="keyword">use</span> time 0.006 <span class="literal">s</span>
+hash <span class="keyword">set</span> <span class="keyword">use</span> time 0.006 <span class="literal">s</span>
+---------------------
+<span class="keyword">Report</span> <span class="keyword">for</span> <span class="keyword">list</span> size 10000
+unique <span class="keyword">use</span> time 0.127 <span class="literal">s</span>
+hash <span class="keyword">set</span> <span class="keyword">use</span> time 0.004 <span class="literal">s</span>
+---------------------
+<span class="keyword">Report</span> <span class="keyword">for</span> <span class="keyword">list</span> size 10000000
+unique <span class="keyword">use</span> time 49.479 <span class="literal">s</span>
+hash <span class="keyword">set</span> <span class="keyword">use</span> time 0.279 <span class="literal">s</span>
+</code></pre><p>我重复运行了代码三遍，出来的结果都差不多，所以对比结果基本是确定的：</p>
+<ol>
+<li>List比较少元素的情况下，比如100以内，运行效率差不了多少</li>
+<li>当List元素较多的时候，差异非常明显，特别是大容量List的运行结果，使用unique就绝对是一个错误的选择！</li>
+</ol>
+<h2 id="字符串列表的去重">字符串列表的去重</h2><h3 id="测试代码-1">测试代码</h3><p>我使用随机生成的十位英文字符串（只包含a、b、c）进行测试比较。测试运行比较列表大小为100、1000、100000的结果。</p>
+<pre><code>random = new Random<span class="params">()</span>;
+strings = ['a', 'b', 'c'];
+performanceReport<span class="params">(<span class="number">100</span>)</span>
+performanceReport<span class="params">(<span class="number">1000</span>)</span>
+performanceReport<span class="params">(<span class="number">100000</span>)</span>
+<span class="comment">//生成随机字符串</span>
+def genString<span class="params">()</span>{
+    def s = '';
+    <span class="params">(<span class="number">1</span>..<span class="number">4</span>)</span>.each{
+        def index = random.nextInt<span class="params">(strings.size<span class="params">()</span>)</span>;
+        s += strings[index];
+    }
+    return s;
+}
+def performanceReport<span class="params">(int size)</span> {
+    println<span class="params">(<span class="string">"Report for list size $size"</span>)</span>
+    def list = [];
+    <span class="params">(<span class="number">1</span>..size)</span>.each {
+        list.add<span class="params">(genString<span class="params">()</span>)</span>
+    ｝
+    def start = System.currentTimeMillis<span class="params">()</span>;
+    list.unique<span class="params">()</span>;
+    def end = System.currentTimeMillis<span class="params">()</span>;
+    def dur = end - start;
+    dur /= <span class="number">1000</span>;
+    println<span class="params">(<span class="string">"unique use time $dur s"</span>)</span>;
+    list.clear<span class="params">()</span>;
+    <span class="params">(<span class="number">1</span>..size)</span>.each {
+        list.add<span class="params">(genString<span class="params">()</span>)</span>
+    }
+    start = System.currentTimeMillis<span class="params">()</span>;
+    def uSet = new HashSet<span class="params">(list.size<span class="params">()</span>)</span>;
+    <span class="keyword">for</span> <span class="params">(e in list)</span> {
+        uSet.add<span class="params">(e)</span>;
+    }
+    end = System.currentTimeMillis<span class="params">()</span>;
+    dur = end - start;
+    dur /= <span class="number">1000</span>;
+    println<span class="params">(<span class="string">"hash set use time $dur s"</span>)</span>;
+    println<span class="params">('---------------------')</span>;
+}
+</code></pre><h3 id="测试结果-1">测试结果</h3><p>重复运行代码三遍，发现结果对比的差值都比较固定，所以可以取其中一个结果作为参考。</p>
+<pre><code><span class="keyword">Report</span> <span class="keyword">for</span> <span class="keyword">list</span> size 100
+unique <span class="keyword">use</span> time 0.002 <span class="literal">s</span>
+hash <span class="keyword">set</span> <span class="keyword">use</span> time 0.005 <span class="literal">s</span>
+---------------------
+<span class="keyword">Report</span> <span class="keyword">for</span> <span class="keyword">list</span> size 1000
+unique <span class="keyword">use</span> time 0.049 <span class="literal">s</span>
+hash <span class="keyword">set</span> <span class="keyword">use</span> time 0.001 <span class="literal">s</span>
+---------------------
+<span class="keyword">Report</span> <span class="keyword">for</span> <span class="keyword">list</span> size 100000
+unique <span class="keyword">use</span> time 30.716 <span class="literal">s</span>
+hash <span class="keyword">set</span> <span class="keyword">use</span> time 0.019 <span class="literal">s</span>
+</code></pre><ol>
+<li>列表容量较少的时候（100左右），groovy的unique方法性能还是有一点点优势的</li>
+<li>大容量的列表去重的时候，依旧比使用HashSet的速度慢了很多。所以如果大列表处理的时候，还是得选用HashSet。</li>
+</ol>
+<h2 id="Groovy_unique方法源码分析">Groovy unique方法源码分析</h2><p>unique方法的源码如下：</p>
+<pre><code>public static &lt;T&gt; Collection&lt;T&gt; unique<span class="params">(Collection&lt;T&gt; self, boolean mutate)</span> {
+    ArrayList answer = new ArrayList<span class="params">()</span>;
+    Iterator i$ = self.iterator<span class="params">()</span>;
+    <span class="comment">//双重循环</span>
+    while<span class="params">(i$.hasNext<span class="params">()</span>)</span> {
+        Object t = i$.next<span class="params">()</span>;
+        boolean duplicated = <span class="literal">false</span>;
+        Iterator i$<span class="number">1</span> = answer.iterator<span class="params">()</span>;
+        <span class="comment">//循环传进来的带重复元素的列表而不是循环已经去重的列表</span>
+        while<span class="params">(i$<span class="number">1</span>.hasNext<span class="params">()</span>)</span> {
+            Object t2 = i$<span class="number">1</span>.next<span class="params">()</span>;
+            <span class="keyword">if</span><span class="params">(coercedEquals<span class="params">(t, t2)</span>)</span> {
+                duplicated = <span class="literal">true</span>;
+                break;
+            }
+        }
+
+        <span class="keyword">if</span><span class="params">(!duplicated)</span> {
+            answer.add<span class="params">(t)</span>;
+        }
+    }
+
+    <span class="keyword">if</span><span class="params">(mutate)</span> {
+        self.clear<span class="params">()</span>;
+        self.addAll<span class="params">(answer)</span>;
+    }
+
+    return <span class="params">(Collection)</span><span class="params">(mutate?self:answer)</span>;
+}
+</code></pre><p>可以发现，非常不幸的两个导致性能底下的代码实现</p>
+<ol>
+<li>双重循环</li>
+<li>在判断重复元素的时候，是去循环原始的List，而不是新构建的容量较小的List，这个也会增加代码执行时间。</li>
+</ol>
+<h2 id="结论">结论</h2><p>一直以为这种框架性质的代码，一定是千锤百炼，写得优雅又高效的，不过事实就是：代码写得好看，性能并不一定好！<br>Groovy方法虽然便捷，但是使用内置的方法还是得谨慎，毕竟要处理超过100的列表是经常的事。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>最近发现使用Groovy中的集合去重unique方法似乎会导致运行时间变长。身为一个java程序员一直比较习惯用HashSet去过滤重复的数据，看到groovy中有这么一个去重复的方法，觉得挺方便，所以就很开心的用上了。但是测试以后发现，这个方法性能真的是很差劲的……]]>
+    
+    </summary>
+    
+      <category term="编程-Java" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Java/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Linux学习积累]]></title>
@@ -1727,210 +1886,6 @@ war {
     </summary>
     
       <category term="编程-Linux/Unix" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux-Unix/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[IPMI]]></title>
-    <link href="http://luoyuan800.github.io/2015/07/01/IPMI/"/>
-    <id>http://luoyuan800.github.io/2015/07/01/IPMI/</id>
-    <published>2015-07-01T00:39:21.000Z</published>
-    <updated>2015-07-16T09:31:37.291Z</updated>
-    <content type="html"><![CDATA[<p>智能平台管理界面（IPMI，Intelligent Platform Management Interface）是管理基于 Intel结构的企业级系统中所使用的外围设备采用的一种工业标准，用户能够利用IPMI监控服务器的物理健康特征，如温度、电压、风扇工作状态、电源状 态等。该标准由美国英特尔、惠普（Hewlett-Packard）、NEC、美国戴尔电脑和SuperMicro等公司定制。新的版本是 IPMI2.0（<a href="http://www.intel.com/design/servers/ipmi/）。" target="_blank" rel="external">http://www.intel.com/design/servers/ipmi/）。</a><a id="more"></a></p>
-<h2 id="IPMI平台">IPMI平台</h2><p>需要使用IPMI的前提条件是目标服务器具备有IPMI的硬件基础。IPMI是独立主机OS的一个管理模块，其本质是一个独立运行的硬件芯片，这个芯片提供IPMI的实现，并且具有独立的电源，独立的MAC和IP地址。可以将这个芯片视为网络层的一种硬件实现。这个芯片在IPMI的概念中被定义为BMC，嵌入式管理为控制器。</p>
-<h3 id="服务器对IPMI的硬件支持">服务器对IPMI的硬件支持</h3><p>目前惠普、戴尔、和NEC等大多数厂商生成的服务器都会默认集成支持IPMI2.0。但是要注意并不是所有的服务器都支持，比如HP的服务器本身知道iLo管理系统，hp的服务器通过这个ILo管理系统模拟BMC实现IPMI，但是早起的ILo中是没有ipmi模块，需要升级到最新的版本才可以支持IPMI2.0.</p>
-<h3 id="使用IPMI管理系统的条件">使用IPMI管理系统的条件</h3><p>IPMI有两种使用方式</p>
-<ul>
-<li><p>一种是本地使用，通过服务器的操作系统来管理本机的电源和其他硬件信息，这种要求当前的操作系统要提供IPMI的内核支持，需要在操作系统上安装IPMI的驱动。例如Linux系统通过OpenIPMI来提供对IPMI接口的支持，在Linux上使用IPMI管理服务的之前需要先安装并且启用这个内核驱动：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service ipmi start</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>另一种是通过网络在另外一台机器上管理目标服务器。这个时候作为管理者使用的机器不需要安装IPMI驱动或者BMC，只需要通过网络发送IPMI命令到被管理的服务器上就使用IPMI进行服务器管理，如果查询硬件状态、开关机。这个时候我们可以在管理用的机器上安装IPMI管理工具如IPMITool。</p>
-</li>
-</ul>
-<h2 id="IPMI_管理工具">IPMI 管理工具</h2><p>IPMI的管理工具可选择范围比较有限，目前Linux上就是用IPMITool，windows上使用 IPMIUtil。基于IPMI进行开发的Java工具包目前可免费是用的是基于Gplv3开源的vxipmi工具。我也基于IPMIutil实现了一个Java开发的支持工具包<a href="https://github.com/luoyuan800/IPMIUtil4J" title="IPMIUtil4J" target="_blank" rel="external">IPMIUtil4J</a>, 基于Apache2.0开放源代码，欢迎使用和提供建议。</p>
-<h2 id="IPMI命令范例">IPMI命令范例</h2><p>IPMI使用Remote Management Control Protocol (RMCP) 版本1支持操作系统关闭（pre-OS和OS-absent），RMCP把把数据发送到<strong>UDP</strong>的623端口。象lan接口一样，lanplus同样使用 Ethernet LAN 的UDP协议与BMC通信，但是lanplus使用RMCP＋协议（在IPMIV20中描述）来同新，RMCP+允许使用改经的认证方式和数据完整性检 查。我没有深入去研究IPMI的命令格式的组成，只是大概学了下怎么是用IPMItool执行IPMI命令，于是在这里记录下一些常用的IPMI命令<br>IPMITool工具执行IPMI命令的时候需要有相应的网络接口来访问BMC，接口有三种模式： open， lan， lanplus，IPMI2.0开始可以是用lanplus来打开网络接口进行远程访问。Open端口用于本地监控系统使用的；Lan/lanplus通过网络进行远程监控。</p>
-<h3 id="IPMITool命令格式">IPMITool命令格式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ipmitool -I lanplus -H &lt;ip&gt; -p &lt;port&gt; -C <span class="number">3</span> -U &lt;user&gt; -P &lt;password&gt; &lt;<span class="built_in">command</span>&gt;</span><br></pre></td></tr></table></figure>
-<p> command的可选命令如下</p>
-<ul>
-<li>raw: 发送一个原始的IPMI请求，并且打印回复信息</li>
-<li>lan： 配置网络信道（channel）</li>
-<li>chassis： 查看服务器的基本状态信息（厂商）和配置电源</li>
-<li>event： 向目标BMC发送一个定义的事件（比如测试配置SNMP是否成功）</li>
-<li>mc：  查看MC（Management Contollor）状态和各种允许的项</li>
-<li>sdr：打印传感器仓库中的任何监控项和从传感器读取到的值</li>
-<li>sensor：打印传感器信息</li>
-<li>Fru：打印内建的Field Replaceable Unit (FRU)信息</li>
-<li>sel： 打印 System Event Log (SEL)      </li>
-<li>pef： 配置 Platform Event Filtering (PEF)，事件过滤平台用于在监控系统发现有event时候，用PEF中的策略进行事件过滤，然后看是否需要报警</li>
-<li>sol/isol：用于配置通过串口的Lan进行监控</li>
-<li>user：配置BMC中用户的信息</li>
-<li><p>channel：配置Management Controller信道</p>
-<p>-C （CipherSuiteID）参数用来配置ipmi的加密登记，可以选择0-14， 各个id对应的加密组合如下表：</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th style="text-align:center">AuthenticationAlgorithm</th>
-<th style="text-align:center">IntegrityAlgorithm</th>
-<th style="text-align:center">ConfidentialityAlgorithm</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0</td>
-<td style="text-align:center">NONE</td>
-<td style="text-align:center">NONE</td>
-<td style="text-align:center">NONE</td>
-</tr>
-<tr>
-<td>1</td>
-<td style="text-align:center">SHA1</td>
-<td style="text-align:center">NONE</td>
-<td style="text-align:center">NONE</td>
-</tr>
-<tr>
-<td>2</td>
-<td style="text-align:center">SHA1</td>
-<td style="text-align:center">SHA1_96</td>
-<td style="text-align:center">NONE</td>
-</tr>
-<tr>
-<td>3</td>
-<td style="text-align:center">SHA1</td>
-<td style="text-align:center">SHA1_96</td>
-<td style="text-align:center">AES_CBC128</td>
-</tr>
-<tr>
-<td>4</td>
-<td style="text-align:center">SHA1</td>
-<td style="text-align:center">SHA1_96</td>
-<td style="text-align:center">XRC4_128</td>
-</tr>
-<tr>
-<td>5</td>
-<td style="text-align:center">SHA1</td>
-<td style="text-align:center">SHA1_96</td>
-<td style="text-align:center">XRC4_40</td>
-</tr>
-<tr>
-<td>6</td>
-<td style="text-align:center">MD5</td>
-<td style="text-align:center">NONE</td>
-<td style="text-align:center">NONE</td>
-</tr>
-<tr>
-<td>7</td>
-<td style="text-align:center">MD5</td>
-<td style="text-align:center">MD5_128</td>
-<td style="text-align:center">NONE</td>
-</tr>
-<tr>
-<td>8</td>
-<td style="text-align:center">MD5</td>
-<td style="text-align:center">MD5_128</td>
-<td style="text-align:center">AES_CBC128</td>
-</tr>
-<tr>
-<td>9</td>
-<td style="text-align:center">MD5</td>
-<td style="text-align:center">MD5_128</td>
-<td style="text-align:center">XRC4_128</td>
-</tr>
-<tr>
-<td>10</td>
-<td style="text-align:center">MD5</td>
-<td style="text-align:center">MD5_128</td>
-<td style="text-align:center">XRC4_40</td>
-</tr>
-<tr>
-<td>11</td>
-<td style="text-align:center">MD5</td>
-<td style="text-align:center">MD5_128</td>
-<td style="text-align:center">NONE</td>
-</tr>
-<tr>
-<td>12</td>
-<td style="text-align:center">MD5</td>
-<td style="text-align:center">MD5_128</td>
-<td style="text-align:center">AES_CBC128</td>
-</tr>
-<tr>
-<td>13</td>
-<td style="text-align:center">MD5</td>
-<td style="text-align:center">MD5_128</td>
-<td style="text-align:center">XRC4_128</td>
-</tr>
-<tr>
-<td>14</td>
-<td style="text-align:center">MD5</td>
-<td style="text-align:center">MD5_128</td>
-<td style="text-align:center">XRC4_40</td>
-</tr>
-</tbody>
-</table>
-<h3 id="命令输出结果举例">命令输出结果举例</h3><pre><code>ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C 3 -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> sensor list  <span class="comment">##这个命令能够获取传感器列表</span>
-
- CPU1 Temp        |<span class="string"> 0.000      </span>|<span class="string"> unspecified </span>|<span class="string"> ok    </span>|<span class="string"> 0.000     </span>|<span class="string"> na        </span>|<span class="string"> 0.000     </span>|<span class="string"> 0.000     </span>|<span class="string"> na        </span>|<span class="string"> na        
- CPU2 Temp        </span>|<span class="string"> 0.000      </span>|<span class="string"> unspecified </span>|<span class="string"> ok    </span>|<span class="string"> 0.000     </span>|<span class="string"> na        </span>|<span class="string"> 0.000     </span>|<span class="string"> 0.000     </span>|<span class="string"> na        </span>|<span class="string"> na        
- System Temp      </span>|<span class="string"> 39.000     </span>|<span class="string"> degrees C  </span>|<span class="string"> ok    </span>|<span class="string"> 0.000     </span>|<span class="string"> 0.000     </span>|<span class="string"> 0.000     </span>|<span class="string"> 81.000    </span>|<span class="string"> 82.000    </span>|<span class="string"> 
- CPU1DIMM         </span>|<span class="string"> 1.544      </span>|<span class="string"> Volts      </span>|<span class="string"> ok    </span>|<span class="string"> 1.320     </span>|<span class="string"> 1.328     </span>|<span class="string"> 1.336     </span>|<span class="string"> 1.656     </span>|<span class="string"> 1.664     </span>|<span class="string"> 1.672     
- CPU2DIMM         </span>|<span class="string"> 1.544      </span>|<span class="string"> Volts      </span>|<span class="string"> ok    </span>|<span class="string"> 1.320     </span>|<span class="string"> 1.328     </span>|<span class="string"> 1.336     </span>|<span class="string"> 1.656     </span>|<span class="string"> 1.664     </span>|<span class="string"> 1.672     
- +1.5V            </span>|<span class="string"> 1.512      </span>|<span class="string"> Volts      </span>|<span class="string"> ok    </span>|<span class="string"> 1.320     </span>|<span class="string"> 1.328     </span>|<span class="string"> 1.336     </span>|<span class="string"> 1.656     </span>|<span class="string"> 1.664     </span>|<span class="string"> 1.672     
- +3.3V            </span>|<span class="string"> 3.240      </span>|<span class="string"> Volts      </span>|<span class="string"> ok    </span>|<span class="string"> 2.880     </span>|<span class="string"> 2.904     </span>|<span class="string"> 2.928     </span>|<span class="string"> 3.648     </span>|<span class="string"> 3.672     </span>|<span class="string"> 3.696     
- +3.3VSB          </span>|<span class="string"> 3.336      </span>|<span class="string"> Volts      </span>|<span class="string"> ok    </span>|<span class="string"> 2.880     </span>|<span class="string"> 2.904     </span>|<span class="string"> 2.928     </span>|<span class="string"> 3.648     </span>|<span class="string"> 3.672     </span>|<span class="string"> 3.696     
- VBAT             </span>|<span class="string"> 3.336      </span>|<span class="string"> Volts      </span>|<span class="string"> ok    </span>|<span class="string"> 2.880     </span>|<span class="string"> 2.904     </span>|<span class="string"> 2.928     </span>|<span class="string"> 3.648     </span>|<span class="string"> 3.672     </span>|<span class="string"> 3.696     
- Fan1             </span>|<span class="string"> 7072.000   </span>|<span class="string"> RPM        </span>|<span class="string"> ok    </span>|<span class="string"> 340.000   </span>|<span class="string"> 408.000   </span>|<span class="string"> 476.000   </span>|<span class="string"> 17204.000 </span>|<span class="string"> 17272.000 </span>|<span class="string"> 17340.000 
- Fan2             </span>|<span class="string"> 7072.000   </span>|<span class="string"> RPM        </span>|<span class="string"> ok    </span>|<span class="string"> 340.000   </span>|<span class="string"> 408.000   </span>|<span class="string"> 476.000   </span>|<span class="string"> 17204.000 </span>|<span class="string"> 17272.000 </span>|<span class="string"> 17340.000 
- Fan3             </span>|<span class="string"> na         </span>|<span class="string"> RPM        </span>|<span class="string"> na    </span>|<span class="string"> 340.000   </span>|<span class="string"> 408.000   </span>|<span class="string"> 476.000   </span>|<span class="string"> 17204.000 </span>|<span class="string"> 17272.000 </span>|<span class="string"> 17340.000 
- PS Status        </span>|<span class="string"> 0.000      </span>|<span class="string"> unspecified </span>|<span class="string"> ok    </span>|<span class="string"> 0.000     </span>|<span class="string"> na        </span>|<span class="string"> 0.000     </span>|<span class="string"> 0.000     </span>|<span class="string"> na        </span>|<span class="string"> na
-
-ipmitool -I lanplus -H &lt;ip&gt; -p &lt;port&gt; -C 3 -U &lt;user&gt; -P &lt;password&gt; sensor get "CPU1 Temp"  ##能够获取ID为CPU1 Temp监测值，CPU1 Temp是sensor的ID，服务器不同，ID表示也不同。
- Locating sensor record...
- Sensor ID              : CPU1 Temp (0x1)
- Entity ID             : 7.1
- Sensor Type (Analog)  : Unknown (0xC0)
- Sensor Reading        : 0 (+/- 0) unspecified
- Status                : ok
- Lower Non-Recoverable : 0.000
- Lower Critical        : na
- Lower Non-Critical    : 0.000
- Upper Non-Critical    : 0.000
- Upper Critical        : na
- Upper Non-Recoverable : na
- Assertion Events      : 
- Assertions Enabled    : lcr- 
- Deassertions Enabled  : lcr-</span>
-</code></pre><h3 id="配置本地BMC的IP和用户名">配置本地BMC的IP和用户名</h3><p>注意这是如何配置本机的IPMI给远程主机连接使用的IP和用户名，所以需要在当前服务器的操作系统上进行配置。有些厂商的服务如HP会提供界面操作。</p>
-<pre><code>ipmitool -I <span class="built_in">open</span> lan print <span class="number">1</span>                           <span class="comment">## 显示BMC通道的信息，如果不知道BMC使用的是哪个通道，请使用下面的命令确认：</span>
-ipmitool -I <span class="built_in">open</span> channel info <span class="number">1</span>
-ipmitool -I <span class="built_in">open</span> lan <span class="built_in">set</span> <span class="number">1</span> ipsrc static                <span class="comment">## 设置本地BMC地址为静态，才能设置IP</span>
-ipmitool -I <span class="built_in">open</span> lan <span class="built_in">set</span> <span class="number">1</span> ipaddr <span class="number">10.53</span>.11.113         <span class="comment">## 设置本地BMC的IP地址</span>
-ipmitool -I <span class="built_in">open</span> lan <span class="built_in">set</span> <span class="number">1</span> netmask <span class="number">255.255</span>.255.0       <span class="comment">## 子网掩码，别忘了设</span>
-ipmitool -I <span class="built_in">open</span> lan <span class="built_in">set</span> <span class="number">1</span> defgw ipaddr <span class="number">10.53</span>.11.254   <span class="comment">## 网关，可设可不设</span>
-ipmitool user list <span class="number">1</span>                                    <span class="comment">## 查看BMC的用户列表</span>
-ipmitool user <span class="built_in">set</span> name <span class="number">1</span> username                        <span class="comment">## 对BMC的1号用户设置用户名username</span>
-ipmitool user <span class="built_in">set</span> password <span class="number">1</span> <span class="number">123456</span>                    <span class="comment">## 对BMC的1号用户设置密码123456</span>
-</code></pre><h3 id="个别IPMITool命令列举">个别IPMITool命令列举</h3><pre><code>ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> sensor thresh   <span class="comment"># 配置ID值等于id的监测项的各种限制值。</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> chassis status  <span class="comment"># 查看主板状态，其中包括了主板电源信息，主板工作状态等</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> chassis restart_cause  <span class="comment"># 查看上次系统重启的原因</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> chassis policy list  <span class="comment"># 查看支持的底盘电源相关策略。</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> chassis power <span class="keyword">on</span> <span class="comment"># 启动底盘，用此命令能够远程开机</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> chassis power off <span class="comment"># 关闭底盘，用此命令能够远程关机</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> chassis power reset <span class="comment">#实现硬重启，用此命令能够远程重启</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> mc reset <span class="comment"># 使BMC重新硬启动</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> mc info <span class="comment"># 查看BMC硬件信息</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> mc setenables =[<span class="keyword">on</span>|off] <span class="comment">#配置bmc相应的允许/禁止选项。</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> mc getenables <span class="comment"># 列出BMC任何允许的选项</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> lan print <span class="number">1</span> <span class="comment"># 打印channel 1的信息</span>
-</code></pre>]]></content>
-    <summary type="html">
-    <![CDATA[<p>智能平台管理界面（IPMI，Intelligent Platform Management Interface）是管理基于 Intel结构的企业级系统中所使用的外围设备采用的一种工业标准，用户能够利用IPMI监控服务器的物理健康特征，如温度、电压、风扇工作状态、电源状 态等。该标准由美国英特尔、惠普（Hewlett-Packard）、NEC、美国戴尔电脑和SuperMicro等公司定制。新的版本是 IPMI2.0（<a href="http://www.intel.com/design/servers/ipmi/）。">http://www.intel.com/design/servers/ipmi/）。</a>]]>
-    
-    </summary>
-    
-      <category term="编程-网络协议" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/"/>
     
   </entry>
   
