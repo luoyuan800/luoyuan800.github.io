@@ -5,7 +5,7 @@
   <subtitle><![CDATA[一点一滴，技术积累]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://luoyuan800.github.io//"/>
-  <updated>2016-09-26T03:02:13.972Z</updated>
+  <updated>2016-10-28T02:32:29.961Z</updated>
   <id>http://luoyuan800.github.io//</id>
   
   <author>
@@ -14,6 +14,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[PipedOutputStream和PipedInputStream]]></title>
+    <link href="http://luoyuan800.github.io/2016/10/30/piped-in-out/"/>
+    <id>http://luoyuan800.github.io/2016/10/30/piped-in-out/</id>
+    <published>2016-10-30T02:31:14.000Z</published>
+    <updated>2016-10-28T02:32:29.961Z</updated>
+    <content type="html"><![CDATA[<p>关于PipedOutputStream和PipedInputStream的一些使用问题。<a id="more"></a></p>
+<h2 id="PipedOutputStream和PipedInputStream的用处">PipedOutputStream和PipedInputStream的用处</h2><p>当需要同时处理输入和输出的时候，可以尝试使用Piple实现类似于生产者和消费者的角色功能。其中Pipe的OutputStream是生产组，用来接受数据并且写入Piple中，PipedInputStream类似消费者，从Pipe中读取数据。所以在PipedInputStream和PipedOutPutStream源代码中可以看到变量和方法的命名都是和writer和receiver相关的。</p>
+<h2 id="用法">用法</h2><p>一般来说我们需要使用两个线程分别处理Output和Input，就是说要在两个不同的线程中使用PipedOutputStream和PipedInputStream。<br>使用 <code>PipledOutputStream.connect(PipedInputStream)</code> 将两个管道连接在以前，这样PipedOutputStream会在接受到数据时调用PipedInputStream的receive方法从而实现将数据写入管道中。</p>
+<h2 id="常见错误信息">常见错误信息</h2><h3 id="IOException(“Pipe_not_connected”)">IOException(“Pipe not connected”)</h3><p>如果只是实例化了PipedInputStream，但是没有调用connect方法（调用PipedInputStream 和PipedOutputStream的connect方法都是一样的效果），就会在InoutStream.read()方法中抛出这个异常。</p>
+<h3 id="IOException(“Pipe_closed”)">IOException(“Pipe closed”)</h3><p>如果PipedOutputStream调用了close方法之后，InputStream还是继续调用read()方法就会抛出这个异常。</p>
+<h3 id="IOException(“Write_end_dead”)">IOException(“Write end dead”)</h3><p>如果执行OutputStream的线程已经执行结束，但是没有调用PipedOutStream.close()。那么InputStream.read()方法就会抛出这个异常。解决方法就是负责生产数据的线程在执行完成之后应该马上调用PipedOutputStream.close()。</p>
+<h3 id="IOException(“Pipe_broken”)">IOException(“Pipe broken”)</h3><p>这个异常在多线程同时执行才会发生的典型错误，并且发生带有一定的偶然性。当PipedInputStream正在执行read()方法的时候，负责生产数据（持有PipedOutputStream）的线程执行结束了，但是并没有在线程结束的时候调用OutputStream的close方法，那么就有可能导致这个异常发生。</p>
+<h2 id="如何正确使用">如何正确使用</h2><ol>
+<li>首先必须要有两个线程分别负责PipedInputStream和PipedOutputStream</li>
+<li>最好能在各自线程执行结束的时候关闭各自负责的Stream</li>
+<li>在负责生成数据的线程执行完成之后一定要马上关闭PipedOutputStream</li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>关于PipedOutputStream和PipedInputStream的一些使用问题。]]>
+    
+    </summary>
+    
+      <category term="编程-Linux/Unix" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux-Unix/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Groovy中unique方法性能分析]]></title>
@@ -171,75 +199,6 @@ hash <span class="keyword">set</span> <span class="keyword">use</span> time 0.01
     </summary>
     
       <category term="编程-Java" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Java/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Linux学习积累]]></title>
-    <link href="http://luoyuan800.github.io/2016/07/25/ubuntu/"/>
-    <id>http://luoyuan800.github.io/2016/07/25/ubuntu/</id>
-    <published>2016-07-25T01:44:14.000Z</published>
-    <updated>2016-07-26T05:54:19.093Z</updated>
-    <content type="html"><![CDATA[<p>自己用到过和遇见过得命令和异常陈列，基本是Ubuntu之类操作系统。<a id="more"></a></p>
-<h2 id="Permission_denied">Permission denied</h2><p><code>sudo chmod -R 777 dell</code></p>
-<p>此命令设置所有用户都有权限访问这个文件夹，其中<code>777=111111111</code>。</p>
-<h2 id="如何安装bin文件">如何安装bin文件</h2><p><code>sudo chmod u+x name.bin</code></p>
-<p>这个命令给予这个bin文件读写的权限</p>
-<p><code>sudo name.bin</code></p>
-<p>这个命令执行安装</p>
-<h2 id="创建新用户">创建新用户</h2><p><code>sudo adduser &lt;username&gt;</code></p>
-<h2 id="切换用户">切换用户</h2><p><code>su &lt;username&gt;</code></p>
-<p>输入密码后就切换到对应的user了</p>
-<p><code>su - &lt;username&gt;</code></p>
-<p>这个命令会把当前设置的环境变量也带过去</p>
-<h2 id="修改默认root用户的密码">修改默认root用户的密码</h2><p>如果安装时候直接设置了自己的用户名，那么root用户的密码就会是随机的（Ubuntu默认不开放root用户)。</p>
-<p><code>sudo passwd</code></p>
-<p>之后按照提示输入密码就可以修改root用户的密码了</p>
-<h2 id="为特定用户添加sudo命令权限">为特定用户添加sudo命令权限</h2><p>有些用户没有运行sudo的权限，执行sudo的话会提示<code>username is not in the sudoers file</code><br>修改sudoers文件可以解决这个问题<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ su -root <span class="comment">## 切换root用户`</span></span><br><span class="line">$ chmod u+w /etc/sudoers <span class="comment"># 添加写权限</span></span><br><span class="line">$  /etc/sudoers </span><br><span class="line">$ <span class="comment"># 在打开的文本编辑器中，找到r**oot ALL=(ALL) ALL在下面添加一行 username ALL=(ALL) ALL</span></span><br><span class="line">$ <span class="comment"># 保存后记得关闭sudoers的写权限</span></span><br><span class="line">$ chmod u-w /etc/sudoers</span><br></pre></td></tr></table></figure></p>
-<h2 id="挂载远程文件系统(mount_remote_filesystem_NFS)">挂载远程文件系统(mount remote filesystem NFS)</h2><ol>
-<li>实现本机的文件系统可以被别的机器挂载</li>
-</ol>
-<p>1.1. 安装nfs服务器</p>
-<p><code>sudo apt-get install nfs-kernel-server</code></p>
-<p>1.2. 修改权限配置文件</p>
-<p><code>vi /etc/exports</code></p>
-<p>根据其中的范例添加你想要共享出去的文件目录（mount point）</p>
-<p>1.3. 重启服务使得配置生效<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$sudo</span> /etc/init.d/portmap restart</span><br><span class="line"><span class="variable">$sudo</span> /etc/init.d/nfs-kernel-server restart</span><br></pre></td></tr></table></figure></p>
-<p>1.4. 你可以使用 <code>showmount -e</code> 命令查看共享成功的文件系统</p>
-<ol>
-<li>挂载命令</li>
-</ol>
-<p><code>sudo mount -t nfs localhost:/home /mnt</code></p>
-<p>其中-t nfs 可以省略，会使用默认支持的nfs文件类型挂载。</p>
-<h2 id="一些基本的命令提示‘command_not_found’">一些基本的命令提示‘command not found’</h2><p>（这个问题一般会出现在redhat 红帽系统中）<br>例如输入命令：<code>ifconfig</code><br>显示<code>bash: ifconfig: command not found</code><br>可能是路径问题，如果然后输入<br><code>/sbin/ifconfig</code>  就会显示IP地址等信息。<br>那么解决办法是<br>执行<code>cat ~/.bash_profile</code> 看自己的PATH，然后再执行：<br><code>gedit /etc/profile</code> 在最后一行后面添加：<br>PATH=$PATH:sbin<br>export PATH=$PATH:/sbin<br>保存退出。<br>然后在初始化一下：<code>source /etc/profile</code> 你再直接输入：<code>ifconfig</code> 就会直接显示IP等信息了</p>
-<h2 id="error_while_loading_shared_libraries">error while loading shared libraries</h2><p>error while loading shared libraries：<strong>**</strong> ：cannot restore segment prot after reloc: Permission denied。<br>网上查了一下，原因是selinux的问题，selinux的设置太过严格导致的。解决的办法是在root用户下，修改/etc/selinux/config 文件<br>把SELINUX=enforcing 改成 SELINUX=disabled。<br>然后，保存关闭，重启机器就可以了。</p>
-<h2 id="Linux开启ssh服务">Linux开启ssh服务</h2><ul>
-<li>开启服务执行 /etc/init.d/sshd start</li>
-<li>如果还是不能连接，尝试关闭防火墙<br><strong> 输入 setup
-</strong> 在弹出界面选择firewall<br>** 选择 no firewall。</li>
-</ul>
-<h2 id="修改ssh的最大连接并发数">修改ssh的最大连接并发数</h2><ul>
-<li>打开文件进行编辑 ： vi /etc.ssh/sshd_config</li>
-<li>找到 MazStartups 去掉注释，并且修改大最小和最大的数值。</li>
-<li>重启ssh服务，可以尝试以下命令（不同内核）<br><strong> sudo systemctl restart sshd 
-</strong> /etc/rc.d/init.d/sshd restart<br>** service sshd restart</li>
-</ul>
-<h2 id="Linux_解压">Linux 解压</h2><ul>
-<li>tar<br><strong> 解压： tar xvf fileName.tar
-</strong> 打包： tar cvf vffileNametar dirName</li>
-<li>.gz<br><strong> 解压： gunzip FileName.gz
-</strong> 解压： gzip -d FileName.gz<br>** 打包： gzip FileName dirName</li>
-<li>.tar.gz 和 .tgz<br><strong> 解压： tar zxvf FileName.tar.gz
-</strong> 打包： tar zcvf FileName.tar.gz DirName</li>
-</ul>
-<h2 id="Linux中的复制命令（必须先给指定的dir创建文件夹）">Linux中的复制命令（必须先给指定的dir创建文件夹）</h2><p>cp -rf source_dir target_dir</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>自己用到过和遇见过得命令和异常陈列，基本是Ubuntu之类操作系统。]]>
-    
-    </summary>
-    
-      <category term="编程-Linux/Unix" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux-Unix/"/>
     
   </entry>
   
@@ -599,6 +558,98 @@ public <span class="class"><span class="keyword">class</span> <span class="title
     </summary>
     
       <category term="编程-Android" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Linux学习积累]]></title>
+    <link href="http://luoyuan800.github.io/2015/11/25/ubuntu/"/>
+    <id>http://luoyuan800.github.io/2015/11/25/ubuntu/</id>
+    <published>2015-11-25T01:44:14.000Z</published>
+    <updated>2016-10-28T02:28:14.872Z</updated>
+    <content type="html"><![CDATA[<p>自己用到过和遇见过得命令和异常陈列，基本是Ubuntu之类的界面和操作系统。<a id="more"></a></p>
+<h2 id="Permission_denied">Permission denied</h2><p><code>sudo chmod -R 777 dell</code></p>
+<p>此命令设置所有用户都有权限访问这个文件夹，其中<code>777=111111111</code>。</p>
+<h2 id="如何安装bin文件">如何安装bin文件</h2><p><code>sudo chmod u+x name.bin</code></p>
+<p>这个命令给予这个bin文件读写的权限</p>
+<p><code>sudo name.bin</code></p>
+<p>这个命令执行安装</p>
+<h2 id="创建新用户">创建新用户</h2><p><code>sudo adduser &lt;username&gt;</code></p>
+<h2 id="修改用户密码">修改用户密码</h2><p><code>sudo password &lt;username&gt;</code></p>
+<h2 id="切换用户">切换用户</h2><p><code>su &lt;username&gt;</code></p>
+<p>输入密码后就切换到对应的user了</p>
+<p><code>su - &lt;username&gt;</code></p>
+<p>这个命令会把当前设置的环境变量也带过去</p>
+<h2 id="修改默认root用户的密码">修改默认root用户的密码</h2><p>如果安装时候直接设置了自己的用户名，那么root用户的密码就会是随机的（Ubuntu默认不开放root用户)。</p>
+<p><code>sudo passwd</code></p>
+<p>之后按照提示输入密码就可以修改root用户的密码了</p>
+<h2 id="为特定用户添加sudo命令权限">为特定用户添加sudo命令权限</h2><p>有些用户没有运行sudo的权限，执行sudo的话会提示<code>username is not in the sudoers file</code><br>修改sudoers文件可以解决这个问题<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ su -root <span class="comment">## 切换root用户`</span></span><br><span class="line">$ chmod u+w /etc/sudoers <span class="comment"># 添加写权限</span></span><br><span class="line">$  /etc/sudoers </span><br><span class="line">$ <span class="comment"># 在打开的文本编辑器中，找到r**oot ALL=(ALL) ALL在下面添加一行 username ALL=(ALL) ALL</span></span><br><span class="line">$ <span class="comment"># 保存后记得关闭sudoers的写权限</span></span><br><span class="line">$ chmod u-w /etc/sudoers</span><br></pre></td></tr></table></figure></p>
+<h2 id="挂载远程文件系统(mount_remote_filesystem_NFS)">挂载远程文件系统(mount remote filesystem NFS)</h2><ol>
+<li>实现本机的文件系统可以被别的机器挂载</li>
+</ol>
+<p>1.1. 安装nfs服务器</p>
+<p><code>sudo apt-get install nfs-kernel-server</code></p>
+<p>1.2. 修改权限配置文件</p>
+<p><code>vi /etc/exports</code></p>
+<p>根据其中的范例添加你想要共享出去的文件目录（mount point）</p>
+<p>1.3. 重启服务使得配置生效<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$sudo</span> /etc/init.d/portmap restart</span><br><span class="line"><span class="variable">$sudo</span> /etc/init.d/nfs-kernel-server restart</span><br></pre></td></tr></table></figure></p>
+<p>1.4. 你可以使用 <code>showmount -e</code> 命令查看共享成功的文件系统</p>
+<ol>
+<li>挂载命令</li>
+</ol>
+<p><code>sudo mount -t nfs localhost:/home /mnt</code></p>
+<p>其中-t nfs 可以省略，会使用默认支持的nfs文件类型挂载。</p>
+<h2 id="一些基本的命令提示‘command_not_found’">一些基本的命令提示‘command not found’</h2><p>（这个问题一般会出现在redhat 红帽系统中）<br>例如输入命令：<code>ifconfig</code><br>显示<code>bash: ifconfig: command not found</code><br>可能是路径问题，如果然后输入<br><code>/sbin/ifconfig</code>  就会显示IP地址等信息。<br>那么解决办法是<br>执行<code>cat ~/.bash_profile</code> 看自己的PATH，然后再执行：<br><code>gedit /etc/profile</code> 在最后一行后面添加：<br>PATH=$PATH:sbin<br>export PATH=$PATH:/sbin<br>保存退出。<br>然后在初始化一下：<code>source /etc/profile</code> 你再直接输入：<code>ifconfig</code> 就会直接显示IP等信息了</p>
+<h2 id="error_while_loading_shared_libraries">error while loading shared libraries</h2><p>error while loading shared libraries：<strong>**</strong> ：cannot restore segment prot after reloc: Permission denied。<br>网上查了一下，原因是selinux的问题，selinux的设置太过严格导致的。解决的办法是在root用户下，修改/etc/selinux/config 文件<br>把SELINUX=enforcing 改成 SELINUX=disabled。<br>然后，保存关闭，重启机器就可以了。</p>
+<h2 id="Linux开启ssh服务">Linux开启ssh服务</h2><ul>
+<li>开启服务执行 /etc/init.d/sshd start</li>
+<li>如果还是不能连接，尝试关闭防火墙<ul>
+<li>输入 setup</li>
+<li>在弹出界面选择firewall</li>
+<li>选择 no firewall。</li>
+</ul>
+</li>
+</ul>
+<h2 id="修改ssh的最大连接并发数">修改ssh的最大连接并发数</h2><ul>
+<li>打开文件进行编辑 ： vi /etc.ssh/sshd_config</li>
+<li>找到 MazStartups 去掉注释，并且修改大最小和最大的数值。</li>
+<li>重启ssh服务，可以尝试以下命令（不同内核）<ul>
+<li>sudo systemctl restart sshd </li>
+<li>/etc/rc.d/init.d/sshd restart </li>
+<li>service sshd restart</li>
+</ul>
+</li>
+</ul>
+<h2 id="Linux_解压">Linux 解压</h2><ul>
+<li>tar<ul>
+<li>解压： tar xvf fileName.tar</li>
+<li>打包： tar cvf vffileNametar dirName</li>
+</ul>
+</li>
+<li>.gz<ul>
+<li>解压： gunzip FileName.gz</li>
+<li>解压： gzip -d FileName.gz</li>
+<li>打包： gzip FileName dirName</li>
+</ul>
+</li>
+<li>.tar.gz 和 .tgz<ul>
+<li>解压： tar zxvf FileName.tar.gz</li>
+<li>打包： tar zcvf FileName.tar.gz DirName</li>
+</ul>
+</li>
+</ul>
+<h2 id="Linux中的复制命令">Linux中的复制命令</h2><p>cp -rf source_dir target_dir</p>
+<h2 id="查看Linux内核版本的命令">查看Linux内核版本的命令</h2><ul>
+<li>命令： uname -a, 查看系统内核版本号及系统名称</li>
+<li>命令： cat /proc/version, 查看目录”/proc”下version的信息，也可以得到当前系统的内核版本号及系统名称 </li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>自己用到过和遇见过得命令和异常陈列，基本是Ubuntu之类的界面和操作系统。]]>
+    
+    </summary>
+    
+      <category term="编程-Linux/Unix" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux-Unix/"/>
     
   </entry>
   
@@ -1806,7 +1857,7 @@ war {
     <link href="http://luoyuan800.github.io/2015/07/02/git-study/"/>
     <id>http://luoyuan800.github.io/2015/07/02/git-study/</id>
     <published>2015-07-02T02:00:01.000Z</published>
-    <updated>2016-01-05T02:25:06.878Z</updated>
+    <updated>2016-10-28T02:27:45.324Z</updated>
     <content type="html"><![CDATA[<p>一些git命令的使用tips，关于git的原理解释就不在此处提及了<a id="more"></a></p>
 <h2 id="复制远程代码到本地">复制远程代码到本地</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> &lt;版本库网址&gt;  &lt;本地文件夹&gt; <span class="comment">## 这个命令是默认建立master分支</span></span><br></pre></td></tr></table></figure>
 <p>在clone出master分支之后，在对应的master文件夹下面使用checkout命令可以下载分支的代码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b branch origin/branch  <span class="comment">## 这个命令会在当前目录下载指定分支</span></span><br></pre></td></tr></table></figure></p>
@@ -1831,6 +1882,12 @@ war {
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git clean <span class="operator">-f</span>  <span class="comment">## 删除 untracked files</span></span><br><span class="line">$ git clean -fd <span class="comment">## 删除文件的同时也会删除文件夹</span></span><br><span class="line">$ git clean -xfd <span class="comment">## gitignore 的也会被删除</span></span><br></pre></td></tr></table></figure>
 <p>在命令前加上-n可以查看会被删除掉的文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git clean -nxfd</span><br></pre></td></tr></table></figure></p>
 <h2 id="分享本地仓库">分享本地仓库</h2><p>当你从远程仓库clone代码之后，你本地其实也同时建立了一个完整的仓库。你可以将这个仓库作为团队开发时的共享仓库<br>在windows系统下，你只需要共享你clone的项目的文件夹，然后让其他组员通过<code>git clone file:///$你的共享项目路径</code>就可以了。<br>如果其他组员也下载了远程仓库的代码，那么可以让他们修改.git文件夹内的config文件，将其中的[remote “origin”]下的ulr地址改成你的共享文件夹目录就可以了，记得加上file:///，并且在你的共享地址前面加上\进行转义，所以url的值应该看起来是这样的：<br>file:///\\hostname\file_path。<br>当你共享了自己的仓库给其他用户之后，记得开启写权限给他们。<br>还有一个一定要注意的问题，如果你和你组员都需要提交到同样的branch，那么你不能占用那个branch，你必须也重新建立一个branch来进行你的工作。否则，如果其他人要提交的branch在你的工作环境中是check out的状态的话，别人提交会有 unpacker err。</p>
+<h2 id="创建Tag">创建Tag</h2><ol>
+<li><code>git tag &lt;tagename&gt;</code>。 这个命令是给当前的commit打上一个轻量级的tag。</li>
+<li><code>git tag -a &lt;tagename&gt; -m &lt;tagmessage&gt;</code> 。这个命令是个当前commit打上一个带有备注的标签。</li>
+<li><code>git push origin &lt;tagename&gt;</code> 发布tag到远程仓库</li>
+<li><code>git push origin --tags</code> 发布所有的本地tag到远程仓库。</li>
+</ol>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>一些git命令的使用tips，关于git的原理解释就不在此处提及了]]>
@@ -1838,54 +1895,6 @@ war {
     </summary>
     
       <category term="编程-工具" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-%E5%B7%A5%E5%85%B7/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Linux 文件系统类型]]></title>
-    <link href="http://luoyuan800.github.io/2015/07/01/linux-filesystem-types/"/>
-    <id>http://luoyuan800.github.io/2015/07/01/linux-filesystem-types/</id>
-    <published>2015-07-01T07:38:50.000Z</published>
-    <updated>2016-07-26T03:46:37.812Z</updated>
-    <content type="html"><![CDATA[<p>Linux操作系统下可用的各种文件系统类型注解<a id="more"></a></p>
-<h2 id="ufs">ufs</h2><p><em>The Unix file system (UFS; also called the Berkeley Fast File System, the BSD Fast File System or FFS) is a file system used by many Unix and Unix-like operating systems. It is a distant descendant of the original filesystem used by Version 7 Unix.</em><br>UFS是UNIX文件系统的简称，它来源于4.3Tahoe发行版中提供的BSD Fat Fast File System（FFS）系统，属于FFS的演化版本。UFS几乎是大部分UNIX类操作系统默认的基于磁盘的文件系统，包括Solaris、Free BSD、Open BSD、Net BSD、HP-UX等，甚至Apple的OS X也能支持UFS文件系统。<br>在UFS文件系统中，“块”(“块”是UFS文件系统中文件分配和存储的基本单位，类似于FAT文件系统和NTFS文件系统中“簇”的概念）有多种类型，每种类型的块都具有特定的功能。UFS文件系统主要具有四种类型的块：引导块、超级块、i-节点、数据块。</p>
-<ul>
-<li>引导块：在引导系统时使用的信息</li>
-<li>超级块：记录文件系统的详细信息</li>
-<li>i-节点：记录文件的各种信息</li>
-<li>数据块：存储每个文件的实际内容</li>
-</ul>
-<h2 id="ext2">ext2</h2><p><em>The ext2 or second extended filesystem is a file system for the Linux kernel. It was initially designed by Rémy Card as a replacement for the extended file system (ext). Its metadata structure was inspired by the earlier Unix File System (UFS).</em><br>The Second Extended File System(ext2)文件系统是Linux系统中的标准文件系统，是通过对Minix的文件系统进行扩展而得到的，其存取文件的性能极好。<br>在ext2文件系统中，文件由inode（包含有文件的所有信息）进行唯一标识。一个文件可能对应多个文件名，只有在所有文件名都被删除后，该文件才会被删除。此外，同一文件在磁盘中存放和被打开时所对应的inode是不同的，并由内核负责同步。<br>ext2文件系统采用三级间接块来存储数据块指针，并以块（block，默认为1KB）为单位分配空间。其磁盘分配策略是尽可能将逻辑相邻的文件分配到磁盘上物理相邻的块中，并尽可能将碎片分配给尽量少的文件，以从全局上提高性能。ext2文件系统将同一目录下的文件（包括目录）尽可能的放在同一个块组中，但目录则分布在各个块组中以实现负载均衡。在扩展文件时，会尽量一次性扩展8个连续块给文件（以预留空间的形式实现）。</p>
-<h2 id="ext3">ext3</h2><p><em>Third extended filesystem, is a journaled file system that is commonly used by the Linux kernel. Its main advantage over ext2 is journaling, which improves reliability and eliminates the need to check the file system after an unclean shutdown.</em><br>ext3的设计目标就是提供对于ext2的高度兼容，很多磁盘上的结构和都和ext2很相似。也因为这样，ext3缺乏很多最新设计中的功能，例如动态分配inode和可变块大小（frags或tails）。<br>ext3文件系统在被挂载为写入的时候，是不能进行fsck的。 ext3档案系统的倾倒作业在这个档案系统还是挂载中的时候执行可能会造成资料的损坏。<br>ext3不支持在其他文件系统上已经支持（例如：JFS2和ext4）的扩展。</p>
-<h2 id="ext4">ext4</h2><p><em>The ext4 or fourth extended filesystem is a journaling file system for Linux, developed as the successor to ext3.</em><br>EXT4是第四代扩展文件系统（英语：Fourth extended filesystem，缩写为 ext4）是Linux系统下的日志文件系统，是ext3文件系统的后继版本。Ext3文件系统最多只能支持32TB的文件系统和2TB的文件，根据使用的具体架构和系统设置，实际容量上限可能比这个数字还要低，即只能容纳2TB的文件系统和16GB的文件。而Ext4的文件系统容量达到1EB，而文件容量则达到16TB。<br>Ext4文件系统在Ext3的基础之上做了很多改进，引入了大量新功能，这些改进主要是为了提高未来的Linux系统的性能。<br>虽然Ext4做了很多改进，但依然能够与Ext3实现向后和向前的兼容性，这一点的确很难得。<br>因为Ext3文件系统是Linux操作系统上最受欢迎的文件系统之一，所以Ext4的研发人员考虑到应该让Ext3用户能够轻松迁移到Ext4，为此，Ext4被设计为在盘区结构方面具有向后和向前的兼容性。<br>首先Ext4是可以向前兼容的，也就是说Ext3文件系统可以挂载为Ext4文件系统使用，不过为了充分利用Ext4的优势，必须实现文件系统的迁移，以转换和利用新的Ext4格式。<br>Ext3文件系统可以在线转换为Ext4，但这样并不能用到Ext4的全部新特性，只有将文件系统重新创建为Ext4才比较彻底。<br>Ext4的向后兼容，向后兼容就是指可以将Ext4文件系统挂载为Ext3文件系统使用，但是前提是Ext4文件系统不能使用盘区功能。</p>
-<h2 id="hfs">hfs</h2><p><em>Hierarchical File System (HFS) is a proprietary file system developed by Apple Inc for use in computer systems running Mac OS. Originally designed for use on floppy and hard disks, it can also be found on read-only media such as CD-ROMs. </em><br>HFS分层文件系统（Hierarchical File System，HFS）是一种由苹果电脑开发，并使用在Mac OS上的文件系统。最初被设计用于软盘和硬盘，同时也可以在在只读媒体如CD-ROM上见到。</p>
-<h2 id="hfs+">hfs+</h2><p><em>HFS+ is a file system developed by Apple Inc. HFS+ was developed to replace the Hierarchical File System (HFS).</em><br>HFS+文件系统是目前的Apple电脑中默认的最常见的文件系统。HFS+来源于UNIX，但是又不用于UNIX，它增加了许多新的特性，同时也有许多不同于Windows、UNIX等系统的概念。HFS+是苹果公司为替代他们的分层文件系统（HFS）而开发的一种文件系统。它被用在macintosh电脑（或者其他运行Mac OS的电脑）上。它也是iPod上使用的其中一种格式。HFS+也被称为Mac OS Extended（或误称为“HFS Extended”)。在开发过程中，苹果公司也把这个文件系统的代号命名为“Sequoia”<br>HFS+是一个HFS的改进版本，支持更大的文件，并用Unicode来命名文件或文件夹，代替了Mac OS Roman或其他一些字符集. 和HFS一样，HFS+也使用B树来存储大部分分卷元数据。</p>
-<h2 id="vsfs">vsfs</h2><h2 id="mvfs">mvfs</h2><p><em>MVFS (MultiVersion File System) is a virtual file system which displays specific versions of data stored in ClearCase. In particular, it supports dynamic views which can show an arbitrary combination of local and remote files.</em><br>这是一种虚拟的文件系统，在ClearCase中使用，用于展示不同版本的数据。</p>
-<h2 id="vxfs">vxfs</h2><p><em>The VERITAS File System (or VxFS; called JFS and OnlineJFS in HP-UX) is an extent-based file system. VxFS is used as the primary filesystem of the HP-UX operating system. </em><br>VeritasFileSystem(VxFS）是首个商业日志记录文件系统。通过日志记录功能，元数据更改首先写入到日志，然后再写入到磁盘。由于无需 在多处写入更改，且元数据是异步写入的，因此吞吐量的速度较快。VxFS也是基于扩展区的意向日志记录文件系统。VxFS设计用于要求高性能和高可用性， 并且可以处理大量数据的操作环境。</p>
-<h2 id="nfs">nfs</h2><p>NFS（Network File System）即网络文件系统，是FreeBSD支持的文件系统中的一种，它允许网络中的计算机之间通过TCP/IP网络共享资源。在NFS的应用中，本地NFS的客户端应用可以透明地读写位于远端NFS服务器上的文件，就像访问本地文件一样。</p>
-<h2 id="nfs2">nfs2</h2><p><em>NFSv2 originally operated only over UDP. Its designers meant to keep the server side stateless, with locking (for example) implemented outside of the core protocol. The decision to make the file system stateless was a key decision, since it makes recovery from server failures trivial: all network clients freeze up when a server becomes unavailable, but once the server is again operational all the state to retry each transaction is contained in each RPC, which is retried by the client stub(s). This design decision allows UNIX applications, which usually cannot tolerate file server crashes, to ignore the problem.</em><br>NFSv2是基于32为系统的，所以其支持的最大文件只能是2G。设计的目标是使得对应的文件系统是无状态的。</p>
-<h2 id="nfs3">nfs3</h2><ul>
-<li>支持64位，文件大小可以大于2g</li>
-<li>支持异步写操作</li>
-</ul>
-<h2 id="nfs4">nfs4</h2><p><em>NFS version 4.1 (RFC 5661, January 2010) aims to provide protocol support to take advantage of clustered server deployments including the ability to provide scalable parallel access to files distributed among multiple servers (pNFS extension).</em><br>针对的目标是集群的大文件读写优化。整合了afs和cifs的优点。</p>
-<h2 id="hsfs">hsfs</h2><h2 id="jfs">jfs</h2><p>JFS( JOURNAL FILE SYSTEM)，一种字节级日志文件系统，借鉴了数据库保护系统的技术，以日志的形式记录文件的变化。JFS通过记录文件结构而不是数据本身的变化来保证数据的完整性。这种方式可以确保在任何时刻都能维护数据的可访问性。<br>该文件系统主要是为满足服务器（从单处理器系统到高级多处理器和群集系统）的高吞吐量和可靠性需求而设计、开发的。JFS文件系统是为面向事务的高性能系统而开发的。在IBM的AIX系统上，JFS已经过较长时间的测试，结果表明它是可靠、快速和容易使用的。 JFS也是一个有大量用户安装使用的企业级文件系统，具有可伸缩性和健壮性。与非日志文件系统相比，它的突出优点是快速重启能力，JFS能够在几秒或几分钟内就把文件系统恢复到一致状态。</p>
-<h2 id="jfs2">jfs2</h2><p><em>In the AIX operating system, there exist two generations of JFS filesystem that are called JFS (JFS1) and JFS2 respectively.</em><br>Jfs2 是在AIX中专用的一种文件系统。</p>
-<h2 id="reiserfs">reiserfs</h2><p>ReiserFS是一种新型的文件系统，它通过一种与众不同的方式—完全平衡树结构来容纳数据，包括文件数据，文件名以及日志支持。ReiserFS还以支持海量磁盘和磁盘阵列，并能在上面继续保很快的搜索速度和很高的效率。</p>
-<h2 id="reiser4">reiser4</h2><p><em>Reiser4 is a computer file system, successor to the ReiserFS file system.</em><br>这个文件系统是设计用来替代reiserfs的。</p>
-<h2 id="smbfs">smbfs</h2><h2 id="zfs">zfs</h2><p>ZFS文件系统的英文名称为Zettabyte File System,也叫动态文件系统（Dynamic File System）,是第一个128位文件系统。最初是由Sun公司为Solaris 10操作系统开发的文件系统。作为OpenSolaris开源计划的一部分，ZFS于2005年11月发布，被Sun称为是终极文件系统，经历了 10 年的活跃开发。而最新的开发将全面开放，并重新命名为 OpenZFS</p>
-<h2 id="xfs">xfs</h2><p><em>XFS is a high-performance 64-bit journaling file system, the file system was ported to the Linux kernel in 2001.</em><br>XfS文件系统是SGI开发的高级日志文件系统，XFS极具伸缩性，非常健壮。所幸的是SGI将其移植到了Linux系统中。在linux环境下。目前版本可用的最新XFS文件系统的为1.2版本，可以很好地工作在2.4核心下。<br>XFS 是 Silicon Graphics，Inc. 于 90 年代初开发的。它至今仍作为 SGI 基于 IRIX 的产品（从工作站到超级计算机）的底层文件系统来使用。现在，XFS 也可以用于 Linux。XFS 的 Linux 版的到来是激动人心的，首先因为它为 Linux 社区提供了一种健壮的、优秀的以及功能丰富的文件系统，并且这种文件系统所具有的可伸缩性能够满足最苛刻的存储需求</p>
-<h2 id="btrfs">btrfs</h2><p><em>Btrfs (B-tree file system) is a GPL-licensed copy-on-write file system for Linux.</em><br>Btrfs（通常念成Butter FS），由Oracle于2007年宣布并进行中的COW(copy-on-write式)文件系统。目标是取代Linux目前的ext3文件系统，改善ext3的限制，特别是单一文件大小的限制，总文件系统大小限制以及加入文件校验和特性。加入目前ext3/4未支持的一些功能，例如可写的磁盘快照(snapshots)，以及支持递归的快照(snapshots of snapshots)，内建磁盘阵列（RAID）支持，支持子卷(Subvolumes)的概念，允许在线调整文件系统大小。</p>
-<h2 id="tmpfs">tmpfs</h2><p><em>A common name for a temporary file storage facility on many Unix-like operating systems.</em><br>tmpfs是一种基于内存的文件系统，它和虚拟磁盘ramdisk比较类似像，但不完全相同，和ramdisk一样，tmpfs可以使用RAM，但它也可以使用swap分区来存储。</p>
-<h2 id="gfs2">gfs2</h2><p><em>The Global File System 2 or GFS2 is a shared disk file system for Linux computer clusters.</em></p>
-<h2 id="vxcfs">vxcfs</h2><p><em>A cache coherent POSIX compliant shared file system built based upon VERITAS File System. Available on: IBM AIX, Solaris, Linux, and HP-UX.</em></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>Linux操作系统下可用的各种文件系统类型注解]]>
-    
-    </summary>
-    
-      <category term="编程-Linux/Unix" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-Linux-Unix/"/>
     
   </entry>
   

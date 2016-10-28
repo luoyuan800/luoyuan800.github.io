@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Ubuntu学习积累 | Yuan</title>
+    <title>Linux学习积累 | Yuan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Luo Yuan">
     
 
     
-    <meta name="description" content="自己用到过和遇见过得Ubuntu命令和异常陈列">
+    <meta name="description" content="自己用到过和遇见过得命令和异常陈列，基本是Ubuntu之类的界面和操作系统。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Ubuntu学习积累">
+<meta property="og:title" content="Linux学习积累">
 <meta property="og:url" content="http://luoyuan800.github.io/2015/11/25/ubuntu/index.html">
 <meta property="og:site_name" content="Yuan">
-<meta property="og:description" content="自己用到过和遇见过得Ubuntu命令和异常陈列">
-<meta property="og:updated_time" content="2015-11-25T01:41:44.546Z">
+<meta property="og:description" content="自己用到过和遇见过得命令和异常陈列，基本是Ubuntu之类的界面和操作系统。">
+<meta property="og:updated_time" content="2016-10-28T02:28:14.872Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Ubuntu学习积累">
-<meta name="twitter:description" content="自己用到过和遇见过得Ubuntu命令和异常陈列">
+<meta name="twitter:title" content="Linux学习积累">
+<meta name="twitter:description" content="自己用到过和遇见过得命令和异常陈列，基本是Ubuntu之类的界面和操作系统。">
 
     
     <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
@@ -79,7 +79,7 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/25/ubuntu/" title="Ubuntu学习积累" itemprop="url">Ubuntu学习积累</a>
+      <a href="/2015/11/25/ubuntu/" title="Linux学习积累" itemprop="url">Linux学习积累</a>
   </h1>
   <p class="article-author">By
        
@@ -95,11 +95,11 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Permission_denied"><span class="toc-number">1.</span> <span class="toc-text">Permission denied</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何安装bin文件"><span class="toc-number">2.</span> <span class="toc-text">如何安装bin文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建新用户"><span class="toc-number">3.</span> <span class="toc-text">创建新用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#切换用户"><span class="toc-number">4.</span> <span class="toc-text">切换用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改默认root用户的密码"><span class="toc-number">5.</span> <span class="toc-text">修改默认root用户的密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为特定用户添加sudo命令权限"><span class="toc-number">6.</span> <span class="toc-text">为特定用户添加sudo命令权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#挂载远程文件系统(mount_remote_filesystem_NFS)"><span class="toc-number">7.</span> <span class="toc-text">挂载远程文件系统(mount remote filesystem NFS)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一些基本的命令提示‘command_not_found’"><span class="toc-number">8.</span> <span class="toc-text">一些基本的命令提示‘command not found’</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#error_while_loading_shared_libraries"><span class="toc-number">9.</span> <span class="toc-text">error while loading shared libraries</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Permission_denied"><span class="toc-number">1.</span> <span class="toc-text">Permission denied</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何安装bin文件"><span class="toc-number">2.</span> <span class="toc-text">如何安装bin文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建新用户"><span class="toc-number">3.</span> <span class="toc-text">创建新用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改用户密码"><span class="toc-number">4.</span> <span class="toc-text">修改用户密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#切换用户"><span class="toc-number">5.</span> <span class="toc-text">切换用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改默认root用户的密码"><span class="toc-number">6.</span> <span class="toc-text">修改默认root用户的密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为特定用户添加sudo命令权限"><span class="toc-number">7.</span> <span class="toc-text">为特定用户添加sudo命令权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#挂载远程文件系统(mount_remote_filesystem_NFS)"><span class="toc-number">8.</span> <span class="toc-text">挂载远程文件系统(mount remote filesystem NFS)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一些基本的命令提示‘command_not_found’"><span class="toc-number">9.</span> <span class="toc-text">一些基本的命令提示‘command not found’</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#error_while_loading_shared_libraries"><span class="toc-number">10.</span> <span class="toc-text">error while loading shared libraries</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux开启ssh服务"><span class="toc-number">11.</span> <span class="toc-text">Linux开启ssh服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改ssh的最大连接并发数"><span class="toc-number">12.</span> <span class="toc-text">修改ssh的最大连接并发数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux_解压"><span class="toc-number">13.</span> <span class="toc-text">Linux 解压</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux中的复制命令"><span class="toc-number">14.</span> <span class="toc-text">Linux中的复制命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看Linux内核版本的命令"><span class="toc-number">15.</span> <span class="toc-text">查看Linux内核版本的命令</span></a></li></ol>
 		
 		</div>
 		
-		<p>自己用到过和遇见过得Ubuntu命令和异常陈列<a id="more"></a></p>
+		<p>自己用到过和遇见过得命令和异常陈列，基本是Ubuntu之类的界面和操作系统。<a id="more"></a></p>
 <h2 id="Permission_denied">Permission denied</h2><p><code>sudo chmod -R 777 dell</code></p>
 <p>此命令设置所有用户都有权限访问这个文件夹，其中<code>777=111111111</code>。</p>
 <h2 id="如何安装bin文件">如何安装bin文件</h2><p><code>sudo chmod u+x name.bin</code></p>
@@ -107,6 +107,7 @@
 <p><code>sudo name.bin</code></p>
 <p>这个命令执行安装</p>
 <h2 id="创建新用户">创建新用户</h2><p><code>sudo adduser &lt;username&gt;</code></p>
+<h2 id="修改用户密码">修改用户密码</h2><p><code>sudo password &lt;username&gt;</code></p>
 <h2 id="切换用户">切换用户</h2><p><code>su &lt;username&gt;</code></p>
 <p>输入密码后就切换到对应的user了</p>
 <p><code>su - &lt;username&gt;</code></p>
@@ -132,6 +133,48 @@
 <p>其中-t nfs 可以省略，会使用默认支持的nfs文件类型挂载。</p>
 <h2 id="一些基本的命令提示‘command_not_found’">一些基本的命令提示‘command not found’</h2><p>（这个问题一般会出现在redhat 红帽系统中）<br>例如输入命令：<code>ifconfig</code><br>显示<code>bash: ifconfig: command not found</code><br>可能是路径问题，如果然后输入<br><code>/sbin/ifconfig</code>  就会显示IP地址等信息。<br>那么解决办法是<br>执行<code>cat ~/.bash_profile</code> 看自己的PATH，然后再执行：<br><code>gedit /etc/profile</code> 在最后一行后面添加：<br>PATH=$PATH:sbin<br>export PATH=$PATH:/sbin<br>保存退出。<br>然后在初始化一下：<code>source /etc/profile</code> 你再直接输入：<code>ifconfig</code> 就会直接显示IP等信息了</p>
 <h2 id="error_while_loading_shared_libraries">error while loading shared libraries</h2><p>error while loading shared libraries：<strong>**</strong> ：cannot restore segment prot after reloc: Permission denied。<br>网上查了一下，原因是selinux的问题，selinux的设置太过严格导致的。解决的办法是在root用户下，修改/etc/selinux/config 文件<br>把SELINUX=enforcing 改成 SELINUX=disabled。<br>然后，保存关闭，重启机器就可以了。</p>
+<h2 id="Linux开启ssh服务">Linux开启ssh服务</h2><ul>
+<li>开启服务执行 /etc/init.d/sshd start</li>
+<li>如果还是不能连接，尝试关闭防火墙<ul>
+<li>输入 setup</li>
+<li>在弹出界面选择firewall</li>
+<li>选择 no firewall。</li>
+</ul>
+</li>
+</ul>
+<h2 id="修改ssh的最大连接并发数">修改ssh的最大连接并发数</h2><ul>
+<li>打开文件进行编辑 ： vi /etc.ssh/sshd_config</li>
+<li>找到 MazStartups 去掉注释，并且修改大最小和最大的数值。</li>
+<li>重启ssh服务，可以尝试以下命令（不同内核）<ul>
+<li>sudo systemctl restart sshd </li>
+<li>/etc/rc.d/init.d/sshd restart </li>
+<li>service sshd restart</li>
+</ul>
+</li>
+</ul>
+<h2 id="Linux_解压">Linux 解压</h2><ul>
+<li>tar<ul>
+<li>解压： tar xvf fileName.tar</li>
+<li>打包： tar cvf vffileNametar dirName</li>
+</ul>
+</li>
+<li>.gz<ul>
+<li>解压： gunzip FileName.gz</li>
+<li>解压： gzip -d FileName.gz</li>
+<li>打包： gzip FileName dirName</li>
+</ul>
+</li>
+<li>.tar.gz 和 .tgz<ul>
+<li>解压： tar zxvf FileName.tar.gz</li>
+<li>打包： tar zcvf FileName.tar.gz DirName</li>
+</ul>
+</li>
+</ul>
+<h2 id="Linux中的复制命令">Linux中的复制命令</h2><p>cp -rf source_dir target_dir</p>
+<h2 id="查看Linux内核版本的命令">查看Linux内核版本的命令</h2><ul>
+<li>命令： uname -a, 查看系统内核版本号及系统名称</li>
+<li>命令： cat /proc/version, 查看目录”/proc”下version的信息，也可以得到当前系统的内核版本号及系统名称 </li>
+</ul>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -139,7 +182,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程-Linux/">编程-Linux</a>
+  <a class="article-category-link" href="/categories/编程-Linux-Unix/">编程-Linux/Unix</a>
 </div>
 
 
@@ -149,7 +192,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://luoyuan800.github.io/2015/11/25/ubuntu/" data-title="Ubuntu学习积累 | Yuan" data-tsina="null" class="share clearfix">
+	  <div data-url="http://luoyuan800.github.io/2015/11/25/ubuntu/" data-title="Linux学习积累 | Yuan" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -183,7 +226,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/11/25/ubuntu/" data-title="Ubuntu学习积累" data-url="http://luoyuan800.github.io/2015/11/25/ubuntu/"></div>
+	<div class="ds-thread" data-thread-key="2015/11/25/ubuntu/" data-title="Linux学习积累" data-url="http://luoyuan800.github.io/2015/11/25/ubuntu/"></div>
 </section>
 
 
@@ -193,7 +236,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Permission_denied"><span class="toc-number">1.</span> <span class="toc-text">Permission denied</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何安装bin文件"><span class="toc-number">2.</span> <span class="toc-text">如何安装bin文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建新用户"><span class="toc-number">3.</span> <span class="toc-text">创建新用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#切换用户"><span class="toc-number">4.</span> <span class="toc-text">切换用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改默认root用户的密码"><span class="toc-number">5.</span> <span class="toc-text">修改默认root用户的密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为特定用户添加sudo命令权限"><span class="toc-number">6.</span> <span class="toc-text">为特定用户添加sudo命令权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#挂载远程文件系统(mount_remote_filesystem_NFS)"><span class="toc-number">7.</span> <span class="toc-text">挂载远程文件系统(mount remote filesystem NFS)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一些基本的命令提示‘command_not_found’"><span class="toc-number">8.</span> <span class="toc-text">一些基本的命令提示‘command not found’</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#error_while_loading_shared_libraries"><span class="toc-number">9.</span> <span class="toc-text">error while loading shared libraries</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Permission_denied"><span class="toc-number">1.</span> <span class="toc-text">Permission denied</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何安装bin文件"><span class="toc-number">2.</span> <span class="toc-text">如何安装bin文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建新用户"><span class="toc-number">3.</span> <span class="toc-text">创建新用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改用户密码"><span class="toc-number">4.</span> <span class="toc-text">修改用户密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#切换用户"><span class="toc-number">5.</span> <span class="toc-text">切换用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改默认root用户的密码"><span class="toc-number">6.</span> <span class="toc-text">修改默认root用户的密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为特定用户添加sudo命令权限"><span class="toc-number">7.</span> <span class="toc-text">为特定用户添加sudo命令权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#挂载远程文件系统(mount_remote_filesystem_NFS)"><span class="toc-number">8.</span> <span class="toc-text">挂载远程文件系统(mount remote filesystem NFS)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一些基本的命令提示‘command_not_found’"><span class="toc-number">9.</span> <span class="toc-text">一些基本的命令提示‘command not found’</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#error_while_loading_shared_libraries"><span class="toc-number">10.</span> <span class="toc-text">error while loading shared libraries</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux开启ssh服务"><span class="toc-number">11.</span> <span class="toc-text">Linux开启ssh服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改ssh的最大连接并发数"><span class="toc-number">12.</span> <span class="toc-text">修改ssh的最大连接并发数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux_解压"><span class="toc-number">13.</span> <span class="toc-text">Linux 解压</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux中的复制命令"><span class="toc-number">14.</span> <span class="toc-text">Linux中的复制命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看Linux内核版本的命令"><span class="toc-number">15.</span> <span class="toc-text">查看Linux内核版本的命令</span></a></li></ol>
  
   </div>
 
@@ -211,11 +254,13 @@
 		  
 		
 		  
-			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>8</sup></a></li>
+			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>9</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/编程-Linux/" title="编程-Linux">编程-Linux<sup>6</sup></a></li>
+		
+		  
+			<li><a href="/categories/编程-Linux-Unix/" title="编程-Linux/Unix">编程-Linux/Unix<sup>8</sup></a></li>
 		  
 		
 		  

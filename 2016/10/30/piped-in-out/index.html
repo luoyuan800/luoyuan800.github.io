@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>启用WinRm | Yuan</title>
+    <title>PipedOutputStream和PipedInputStream | Yuan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Luo Yuan">
     
 
     
-    <meta name="description" content="如何在Windows上配置启用WinRm">
+    <meta name="description" content="关于PipedOutputStream和PipedInputStream的一些使用问题。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="启用WinRm">
-<meta property="og:url" content="http://luoyuan800.github.io/2015/09/22/WinRm/index.html">
+<meta property="og:title" content="PipedOutputStream和PipedInputStream">
+<meta property="og:url" content="http://luoyuan800.github.io/2016/10/30/piped-in-out/index.html">
 <meta property="og:site_name" content="Yuan">
-<meta property="og:description" content="如何在Windows上配置启用WinRm">
-<meta property="og:updated_time" content="2015-09-23T01:54:11.487Z">
+<meta property="og:description" content="关于PipedOutputStream和PipedInputStream的一些使用问题。">
+<meta property="og:updated_time" content="2016-10-28T02:32:29.961Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="启用WinRm">
-<meta name="twitter:description" content="如何在Windows上配置启用WinRm">
+<meta name="twitter:title" content="PipedOutputStream和PipedInputStream">
+<meta name="twitter:description" content="关于PipedOutputStream和PipedInputStream的一些使用问题。">
 
     
     <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
@@ -79,14 +79,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/22/WinRm/" title="启用WinRm" itemprop="url">启用WinRm</a>
+      <a href="/2016/10/30/piped-in-out/" title="PipedOutputStream和PipedInputStream" itemprop="url">PipedOutputStream和PipedInputStream</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-09-22T06:45:50.000Z" itemprop="datePublished"> 发表于 2015-09-22</time>
+    <time datetime="2016-10-30T02:31:14.000Z" itemprop="datePublished"> 发表于 2016-10-30</time>
     
   </p>
 </header>
@@ -95,64 +95,21 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#在windows_server_system上配置WinRm"><span class="toc-number">1.</span> <span class="toc-text">在windows server system上配置WinRm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WinRm_登陆方式设置"><span class="toc-number">2.</span> <span class="toc-text">WinRm 登陆方式设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#默认的WinRm登陆是使用Basic的，但是Basic模式下是不能修改WinRm的配置，只能读取数据。如果需要修改配置，首先我们需要配置登陆模式为negotiate。"><span class="toc-number">2.1.</span> <span class="toc-text">默认的WinRm登陆是使用Basic的，但是Basic模式下是不能修改WinRm的配置，只能读取数据。如果需要修改配置，首先我们需要配置登陆模式为negotiate。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如果需要切换回Basic的登陆方式"><span class="toc-number">2.2.</span> <span class="toc-text">如果需要切换回Basic的登陆方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WinRm的用户组设置"><span class="toc-number">3.</span> <span class="toc-text">WinRm的用户组设置</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PipedOutputStream和PipedInputStream的用处"><span class="toc-number">1.</span> <span class="toc-text">PipedOutputStream和PipedInputStream的用处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用法"><span class="toc-number">2.</span> <span class="toc-text">用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常见错误信息"><span class="toc-number">3.</span> <span class="toc-text">常见错误信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IOException(“Pipe_not_connected”)"><span class="toc-number">3.1.</span> <span class="toc-text">IOException(“Pipe not connected”)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IOException(“Pipe_closed”)"><span class="toc-number">3.2.</span> <span class="toc-text">IOException(“Pipe closed”)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IOException(“Write_end_dead”)"><span class="toc-number">3.3.</span> <span class="toc-text">IOException(“Write end dead”)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IOException(“Pipe_broken”)"><span class="toc-number">3.4.</span> <span class="toc-text">IOException(“Pipe broken”)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何正确使用"><span class="toc-number">4.</span> <span class="toc-text">如何正确使用</span></a></li></ol>
 		
 		</div>
 		
-		<p>如何在Windows上配置启用WinRm<a id="more"></a></p>
-<h2 id="在windows_server_system上配置WinRm">在windows server system上配置WinRm</h2><ol>
-<li>使用Administrator账号登陆目标机器（不是Administrator用户组，而是Administrator账号）。</li>
-<li>使用命令<code>winrm enumerate winrm/config/listener</code>查看WinRm在当前的机器上是否因配置过。</li>
-<li>如果没有返回消息，就表明WinRm没有成功配置。</li>
-<li>执行 <code>winrm quickconfig</code> 初始化WinRm</li>
-<li>执行命令<code>winrm set winrm/config/service/auth @{Basic=&quot;true&quot;}</code> 配置登陆方式</li>
-<li>执行 <code>winrm set winrm/config/service @{AllowUnencrypted=&quot;true&quot;}</code> 配置加密方式</li>
-<li>执行 <code>winrm enumerate winrm/config/listener</code> 查看WinR是否成功配置</li>
-<li>如果发现还是不能执行WinRm命令的话，打开端口http和https<ol>
-<li><code>winrm quickconfig -transport:https</code></li>
-<li><code>winrm quickconfig -transport:http</code></li>
-</ol>
-</li>
-<li>如果发现以上命令执行不成功，那么尝试参考下面的步骤： 更换登陆方式为negotiate</li>
-</ol>
-<h2 id="WinRm_登陆方式设置">WinRm 登陆方式设置</h2><h3 id="默认的WinRm登陆是使用Basic的，但是Basic模式下是不能修改WinRm的配置，只能读取数据。如果需要修改配置，首先我们需要配置登陆模式为negotiate。">默认的WinRm登陆是使用Basic的，但是Basic模式下是不能修改WinRm的配置，只能读取数据。如果需要修改配置，首先我们需要配置登陆模式为negotiate。</h3><ol>
-<li>首先需要打开注册表<code>regedit</code></li>
-<li>找到注册表<code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WSMAN\Service</code></li>
-<li>修改键 <code>auth-negotiate</code> 为 1， <code>suth-basic</code> 为 0</li>
-<li>重启系统</li>
-</ol>
-<h3 id="如果需要切换回Basic的登陆方式">如果需要切换回Basic的登陆方式</h3><ol>
-<li>首先在Negotiate模式下执行<code>winrm set winrm/config/service/auth @{Basic=&quot;true&quot;}</code></li>
-<li>然后再执行<code>winrm set winrm/config/service/auth @{Negotiate=&quot;false&quot;}</code></li>
-</ol>
-<h2 id="WinRm的用户组设置">WinRm的用户组设置</h2><ol>
-<li>设定WinR用户组，我们可以指定特定的用户组具有访问WinRm的权限<ol>
-<li>命令行执行lusrmgr.msc</li>
-<li>在弹出窗口中选择users，然后选择你要给予权限的用户，点击右键选择properties</li>
-<li>选择Member of的选项卡，在其中添加当前用户到某个指定用户组</li>
-</ol>
-</li>
-<li>配置用户组权限<ol>
-<li>有些情况下用户组权限是不能访问WinRm的，所以需要修改用户组的权限</li>
-<li>执行命令<code>winrm set winrm/config/service @{RootSDDL=&quot;O:NSG:BAD:P(A;;GA;;;BA)(A;;GA;;;S-1-5-32-558)S:P(AU;FA;GA;;;WD)(AU;SA;GWGX;;;WD)&quot;}</code></li>
-<li>这个命令是个SID为<code>S-1-5-32-558</code> 的用户组添加WinRm的控制权限</li>
-</ol>
-</li>
-<li>还需要给将这个用户组添加到指定Namespace中<ol>
-<li>命令行执行<code>wmimgmt.msc</code></li>
-<li>弹出窗口中在 WMI Control上点击右键选择properties</li>
-<li>选择Security 选项卡</li>
-<li>找到root/cimv2, root, root/mscluster(这个是cluster环境下才有的）</li>
-<li>分别选择namespaces 然后选择Security之后添加用户组到里面，并且要给予全部的权限（全部打勾）</li>
-</ol>
-</li>
-<li>用户组额外的权限设置<ol>
-<li>如果某些WinRm查询接口无法获得数据，可能是因为权限导致的</li>
-<li>使用<code>sc sdshow SCMANAGER</code> 查看当前的权限</li>
-<li>使用<code>sc sdset SCMANAGER D:(A;;CCLCRPRC;;;用户组SID)(A;;CC;;;AU)(A;;CCLCRPRC;;;IU)(A;;CCLCRPRC;;;SU)(A;;CCLCRPWPRC;;;SY)(A;;KA;;;BA)S:(AU;FA;KA;;;WD)(AU;OIIOFA;GA;;;WD)</code> 使得用户组获得权限</li>
-<li>参考资料：<a href="http://blogs.msmvps.com/erikr/2007/09/26/set-permissions-on-a-specific-service-windows" target="_blank" rel="external">http://blogs.msmvps.com/erikr/2007/09/26/set-permissions-on-a-specific-service-windows</a>, and <a href="http://www.netid.washington.edu/documentation/domains/sddl.aspx" target="_blank" rel="external">http://www.netid.washington.edu/documentation/domains/sddl.aspx</a>.</li>
-</ol>
-</li>
+		<p>关于PipedOutputStream和PipedInputStream的一些使用问题。<a id="more"></a></p>
+<h2 id="PipedOutputStream和PipedInputStream的用处">PipedOutputStream和PipedInputStream的用处</h2><p>当需要同时处理输入和输出的时候，可以尝试使用Piple实现类似于生产者和消费者的角色功能。其中Pipe的OutputStream是生产组，用来接受数据并且写入Piple中，PipedInputStream类似消费者，从Pipe中读取数据。所以在PipedInputStream和PipedOutPutStream源代码中可以看到变量和方法的命名都是和writer和receiver相关的。</p>
+<h2 id="用法">用法</h2><p>一般来说我们需要使用两个线程分别处理Output和Input，就是说要在两个不同的线程中使用PipedOutputStream和PipedInputStream。<br>使用 <code>PipledOutputStream.connect(PipedInputStream)</code> 将两个管道连接在以前，这样PipedOutputStream会在接受到数据时调用PipedInputStream的receive方法从而实现将数据写入管道中。</p>
+<h2 id="常见错误信息">常见错误信息</h2><h3 id="IOException(“Pipe_not_connected”)">IOException(“Pipe not connected”)</h3><p>如果只是实例化了PipedInputStream，但是没有调用connect方法（调用PipedInputStream 和PipedOutputStream的connect方法都是一样的效果），就会在InoutStream.read()方法中抛出这个异常。</p>
+<h3 id="IOException(“Pipe_closed”)">IOException(“Pipe closed”)</h3><p>如果PipedOutputStream调用了close方法之后，InputStream还是继续调用read()方法就会抛出这个异常。</p>
+<h3 id="IOException(“Write_end_dead”)">IOException(“Write end dead”)</h3><p>如果执行OutputStream的线程已经执行结束，但是没有调用PipedOutStream.close()。那么InputStream.read()方法就会抛出这个异常。解决方法就是负责生产数据的线程在执行完成之后应该马上调用PipedOutputStream.close()。</p>
+<h3 id="IOException(“Pipe_broken”)">IOException(“Pipe broken”)</h3><p>这个异常在多线程同时执行才会发生的典型错误，并且发生带有一定的偶然性。当PipedInputStream正在执行read()方法的时候，负责生产数据（持有PipedOutputStream）的线程执行结束了，但是并没有在线程结束的时候调用OutputStream的close方法，那么就有可能导致这个异常发生。</p>
+<h2 id="如何正确使用">如何正确使用</h2><ol>
+<li>首先必须要有两个线程分别负责PipedInputStream和PipedOutputStream</li>
+<li>最好能在各自线程执行结束的时候关闭各自负责的Stream</li>
+<li>在负责生成数据的线程执行完成之后一定要马上关闭PipedOutputStream</li>
 </ol>
   
 	</div>
@@ -161,7 +118,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程-网络协议/">编程-网络协议</a>
+  <a class="article-category-link" href="/categories/编程-Linux-Unix/">编程-Linux/Unix</a>
 </div>
 
 
@@ -171,7 +128,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://luoyuan800.github.io/2015/09/22/WinRm/" data-title="启用WinRm | Yuan" data-tsina="null" class="share clearfix">
+	  <div data-url="http://luoyuan800.github.io/2016/10/30/piped-in-out/" data-title="PipedOutputStream和PipedInputStream | Yuan" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -184,19 +141,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/10/09/snmp4j-trap-v3/" title="基于snmp4j发送 V3 trap">
-  <strong>上一篇：</strong><br/>
-  <span>
-  基于snmp4j发送 V3 trap</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/07/24/jvm-argument/"  title="JVM 启动参数设置">
+<a href="/2016/09/26/groovy_unique_performance/"  title="Groovy中unique方法性能分析">
  <strong>下一篇：</strong><br/> 
- <span>JVM 启动参数设置
+ <span>Groovy中unique方法性能分析
 </span>
 </a>
 </div>
@@ -205,7 +154,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/09/22/WinRm/" data-title="启用WinRm" data-url="http://luoyuan800.github.io/2015/09/22/WinRm/"></div>
+	<div class="ds-thread" data-thread-key="2016/10/30/piped-in-out/" data-title="PipedOutputStream和PipedInputStream" data-url="http://luoyuan800.github.io/2016/10/30/piped-in-out/"></div>
 </section>
 
 
@@ -215,7 +164,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#在windows_server_system上配置WinRm"><span class="toc-number">1.</span> <span class="toc-text">在windows server system上配置WinRm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WinRm_登陆方式设置"><span class="toc-number">2.</span> <span class="toc-text">WinRm 登陆方式设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#默认的WinRm登陆是使用Basic的，但是Basic模式下是不能修改WinRm的配置，只能读取数据。如果需要修改配置，首先我们需要配置登陆模式为negotiate。"><span class="toc-number">2.1.</span> <span class="toc-text">默认的WinRm登陆是使用Basic的，但是Basic模式下是不能修改WinRm的配置，只能读取数据。如果需要修改配置，首先我们需要配置登陆模式为negotiate。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如果需要切换回Basic的登陆方式"><span class="toc-number">2.2.</span> <span class="toc-text">如果需要切换回Basic的登陆方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WinRm的用户组设置"><span class="toc-number">3.</span> <span class="toc-text">WinRm的用户组设置</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PipedOutputStream和PipedInputStream的用处"><span class="toc-number">1.</span> <span class="toc-text">PipedOutputStream和PipedInputStream的用处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用法"><span class="toc-number">2.</span> <span class="toc-text">用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常见错误信息"><span class="toc-number">3.</span> <span class="toc-text">常见错误信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IOException(“Pipe_not_connected”)"><span class="toc-number">3.1.</span> <span class="toc-text">IOException(“Pipe not connected”)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IOException(“Pipe_closed”)"><span class="toc-number">3.2.</span> <span class="toc-text">IOException(“Pipe closed”)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IOException(“Write_end_dead”)"><span class="toc-number">3.3.</span> <span class="toc-text">IOException(“Write end dead”)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IOException(“Pipe_broken”)"><span class="toc-number">3.4.</span> <span class="toc-text">IOException(“Pipe broken”)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何正确使用"><span class="toc-number">4.</span> <span class="toc-text">如何正确使用</span></a></li></ol>
  
   </div>
 
