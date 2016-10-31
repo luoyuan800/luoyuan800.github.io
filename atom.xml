@@ -5,7 +5,7 @@
   <subtitle><![CDATA[一点一滴，技术积累]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://luoyuan800.github.io//"/>
-  <updated>2016-10-28T02:32:29.961Z</updated>
+  <updated>2016-10-31T03:41:32.782Z</updated>
   <id>http://luoyuan800.github.io//</id>
   
   <author>
@@ -14,6 +14,51 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[勇者闯迷宫]]></title>
+    <link href="http://luoyuan800.github.io/2016/10/31/maze_never_end/"/>
+    <id>http://luoyuan800.github.io/2016/10/31/maze_never_end/</id>
+    <published>2016-10-31T02:00:01.000Z</published>
+    <updated>2016-10-31T03:41:32.782Z</updated>
+    <content type="html"><![CDATA[<p>自己写的一个小游戏<a id="more"></a></p>
+<blockquote>
+<h2 id="勇者闯迷宫">勇者闯迷宫</h2></blockquote>
+<p>Android 二维码下载</p>
+<p><img src="http://7xk7ce.com1.z0.glb.clouddn.com/1477882861.png" alt="二维码"> </p>
+<p><a href="http://bmob-cdn-5020.b0.upaiyun.com/2016/10/29/0959d79c406e809080bc8ac0e5f6f9ee.apk" target="_blank" rel="external">Androd下载</a></p>
+<hr>
+<p>勇者闯迷宫浴火归来，更加合理的数据设计，更加多的怪物，更加坚固的作弊检测。<br>剧情：是谁建造了迷宫，是谁把主人公丢在这个迷宫里，为什么有那么多稀奇古怪的怪物，是谁在背后操控着主角的命运，那些神经兮兮的NPC又是谁，残缺的文档隐藏着什么样的历史？<br>玩法：一款放置类的冒险游戏。自由PK，万人同服，完全免费。<strong>宠物</strong>培养，宠物竞技，宠物排行，离线挂机。完全自由的<strong>装备打造</strong>系统，任意搭配的技能组合。你想得到的，都可以玩到，如果没有，告诉我，更新给你加上去！持续更新各种游戏内容，欢迎您的建议！`</p>
+<hr>
+<h2 id="玩家自定义装备、宠物展示">玩家自定义装备、宠物展示</h2><h2 id=""><img src="http://7xk7ce.com1.z0.glb.clouddn.com/QQ%E5%9B%BE%E7%89%8720161031112323.jpg" alt="装备自定义"><img src="http://7xk7ce.com1.z0.glb.clouddn.com/QQ%E5%9B%BE%E7%89%8720161031112341.jpg" alt="装备自定义"> <img src="http://7xk7ce.com1.z0.glb.clouddn.com/QQ%E5%9B%BE%E7%89%8720161031112405.jpg" alt="宠物培育"></h2><h3 id="更新日志">更新日志</h3><h5 id="3-4_更新_2016-10-29">3.4 更新 2016-10-29</h5><ul>
+<li>增加宠物排名争夺</li>
+<li>增加十二生肖相关宠物</li>
+</ul>
+<h5 id="3-3-7_更新_2016-10-23">3.3.7 更新 2016-10-23</h5><ul>
+<li>增加装备（饰品）升级系统</li>
+</ul>
+<h5 id="3-3-5_更新_2016-09-26">3.3.5 更新 2016-09-26</h5><ul>
+<li>增加宠物升级功能</li>
+</ul>
+<h5 id="3-3-2_更新_2016-09-17">3.3.2 更新 2016-09-17</h5><ul>
+<li>增加双倍锻造、加快游戏速度的道具</li>
+</ul>
+<h5 id="3-3_更新_2016-09-09">3.3 更新 2016-09-09</h5><ul>
+<li>增加宠物特殊进化</li>
+<li>增加20多种伊布</li>
+</ul>
+<h5 id="3-0_更新_2016-08-24">3.0 更新 2016-08-24</h5><ul>
+<li>增加宠物进化的功能</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>自己写的一个小游戏]]>
+    
+    </summary>
+    
+      <category term="杂物" scheme="http://luoyuan800.github.io/categories/%E6%9D%82%E7%89%A9/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[PipedOutputStream和PipedInputStream]]></title>
@@ -1845,52 +1890,6 @@ war {
 </code></pre>]]></content>
     <summary type="html">
     <![CDATA[<p>Gradle是一个基于Groovy实现的，类似于Ant工具的项目构建文件，其设计目标是用更简单的语法和方式来配置一个项目的构建，而不需要像Ant工具一样那么麻烦 。]]>
-    
-    </summary>
-    
-      <category term="编程-工具" scheme="http://luoyuan800.github.io/categories/%E7%BC%96%E7%A8%8B-%E5%B7%A5%E5%85%B7/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[git使用Tips]]></title>
-    <link href="http://luoyuan800.github.io/2015/07/02/git-study/"/>
-    <id>http://luoyuan800.github.io/2015/07/02/git-study/</id>
-    <published>2015-07-02T02:00:01.000Z</published>
-    <updated>2016-10-28T02:27:45.324Z</updated>
-    <content type="html"><![CDATA[<p>一些git命令的使用tips，关于git的原理解释就不在此处提及了<a id="more"></a></p>
-<h2 id="复制远程代码到本地">复制远程代码到本地</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> &lt;版本库网址&gt;  &lt;本地文件夹&gt; <span class="comment">## 这个命令是默认建立master分支</span></span><br></pre></td></tr></table></figure>
-<p>在clone出master分支之后，在对应的master文件夹下面使用checkout命令可以下载分支的代码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b branch origin/branch  <span class="comment">## 这个命令会在当前目录下载指定分支</span></span><br></pre></td></tr></table></figure></p>
-<p>如果只需要一个branch的代码，可以考虑直接clone一个branch的代码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> -b &lt;branch name&gt; &lt;版本库网址&gt; &lt;本地文件夹位置（可选）&gt; <span class="comment">## 这个命令可以clone对应的branch代码并且放到指定的文件夹中</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="撤销本地的文件修改">撤销本地的文件修改</h2><p>使用远程版本库的文件覆盖本地的文件，其本质是将本地版本库的文件头回退，即是使得git记录文件修改的文件忘记本次修改的内容，然后是用pull更新当前代码。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git reset --hard</span><br><span class="line">$ git pull</span><br></pre></td></tr></table></figure></p>
-<h2 id="在某个branch的基础上创建一个newBranch（本地）">在某个branch的基础上创建一个newBranch（本地）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b &lt;newBranch&gt; origin/&lt;remotebarnch&gt; <span class="comment">## 这个命令只会在本地仓库创建一个新的branch，如果之后执行commit push命令的话就会在远程仓库创建这个branch</span></span><br></pre></td></tr></table></figure>
-<h2 id="用指定的远程branch更新当前的branch">用指定的远程branch更新当前的branch</h2><p>这个命令要在需要更新branch的文件目录下执行<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git pull origin &lt;branchName&gt;</span><br></pre></td></tr></table></figure></p>
-<h2 id="关联当前的branch和远程的branch">关联当前的branch和远程的branch</h2><p>这个命令可以指定当前本地的branch的pull和push的远程仓库对应的branch是哪一个（如果是直接从远程branch checkout的branch就默认关联同名）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git bran -- <span class="built_in">set</span>-upstram &lt;<span class="built_in">local</span>Branch&gt; origin/&lt;remoteBranch&gt;</span><br></pre></td></tr></table></figure></p>
-<h2 id="修改当前项目commit的作者名称">修改当前项目commit的作者名称</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git config user.name &lt;name&gt; <span class="comment">## 修改用户名称</span></span><br><span class="line">$ git config user.email &lt;emailmaile@xxx.com&gt; <span class="comment">## 修改commit的作者的email</span></span><br></pre></td></tr></table></figure>
-<p>以上的两个步骤也可以打开.git文件目录下的config文件，修改里面的author和email。修改完成之后下一次commit就会适应这个新的配置了。</p>
-<h2 id="修改上一次commit的作者">修改上一次commit的作者</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git commit --amend --author=<span class="string">'Gavin Luo &lt;gavin.luo@dell.com&gt;'</span></span><br></pre></td></tr></table></figure>
-<h2 id="查看commit的记录：">查看commit的记录：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span></span><br></pre></td></tr></table></figure>
-<h2 id="撤销上一次的提交（已经push上远程仓库）">撤销上一次的提交（已经push上远程仓库）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git revert HEAD</span><br><span class="line">$ git push</span><br></pre></td></tr></table></figure>
-<p>这个命令会产生一个新的commit。</p>
-<h2 id="撤销上一次提交">撤销上一次提交</h2><p>如果在提交之前忘记pull最新的代码下来会导致无法push本地修改的代码到远程，这个时候可以先撤销上一次的提交，更新本地代码之后再从那时提交一次就可以了。<br>reset命令是可以撤销本地的提交，记得reset之后要pull，把远程的更新拉到本地。注意这个命令不会产生新的commit。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git reset HEAD~<span class="number">1</span></span><br><span class="line">$ git pull</span><br></pre></td></tr></table></figure></p>
-<h2 id="Merge操作">Merge操作</h2><h3 id="Merge">Merge</h3><p>是将一个分支的修改内容合并到另外一个分支。首先切换到要进行merge的branch目录下，并且使用checkout命令设置当前的branch为需要进行合并的那个branch<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout localbranch</span><br><span class="line">$ git merge origin/remotebranch</span><br></pre></td></tr></table></figure></p>
-<h3 id="Cherry">Cherry</h3><p>Cherry 命令可以挑选一个分支上的某些commit合并到当前分支上。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout localbranch</span><br><span class="line">$ git cherry-pick <span class="number">12345</span> <span class="comment">##12345为commit id</span></span><br></pre></td></tr></table></figure></p>
-<p>如果是要同时挑选多个commit可以使用-n<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout localbranch</span><br><span class="line">$ git cherry-pick -n <span class="number">12345</span> <span class="comment">##12345为commit id</span></span><br><span class="line">$ git cherry-pick -n <span class="number">13333</span> <span class="comment">##1333为commit id</span></span><br><span class="line">$ git commit -m <span class="string">"cherry test"</span></span><br></pre></td></tr></table></figure></p>
-<p>执行完merge相关命令后如果没有冲突，那么remoteBranch的修改就会merge到当前的branch中了。<br>如果发生了冲突，就需要先打开文件解决冲突，然后把修改好的冲突文件add之后再commit一次就可以了</p>
-<h2 id="强制覆盖本地文件">强制覆盖本地文件</h2><p>相信很多人都很烦恼merge的问题，如果发生了很蛋疼的冲入，我就会接用服务器上代码更新本地的代码。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git fetch --all</span><br><span class="line">$ git reset --hard</span><br><span class="line">$ git pull</span><br></pre></td></tr></table></figure></p>
-<h2 id="删除untrak文件">删除untrak文件</h2><p>不小心批量添加了文件，在没有提交之前可以一次性全部删除</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git clean <span class="operator">-f</span>  <span class="comment">## 删除 untracked files</span></span><br><span class="line">$ git clean -fd <span class="comment">## 删除文件的同时也会删除文件夹</span></span><br><span class="line">$ git clean -xfd <span class="comment">## gitignore 的也会被删除</span></span><br></pre></td></tr></table></figure>
-<p>在命令前加上-n可以查看会被删除掉的文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git clean -nxfd</span><br></pre></td></tr></table></figure></p>
-<h2 id="分享本地仓库">分享本地仓库</h2><p>当你从远程仓库clone代码之后，你本地其实也同时建立了一个完整的仓库。你可以将这个仓库作为团队开发时的共享仓库<br>在windows系统下，你只需要共享你clone的项目的文件夹，然后让其他组员通过<code>git clone file:///$你的共享项目路径</code>就可以了。<br>如果其他组员也下载了远程仓库的代码，那么可以让他们修改.git文件夹内的config文件，将其中的[remote “origin”]下的ulr地址改成你的共享文件夹目录就可以了，记得加上file:///，并且在你的共享地址前面加上\进行转义，所以url的值应该看起来是这样的：<br>file:///\\hostname\file_path。<br>当你共享了自己的仓库给其他用户之后，记得开启写权限给他们。<br>还有一个一定要注意的问题，如果你和你组员都需要提交到同样的branch，那么你不能占用那个branch，你必须也重新建立一个branch来进行你的工作。否则，如果其他人要提交的branch在你的工作环境中是check out的状态的话，别人提交会有 unpacker err。</p>
-<h2 id="创建Tag">创建Tag</h2><ol>
-<li><code>git tag &lt;tagename&gt;</code>。 这个命令是给当前的commit打上一个轻量级的tag。</li>
-<li><code>git tag -a &lt;tagename&gt; -m &lt;tagmessage&gt;</code> 。这个命令是个当前commit打上一个带有备注的标签。</li>
-<li><code>git push origin &lt;tagename&gt;</code> 发布tag到远程仓库</li>
-<li><code>git push origin --tags</code> 发布所有的本地tag到远程仓库。</li>
-</ol>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>一些git命令的使用tips，关于git的原理解释就不在此处提及了]]>
     
     </summary>
     
