@@ -1,0 +1,558 @@
+
+ <!DOCTYPE HTML>
+<html lang="ch">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>什么是LMAX Disruptor | Yuan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Luo Yuan">
+    
+
+    
+    <meta name="description" content="这次我们来聊聊Java吧。自诞生以来，在年度最热门语言的排行榜上，Java不是第一就是第二，互联网行业上Java的工作岗位数量也一直不会少。所以Java程序员都以为自己永远不会失业，永远可以拿到高工资，然而层出不穷的新框架，什么mina、Zookeeper、Hadoop、Hbase、redis…… Java程序员们像孔乙己一样口中碎碎念着什么大数据，什么云计算，什么高并发，什么可用性健壮性……岗位">
+<meta property="og:type" content="article">
+<meta property="og:title" content="什么是LMAX Disruptor">
+<meta property="og:url" content="http://luoyuan800.github.io/2020/08/24/java-learning/index.html">
+<meta property="og:site_name" content="Yuan">
+<meta property="og:description" content="这次我们来聊聊Java吧。自诞生以来，在年度最热门语言的排行榜上，Java不是第一就是第二，互联网行业上Java的工作岗位数量也一直不会少。所以Java程序员都以为自己永远不会失业，永远可以拿到高工资，然而层出不穷的新框架，什么mina、Zookeeper、Hadoop、Hbase、redis…… Java程序员们像孔乙己一样口中碎碎念着什么大数据，什么云计算，什么高并发，什么可用性健壮性……岗位">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-08-24T00:53:00.000Z">
+<meta property="article:modified_time" content="2021-04-22T08:21:31.288Z">
+<meta property="article:author" content="Luo Yuan">
+<meta name="twitter:card" content="summary">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/%02.css">
+<link rel="stylesheet" href="/.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Yuan" title="Yuan"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Yuan">Yuan</a></h1>
+				<h2 class="blog-motto">一点一滴，积累技术</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:luoyuan800.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2020/08/24/java-learning/" title="什么是LMAX Disruptor" itemprop="url">什么是LMAX Disruptor</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
+		
+  <p class="article-time">
+    <time datetime="2020-08-24T00:53:00.000Z" itemprop="datePublished"> Published 2020-08-24</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-number">1.</span> <span class="toc-text">Java能做什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85JDK"><span class="toc-number">2.</span> <span class="toc-text">安装JDK</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux-%E5%AE%89%E8%A3%85"><span class="toc-number">2.1.</span> <span class="toc-text">Linux 安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87yum%E8%BF%9B%E8%A1%8C%E5%AE%89%E8%A3%85%E3%80%82"><span class="toc-number">2.1.1.</span> <span class="toc-text">可以通过yum进行安装。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E4%B8%8B%E8%BD%BD%E5%8E%8B%E7%BC%A9%E5%8C%85%E5%AE%89%E8%A3%85"><span class="toc-number">2.1.2.</span> <span class="toc-text">直接下载压缩包安装</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Windows-%E5%AE%89%E8%A3%85"><span class="toc-number">2.2.</span> <span class="toc-text">Windows 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%A1%E9%AA%8C%E5%AE%89%E8%A3%85%E6%98%AF%E5%90%A6%E6%88%90%E5%8A%9F"><span class="toc-number">2.3.</span> <span class="toc-text">校验安装是否成功</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%86%E8%A7%A3%E4%BB%A3%E7%A0%81%E5%9F%BA%E7%A1%80%E7%BB%93%E6%9E%84"><span class="toc-number">3.</span> <span class="toc-text">了解代码基础结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%BA%E5%BA%8F%E7%BB%93%E6%9E%84"><span class="toc-number">3.1.</span> <span class="toc-text">顺序结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%94%AF%E7%BB%93%E6%9E%84"><span class="toc-number">3.2.</span> <span class="toc-text">分支结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E7%BB%93%E6%9E%84"><span class="toc-number">3.3.</span> <span class="toc-text">循环结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="toc-number">3.4.</span> <span class="toc-text">异常处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="toc-number">4.</span> <span class="toc-text">Java中的类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B"><span class="toc-number">4.1.</span> <span class="toc-text">基本类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%EF%BC%88%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%EF%BC%89"><span class="toc-number">4.2.</span> <span class="toc-text">对象（引用类型）</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>这次我们来聊聊Java吧。自诞生以来，在年度最热门语言的排行榜上，Java不是第一就是第二，互联网行业上Java的工作岗位数量也一直不会少。所以Java程序员都以为自己永远不会失业，永远可以拿到高工资，然而层出不穷的新框架，什么mina、Zookeeper、Hadoop、Hbase、redis…… Java程序员们像孔乙己一样口中碎碎念着什么大数据，什么云计算，什么高并发，什么可用性健壮性……岗位越来越热门，要学的东西也越来越多，人才也越来越饱和，平均年龄越来越年轻，工资没见得增长，年纪大了后拿着公司的解雇通知在天台上感受着稀疏的头发随风飘零……呃，跑题了，本文不是为了吐槽行业现状，只是写一个简单的教程给想学习Java的新人看看。<span id="more"></span></p>
+<h2 id="Java能做什么"><a href="#Java能做什么" class="headerlink" title="Java能做什么"></a>Java能做什么</h2><p>手机游戏、中间件、软件、网站，电脑游戏都是可以用Java编写。java是一门面向对象编程语言，吸收了C++语言的各种优点同时还摒弃了C++里难以理解的多继承、指针等概念，因此Java语言功能强大但是入门简单。Java拥有很高的安全性、很强的跨平台性，开源的特性又使得基于Java的各种的框架异常丰富。目前热门的大数据、人工智能、机器学习、云计算、物联网什么的，Java都在其中占有重要的地位。</p>
+<h2 id="安装JDK"><a href="#安装JDK" class="headerlink" title="安装JDK"></a>安装JDK</h2><p>开始编写Java程序之前要先下载JDK <code>Java Development Kit</code>。JDK中包含Java程序运行的环境JRE <code>Java Runtime Environment</code> 和编译构建Java程序的相关工具。以下是几个概念解释：</p>
+<p><code>Java虚拟机（JVM）</code>：Java语言的一个非常重要的特点就是与平台的无关性，这个特点是通过Java虚拟机实现的：Java虚拟机屏蔽了与具体操作系统平台相关的信息，使得Java程序只需生成在Java虚拟机上运行的目标代码。这里需要注意的是， java程序可以是平台无关的（跨平台运行），但是java虚拟机是平台相关的。</p>
+<p><code>编译Java程序</code>：将java源代码编译成可以在Java虚拟机上的字节码文件。编译过程中会对语法进行检查，编译后生产的字节码文件后缀为.class。</p>
+<p>JDK 可以通过Oracle Java（<a target="_blank" rel="noopener" href="https://www.oracle.com/java/%EF%BC%89%E6%88%96%E8%80%85OpendJDK%EF%BC%88http://openjdk.java.net/%EF%BC%89%E4%B8%8B%E8%BD%BD%EF%BC%8C">https://www.oracle.com/java/）或者OpendJDK（http://openjdk.java.net/）下载，</a> 需要注意的是如果免费的JDK话，OracleJDK只能下载JDK8，更高版本的JDK是无法免费获取的，那么要使用最新版本的JDK可以选择使用OpenJDK。OpenJdk和OracleJDK只是实现方式不一样，还有部分功能会不一致，我们初学者可以不用去关心这些问题。目前我们可以下载得到最新版本是OpenJDK14 （2020.8.17）。</p>
+<h3 id="Linux-安装"><a href="#Linux-安装" class="headerlink" title="Linux 安装"></a>Linux 安装</h3><p>我们️以Centos为例。</p>
+<h4 id="可以通过yum进行安装。"><a href="#可以通过yum进行安装。" class="headerlink" title="可以通过yum进行安装。"></a>可以通过<code>yum</code>进行安装。</h4><ol>
+<li>先更新yum库的列表<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum update -y </span><br></pre></td></tr></table></figure></li>
+<li>查看yum上面可以安装的jdk版本<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum list java-*</span><br></pre></td></tr></table></figure></li>
+<li>执行安装命令<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install <span class="string">&quot;java-14-openjdk&quot;</span> -y</span><br></pre></td></tr></table></figure>
+<h4 id="直接下载压缩包安装"><a href="#直接下载压缩包安装" class="headerlink" title="直接下载压缩包安装"></a>直接下载压缩包安装</h4>如果发现<code>yum</code>不支持最新的版本，也可以从OpenJDK的网站上下载最新版本的Linux平台安装包：《图片》<br>下载下来后使用<code>tar</code> 命令解压（可以自己指定目录，本文中将JDK解压到了/usr/jdk-14.0.2）：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar xvf openjdk-14.0.2_linux-x64_bin.tar.gz -C /usr/jdk-14.0.2</span><br></pre></td></tr></table></figure>
+解压完成后还需要手动配置环境变量：</li>
+<li>编辑profile 文件<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br></pre></td></tr></table></figure></li>
+<li>找到<code>export PATH</code> 这一行，在它下面添加<code>JAVA_HOME</code>和新的<code>PATH</code><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH USER LOGNAME MAIL HOSTNAME HISTSIZE HISTCONTROL</span><br><span class="line"><span class="built_in">export</span> JAVA_HOME=/usr/jdk-140.2</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$JAVA_HOME</span>/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure></li>
+<li>保存修改后退出文本编辑，执行source命令使修改生效。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
+<h3 id="Windows-安装"><a href="#Windows-安装" class="headerlink" title="Windows 安装"></a>Windows 安装</h3></li>
+<li>下载Windows平台对应的jdk</li>
+</ol>
+<p>图片</p>
+<ol start="2">
+<li>解压到指定目录，比如D:\java\jdk-14.0.2</li>
+<li>打开系统配置配置系统环境变量</li>
+</ol>
+<p>图片</p>
+<ol start="4">
+<li>添加变量JAVA_HOME和CLASSPATH</li>
+</ol>
+<p>图片</p>
+<ol start="5">
+<li>修复PATH变量，增加JDK、JRE的bin目录</li>
+</ol>
+<p>图片</p>
+<h3 id="校验安装是否成功"><a href="#校验安装是否成功" class="headerlink" title="校验安装是否成功"></a>校验安装是否成功</h3><ol>
+<li>安装配置成功后，执行<code>java -version</code> 可以看到java的版本相关信息。</li>
+<li>打开文本编辑器写一个简单的<code>HelloJava</code>代码并且保存为<code>HelloJava.java</code>来测试下能否编译。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloJava</span></span>&#123;</span><br><span class="line">    <span class="comment">//main 方法是java程序执行的入口，格式是固定的哦</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String...args)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Hello JAVA&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ javac HelloJava.java <span class="comment">#编译源码</span></span><br><span class="line">$ java HelloJava <span class="comment">#运行</span></span><br><span class="line">Hello JAVA</span><br></pre></td></tr></table></figure>
+基于Java14新增的自动编译特性，我们也可以这样运行Java代码：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ java HelloJava.java</span><br><span class="line">Hello JAVA</span><br></pre></td></tr></table></figure>
+<h2 id="了解代码基础结构"><a href="#了解代码基础结构" class="headerlink" title="了解代码基础结构"></a>了解代码基础结构</h2></li>
+</ol>
+<p>Java代码语句包括4种基本控制结构：顺序结构、选择结构、循环结构、异常处理逻辑。</p>
+<h3 id="顺序结构"><a href="#顺序结构" class="headerlink" title="顺序结构"></a>顺序结构</h3><p>语句执行的基本顺序按各语句出现的位置先后顺序执行</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Order</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String...args)</span></span>&#123;</span><br><span class="line">        String a = <span class="string">&quot;你好！&quot;</span>;</span><br><span class="line">        System.out.println(a);</span><br><span class="line">        a = <span class="string">&quot;我是某鸟&quot;</span>;</span><br><span class="line">        System.out.println(a);</span><br><span class="line">        a = <span class="string">&quot;请关注我的公众号：某鸟碎碎&quot;</span>;</span><br><span class="line">        System.out.println(a);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段程序的输出是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ java Order.java</span><br><span class="line">你好！</span><br><span class="line">我是某鸟</span><br><span class="line">请关注我的公众号：某鸟碎碎</span><br></pre></td></tr></table></figure>
+
+<h3 id="分支结构"><a href="#分支结构" class="headerlink" title="分支结构"></a>分支结构</h3><p>代码中根据条件来控制代码的执行分支，也被称为成选择结构。Java中有两种控制分支的条件语句：<code>if</code>和<code>switch</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IfBranch</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String...args)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(args[<span class="number">0</span>].equals(<span class="string">&quot;关注&quot;</span>)&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;谢谢你关注《某鸟碎碎》！&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;别犹豫，快来关注《某鸟碎碎》！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SwitchBranch</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String...args)</span></span>&#123;</span><br><span class="line">      <span class="keyword">switch</span>(args[<span class="number">0</span>])&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;关注&quot;</span>:</span><br><span class="line">          System.out.println(<span class="string">&quot;谢谢你关注《某鸟碎碎》！&quot;</span>);</span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;取关&quot;</span>:</span><br><span class="line">          System.out.println(<span class="string">&quot;朋友，再见！&quot;</span>);</span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">          System.out.println(<span class="string">&quot;别犹豫，快来关注《某鸟碎碎》！&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上代码可以根据运行时的参数来选择执行的语句：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ java IfBranch.java 关注 <span class="comment">##尝试下换成其他词</span></span><br><span class="line">$ javaSwitchBranch.java 取关 <span class="comment">##尝试下换成其他词</span></span><br></pre></td></tr></table></figure>
+<h3 id="循环结构"><a href="#循环结构" class="headerlink" title="循环结构"></a>循环结构</h3><p>循环是条件满足的时候重复执行相关的代码。Java中的循环结构可以通过<code>for</code>和<code>while</code>来实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">For</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String...args)</span></span>&#123;</span><br><span class="line">    <span class="comment">//循环指定的次数</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++)&#123;</span><br><span class="line">      System.out.println(i + <span class="string">&quot;. 关注某鸟碎碎&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    String[] w = &#123;<span class="string">&quot;某&quot;</span>,<span class="string">&quot;鸟&quot;</span>,<span class="string">&quot;碎&quot;</span>,<span class="string">&quot;碎&quot;</span>&#125;;</span><br><span class="line">    <span class="comment">//对指定的列表进行循环，也称为for each语句</span></span><br><span class="line">    <span class="keyword">for</span>(String a : w)&#123;</span><br><span class="line">      System.out.println(a);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h3><p>异常是一个事件，它发生在程序运行期间，干扰了正常的指令流程。大部分错误可以在编写代码的时候通过编译发现，现代的代码编写工具（比如IDEA、Eclipse）也可以辅助发现一些可能导致运行时出问题的错误。但是我们仍然需要留意并且处理一些正在运行起来才会出现的错误，或者偶然出现的错误。Java中异常都是对象，是Throwable子类的实例，描述了出现在一段编码中的错误条件。可以通过<code>try...catch</code>代码块进行捕获和处理，处理完成（通常是打印日志信息和释放资源）后可以由开发者决定是终止运行还是忽略异常继续执行剩下的代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExceptionHandler</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String...args)</span></span>&#123;</span><br><span class="line">      <span class="keyword">try</span>&#123;</span><br><span class="line">          <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">&quot;抛出的异常会被catch里面的代码处理&quot;</span>);</span><br><span class="line">      &#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">          System.out.println(e.getMessage());</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Java中的类型"><a href="#Java中的类型" class="headerlink" title="Java中的类型"></a>Java中的类型</h2><p>Java的类型类型可以分成功基本类型和引用类型。基本类型可以自己使用无线显示调用<code>new</code>关键字。引用类型则是创建对象的时候使用，因为对象可以自己定义，实现更复杂的逻辑。</p>
+<h3 id="基本类型"><a href="#基本类型" class="headerlink" title="基本类型"></a>基本类型</h3><p>Java基本类（内置直接使用的类型）有字符类型char，布尔类型boolean，整数类型byte、short、int、long和浮点数类型float、double。需要注意的是数值类型（整数和浮点数）是有边界，如果数值超过边界就会导致溢出：正数变成负数、负数变成正数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseType</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String...args)</span></span>&#123;</span><br><span class="line">      <span class="keyword">char</span> c = <span class="string">&quot;c&quot;</span>;</span><br><span class="line">      <span class="keyword">boolean</span> b = <span class="keyword">false</span>;</span><br><span class="line">      <span class="keyword">byte</span> maxByte = <span class="number">127</span>;</span><br><span class="line">      <span class="keyword">byte</span> minByte = -<span class="number">128</span>;</span><br><span class="line">      <span class="keyword">short</span> maxShort = <span class="number">32767</span>;</span><br><span class="line">      <span class="keyword">short</span> minShort = -<span class="number">32768</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="对象（引用类型）"><a href="#对象（引用类型）" class="headerlink" title="对象（引用类型）"></a>对象（引用类型）</h3><p>Java有 5种对象类型（引用类型）：类 接口 数组 枚举 注解。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">InterfaceType</span></span>&#123;</span><br><span class="line">      <span class="comment">//接口是一个抽象类型，是抽象方法的集合，规定了一组必须要实现后才能使用的方法。</span></span><br><span class="line">      <span class="function"><span class="keyword">void</span> <span class="title">said</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassType</span> <span class="keyword">implements</span> <span class="title">InterfaceType</span></span>&#123;</span><br><span class="line">     <span class="comment">//类通过继承接口的方式，从而来实现接口的抽象方法的具体逻辑。</span></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">said</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;某鸟碎碎&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">enum</span> <span class="title">EnumType</span></span>&#123;</span><br><span class="line">   <span class="comment">//枚举类是一种特殊的类，它和普通的类一样，有自己的成员变量、成员方法、构造器 (只能使用 private)，特殊的地方在于它的对象数量是固定的。</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> AnnotationType&#123;</span><br><span class="line">  <span class="comment">//注解是一种标识，用来标记特殊内容或对象。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对象是Java中最基本也是最复杂的，具体内容不会在本文展开，后续会在公众号《某鸟碎碎》更新Java进阶内容，希望你能持续关注。</p>
+<hr>
+<p>如果对这篇文章有疑惑或者问题，可以在下面留言，我会尽量回复的。谢谢你关注 《某鸟碎碎》 ，还请点个在看再离开吧。</p>
+<p>现在你已经了解Java编程的基础，如果你对Java有兴趣想要更进一步，还有更多的东西可以学习，比如引用、封装对象、继承、多态、泛型、线程、同步、垃圾回收等等。入门后要自己编写程序，比如给自己几个简单的需求：用Java计算一堆数字、写一个java聊天程序、用java读取网页等等，相关的技术可以尝试通过网络查找关键字。要更进一步了解和提升Java编程技术，就需要自己去阅读书籍（推荐阅读《Java编程思想》（Thinking in Java）这本书）、多看别人写的代码、多写自己的代码。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B-Java/">编程-Java</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://luoyuan800.github.io/2020/08/24/java-learning/" data-title="什么是LMAX Disruptor | Yuan" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2020/09/28/jdk14/" title="JDK14的新特性">
+  <strong>上一篇：</strong><br/>
+  <span>
+  JDK14的新特性</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2020/08/13/lmax-disruptor/"  title="什么是LMAX Disruptor">
+ <strong>下一篇：</strong><br/> 
+ <span>什么是LMAX Disruptor
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-number">1.</span> <span class="toc-text">Java能做什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85JDK"><span class="toc-number">2.</span> <span class="toc-text">安装JDK</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux-%E5%AE%89%E8%A3%85"><span class="toc-number">2.1.</span> <span class="toc-text">Linux 安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87yum%E8%BF%9B%E8%A1%8C%E5%AE%89%E8%A3%85%E3%80%82"><span class="toc-number">2.1.1.</span> <span class="toc-text">可以通过yum进行安装。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E4%B8%8B%E8%BD%BD%E5%8E%8B%E7%BC%A9%E5%8C%85%E5%AE%89%E8%A3%85"><span class="toc-number">2.1.2.</span> <span class="toc-text">直接下载压缩包安装</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Windows-%E5%AE%89%E8%A3%85"><span class="toc-number">2.2.</span> <span class="toc-text">Windows 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%A1%E9%AA%8C%E5%AE%89%E8%A3%85%E6%98%AF%E5%90%A6%E6%88%90%E5%8A%9F"><span class="toc-number">2.3.</span> <span class="toc-text">校验安装是否成功</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%86%E8%A7%A3%E4%BB%A3%E7%A0%81%E5%9F%BA%E7%A1%80%E7%BB%93%E6%9E%84"><span class="toc-number">3.</span> <span class="toc-text">了解代码基础结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%BA%E5%BA%8F%E7%BB%93%E6%9E%84"><span class="toc-number">3.1.</span> <span class="toc-text">顺序结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%94%AF%E7%BB%93%E6%9E%84"><span class="toc-number">3.2.</span> <span class="toc-text">分支结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E7%BB%93%E6%9E%84"><span class="toc-number">3.3.</span> <span class="toc-text">循环结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="toc-number">3.4.</span> <span class="toc-text">异常处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="toc-number">4.</span> <span class="toc-text">Java中的类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B"><span class="toc-number">4.1.</span> <span class="toc-text">基本类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%EF%BC%88%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%EF%BC%89"><span class="toc-number">4.2.</span> <span class="toc-text">对象（引用类型）</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/杂物-医学/" title="杂物-医学">杂物-医学<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Linux/" title="编程-Linux">编程-Linux<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Linux-Unix/" title="编程-Linux/Unix">编程-Linux/Unix<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-工具/" title="编程-工具">编程-工具<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-网络协议/" title="编程-网络协议">编程-网络协议<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-工具/" title="网站-工具">网站-工具<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-语言/" title="网站-语言">网站-语言<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Luo Yuan in Zhuhai. <br/>
+			Here is my place for knowledge accumulation.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2021 
+		
+		<a href="/about" target="_blank" title="Luo Yuan">Luo Yuan</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

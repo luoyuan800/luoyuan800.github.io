@@ -1,6 +1,6 @@
 
  <!DOCTYPE HTML>
-<html lang="zh-CN">
+<html lang="ch">
 <head>
   <meta charset="UTF-8">
   
@@ -14,13 +14,14 @@
     <meta name="description" content="智能平台管理界面（IPMI，Intelligent Platform Management Interface）是管理基于 Intel结构的企业级系统中所使用的外围设备采用的一种工业标准，用户能够利用IPMI监控服务器的物理健康特征，如温度、电压、风扇工作状态、电源状 态等。该标准由美国英特尔、惠普（Hewlett-Packard）、NEC、美国戴尔电脑和SuperMicro等公司定制。新的版本是">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IPMI">
-<meta property="og:url" content="http://luoyuan800.github.io/2015/07/01/IPMI/index.html">
+<meta property="og:url" content="http://luoyuan800.github.io/2015/07/01/ipmi/index.html">
 <meta property="og:site_name" content="Yuan">
 <meta property="og:description" content="智能平台管理界面（IPMI，Intelligent Platform Management Interface）是管理基于 Intel结构的企业级系统中所使用的外围设备采用的一种工业标准，用户能够利用IPMI监控服务器的物理健康特征，如温度、电压、风扇工作状态、电源状 态等。该标准由美国英特尔、惠普（Hewlett-Packard）、NEC、美国戴尔电脑和SuperMicro等公司定制。新的版本是">
-<meta property="og:updated_time" content="2015-07-16T09:31:37.291Z">
+<meta property="og:locale">
+<meta property="article:published_time" content="2015-07-01T00:39:21.000Z">
+<meta property="article:modified_time" content="2021-04-22T08:13:10.870Z">
+<meta property="article:author" content="Luo Yuan">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="IPMI">
-<meta name="twitter:description" content="智能平台管理界面（IPMI，Intelligent Platform Management Interface）是管理基于 Intel结构的企业级系统中所使用的外围设备采用的一种工业标准，用户能够利用IPMI监控服务器的物理健康特征，如温度、电压、风扇工作状态、电源状 态等。该标准由美国英特尔、惠普（Hewlett-Packard）、NEC、美国戴尔电脑和SuperMicro等公司定制。新的版本是">
 
     
     <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
@@ -32,8 +33,12 @@
     <link rel="apple-touch-icon" href="/img/jacman.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
-</head>
+    
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/%02.css">
+<link rel="stylesheet" href="/.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
 
   <body>
     <header>
@@ -46,9 +51,9 @@
 			
 			<div id="textlogo">
 				<h1 class="site-name"><a href="/" title="Yuan">Yuan</a></h1>
-				<h2 class="blog-motto">一点一滴，技术积累</h2>
+				<h2 class="blog-motto">一点一滴，积累技术</h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -62,10 +67,11 @@
 					
 					<li>
  					
-						<form class="search">
-							<label>Search</label>
-						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
-						</form>
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:luoyuan800.github.io">
+					</form>
 					
 					</li>
 				</ul>
@@ -79,40 +85,37 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/01/IPMI/" title="IPMI" itemprop="url">IPMI</a>
+      <a href="/2015/07/01/ipmi/" title="IPMI" itemprop="url">IPMI</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-01T00:39:21.000Z" itemprop="datePublished"> 发表于 2015-07-01</time>
+    <time datetime="2015-07-01T00:39:21.000Z" itemprop="datePublished"> Published 2015-07-01</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
+			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#IPMI平台"><span class="toc-number">1.</span> <span class="toc-text">IPMI平台</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#服务器对IPMI的硬件支持"><span class="toc-number">1.1.</span> <span class="toc-text">服务器对IPMI的硬件支持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用IPMI管理系统的条件"><span class="toc-number">1.2.</span> <span class="toc-text">使用IPMI管理系统的条件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IPMI_管理工具"><span class="toc-number">2.</span> <span class="toc-text">IPMI 管理工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IPMI命令范例"><span class="toc-number">3.</span> <span class="toc-text">IPMI命令范例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IPMITool命令格式"><span class="toc-number">3.1.</span> <span class="toc-text">IPMITool命令格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令输出结果举例"><span class="toc-number">3.2.</span> <span class="toc-text">命令输出结果举例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置本地BMC的IP和用户名"><span class="toc-number">3.3.</span> <span class="toc-text">配置本地BMC的IP和用户名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#个别IPMITool命令列举"><span class="toc-number">3.4.</span> <span class="toc-text">个别IPMITool命令列举</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#IPMI%E5%B9%B3%E5%8F%B0"><span class="toc-number">1.</span> <span class="toc-text">IPMI平台</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AF%B9IPMI%E7%9A%84%E7%A1%AC%E4%BB%B6%E6%94%AF%E6%8C%81"><span class="toc-number">1.1.</span> <span class="toc-text">服务器对IPMI的硬件支持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8IPMI%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.2.</span> <span class="toc-text">使用IPMI管理系统的条件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IPMI-%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7"><span class="toc-number">2.</span> <span class="toc-text">IPMI 管理工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IPMI%E5%91%BD%E4%BB%A4%E8%8C%83%E4%BE%8B"><span class="toc-number">3.</span> <span class="toc-text">IPMI命令范例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IPMITool%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="toc-number">3.1.</span> <span class="toc-text">IPMITool命令格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C%E4%B8%BE%E4%BE%8B"><span class="toc-number">3.2.</span> <span class="toc-text">命令输出结果举例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%9C%AC%E5%9C%B0BMC%E7%9A%84IP%E5%92%8C%E7%94%A8%E6%88%B7%E5%90%8D"><span class="toc-number">3.3.</span> <span class="toc-text">配置本地BMC的IP和用户名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AA%E5%88%ABIPMITool%E5%91%BD%E4%BB%A4%E5%88%97%E4%B8%BE"><span class="toc-number">3.4.</span> <span class="toc-text">个别IPMITool命令列举</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<p>智能平台管理界面（IPMI，Intelligent Platform Management Interface）是管理基于 Intel结构的企业级系统中所使用的外围设备采用的一种工业标准，用户能够利用IPMI监控服务器的物理健康特征，如温度、电压、风扇工作状态、电源状 态等。该标准由美国英特尔、惠普（Hewlett-Packard）、NEC、美国戴尔电脑和SuperMicro等公司定制。新的版本是 IPMI2.0（<a href="http://www.intel.com/design/servers/ipmi/）。" target="_blank" rel="external">http://www.intel.com/design/servers/ipmi/）。</a><a id="more"></a></p>
-<h2 id="IPMI平台">IPMI平台</h2><p>需要使用IPMI的前提条件是目标服务器具备有IPMI的硬件基础。IPMI是独立主机OS的一个管理模块，其本质是一个独立运行的硬件芯片，这个芯片提供IPMI的实现，并且具有独立的电源，独立的MAC和IP地址。可以将这个芯片视为网络层的一种硬件实现。这个芯片在IPMI的概念中被定义为BMC，嵌入式管理为控制器。</p>
-<h3 id="服务器对IPMI的硬件支持">服务器对IPMI的硬件支持</h3><p>目前惠普、戴尔、和NEC等大多数厂商生成的服务器都会默认集成支持IPMI2.0。但是要注意并不是所有的服务器都支持，比如HP的服务器本身知道iLo管理系统，hp的服务器通过这个ILo管理系统模拟BMC实现IPMI，但是早起的ILo中是没有ipmi模块，需要升级到最新的版本才可以支持IPMI2.0.</p>
-<h3 id="使用IPMI管理系统的条件">使用IPMI管理系统的条件</h3><p>IPMI有两种使用方式</p>
+		<p>智能平台管理界面（IPMI，Intelligent Platform Management Interface）是管理基于 Intel结构的企业级系统中所使用的外围设备采用的一种工业标准，用户能够利用IPMI监控服务器的物理健康特征，如温度、电压、风扇工作状态、电源状 态等。该标准由美国英特尔、惠普（Hewlett-Packard）、NEC、美国戴尔电脑和SuperMicro等公司定制。新的版本是 IPMI2.0（<a target="_blank" rel="noopener" href="http://www.intel.com/design/servers/ipmi/%EF%BC%89%E3%80%82">http://www.intel.com/design/servers/ipmi/）。</a><span id="more"></span></p>
+<h2 id="IPMI平台"><a href="#IPMI平台" class="headerlink" title="IPMI平台"></a>IPMI平台</h2><p>需要使用IPMI的前提条件是目标服务器具备有IPMI的硬件基础。IPMI是独立主机OS的一个管理模块，其本质是一个独立运行的硬件芯片，这个芯片提供IPMI的实现，并且具有独立的电源，独立的MAC和IP地址。可以将这个芯片视为网络层的一种硬件实现。这个芯片在IPMI的概念中被定义为BMC，嵌入式管理为控制器。</p>
+<h3 id="服务器对IPMI的硬件支持"><a href="#服务器对IPMI的硬件支持" class="headerlink" title="服务器对IPMI的硬件支持"></a>服务器对IPMI的硬件支持</h3><p>目前惠普、戴尔、和NEC等大多数厂商生成的服务器都会默认集成支持IPMI2.0。但是要注意并不是所有的服务器都支持，比如HP的服务器本身知道iLo管理系统，hp的服务器通过这个ILo管理系统模拟BMC实现IPMI，但是早起的ILo中是没有ipmi模块，需要升级到最新的版本才可以支持IPMI2.0.</p>
+<h3 id="使用IPMI管理系统的条件"><a href="#使用IPMI管理系统的条件" class="headerlink" title="使用IPMI管理系统的条件"></a>使用IPMI管理系统的条件</h3><p>IPMI有两种使用方式</p>
 <ul>
-<li><p>一种是本地使用，通过服务器的操作系统来管理本机的电源和其他硬件信息，这种要求当前的操作系统要提供IPMI的内核支持，需要在操作系统上安装IPMI的驱动。例如Linux系统通过OpenIPMI来提供对IPMI接口的支持，在Linux上使用IPMI管理服务的之前需要先安装并且启用这个内核驱动：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service ipmi start</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>另一种是通过网络在另外一台机器上管理目标服务器。这个时候作为管理者使用的机器不需要安装IPMI驱动或者BMC，只需要通过网络发送IPMI命令到被管理的服务器上就使用IPMI进行服务器管理，如果查询硬件状态、开关机。这个时候我们可以在管理用的机器上安装IPMI管理工具如IPMITool。</p>
-</li>
+<li>一种是本地使用，通过服务器的操作系统来管理本机的电源和其他硬件信息，这种要求当前的操作系统要提供IPMI的内核支持，需要在操作系统上安装IPMI的驱动。例如Linux系统通过OpenIPMI来提供对IPMI接口的支持，在Linux上使用IPMI管理服务的之前需要先安装并且启用这个内核驱动：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service ipmi start</span><br></pre></td></tr></table></figure></li>
+<li>另一种是通过网络在另外一台机器上管理目标服务器。这个时候作为管理者使用的机器不需要安装IPMI驱动或者BMC，只需要通过网络发送IPMI命令到被管理的服务器上就使用IPMI进行服务器管理，如果查询硬件状态、开关机。这个时候我们可以在管理用的机器上安装IPMI管理工具如IPMITool。</li>
 </ul>
-<h2 id="IPMI_管理工具">IPMI 管理工具</h2><p>IPMI的管理工具可选择范围比较有限，目前Linux上就是用IPMITool，windows上使用 IPMIUtil。基于IPMI进行开发的Java工具包目前可免费是用的是基于Gplv3开源的vxipmi工具。我也基于IPMIutil实现了一个Java开发的支持工具包<a href="https://github.com/luoyuan800/IPMIUtil4J" title="IPMIUtil4J" target="_blank" rel="external">IPMIUtil4J</a>, 基于Apache2.0开放源代码，欢迎使用和提供建议。</p>
-<h2 id="IPMI命令范例">IPMI命令范例</h2><p>IPMI使用Remote Management Control Protocol (RMCP) 版本1支持操作系统关闭（pre-OS和OS-absent），RMCP把把数据发送到<strong>UDP</strong>的623端口。象lan接口一样，lanplus同样使用 Ethernet LAN 的UDP协议与BMC通信，但是lanplus使用RMCP＋协议（在IPMIV20中描述）来同新，RMCP+允许使用改经的认证方式和数据完整性检 查。我没有深入去研究IPMI的命令格式的组成，只是大概学了下怎么是用IPMItool执行IPMI命令，于是在这里记录下一些常用的IPMI命令<br>IPMITool工具执行IPMI命令的时候需要有相应的网络接口来访问BMC，接口有三种模式： open， lan， lanplus，IPMI2.0开始可以是用lanplus来打开网络接口进行远程访问。Open端口用于本地监控系统使用的；Lan/lanplus通过网络进行远程监控。</p>
-<h3 id="IPMITool命令格式">IPMITool命令格式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ipmitool -I lanplus -H &lt;ip&gt; -p &lt;port&gt; -C <span class="number">3</span> -U &lt;user&gt; -P &lt;password&gt; &lt;<span class="built_in">command</span>&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="IPMI-管理工具"><a href="#IPMI-管理工具" class="headerlink" title="IPMI 管理工具"></a>IPMI 管理工具</h2><p>IPMI的管理工具可选择范围比较有限，目前Linux上就是用IPMITool，windows上使用 IPMIUtil。基于IPMI进行开发的Java工具包目前可免费是用的是基于Gplv3开源的vxipmi工具。我也基于IPMIutil实现了一个在windows平台下进行Java开发的支持工具包。</p>
+<h2 id="IPMI命令范例"><a href="#IPMI命令范例" class="headerlink" title="IPMI命令范例"></a>IPMI命令范例</h2><p>IPMI使用Remote Management Control Protocol (RMCP) 版本1支持操作系统关闭（pre-OS和OS-absent），RMCP把把数据发送到<strong>UDP</strong>的623端口。象lan接口一样，lanplus同样使用 Ethernet LAN 的UDP协议与BMC通信，但是lanplus使用RMCP＋协议（在IPMIV20中描述）来同新，RMCP+允许使用改经的认证方式和数据完整性检 查。我没有深入去研究IPMI的命令格式的组成，只是大概学了下怎么是用IPMItool执行IPMI命令，于是在这里记录下一些常用的IPMI命令<br>IPMITool工具执行IPMI命令的时候需要有相应的网络接口来访问BMC，接口有三种模式： open， lan， lanplus，IPMI2.0开始可以是用lanplus来打开网络接口进行远程访问。Open端口用于本地监控系统使用的；Lan/lanplus通过网络进行远程监控。</p>
+<h3 id="IPMITool命令格式"><a href="#IPMITool命令格式" class="headerlink" title="IPMITool命令格式"></a>IPMITool命令格式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ipmitool -I lanplus -H &lt;ip&gt; -p &lt;port&gt; -C 3 -U &lt;user&gt; -P &lt;password&gt; &lt;<span class="built_in">command</span>&gt;</span><br></pre></td></tr></table></figure>
 <p> command的可选命令如下</p>
 <ul>
 <li>raw: 发送一个原始的IPMI请求，并且打印回复信息</li>
@@ -127,174 +130,129 @@
 <li>pef： 配置 Platform Event Filtering (PEF)，事件过滤平台用于在监控系统发现有event时候，用PEF中的策略进行事件过滤，然后看是否需要报警</li>
 <li>sol/isol：用于配置通过串口的Lan进行监控</li>
 <li>user：配置BMC中用户的信息</li>
-<li><p>channel：配置Management Controller信道</p>
-<p>-C （CipherSuiteID）参数用来配置ipmi的加密登记，可以选择0-14， 各个id对应的加密组合如下表：</p>
-</li>
+<li>channel：配置Management Controller信道</li>
+<li>C （CipherSuiteID）参数用来配置ipmi的加密登记，可以选择0-14， 各个id对应的加密组合如下表：</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>id</th>
-<th style="text-align:center">AuthenticationAlgorithm</th>
-<th style="text-align:center">IntegrityAlgorithm</th>
-<th style="text-align:center">ConfidentialityAlgorithm</th>
+<th align="center">AuthenticationAlgorithm</th>
+<th align="center">IntegrityAlgorithm</th>
+<th align="center">ConfidentialityAlgorithm</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>0</td>
-<td style="text-align:center">NONE</td>
-<td style="text-align:center">NONE</td>
-<td style="text-align:center">NONE</td>
+<td align="center">NONE</td>
+<td align="center">NONE</td>
+<td align="center">NONE</td>
 </tr>
 <tr>
 <td>1</td>
-<td style="text-align:center">SHA1</td>
-<td style="text-align:center">NONE</td>
-<td style="text-align:center">NONE</td>
+<td align="center">SHA1</td>
+<td align="center">NONE</td>
+<td align="center">NONE</td>
 </tr>
 <tr>
 <td>2</td>
-<td style="text-align:center">SHA1</td>
-<td style="text-align:center">SHA1_96</td>
-<td style="text-align:center">NONE</td>
+<td align="center">SHA1</td>
+<td align="center">SHA1_96</td>
+<td align="center">NONE</td>
 </tr>
 <tr>
 <td>3</td>
-<td style="text-align:center">SHA1</td>
-<td style="text-align:center">SHA1_96</td>
-<td style="text-align:center">AES_CBC128</td>
+<td align="center">SHA1</td>
+<td align="center">SHA1_96</td>
+<td align="center">AES_CBC128</td>
 </tr>
 <tr>
 <td>4</td>
-<td style="text-align:center">SHA1</td>
-<td style="text-align:center">SHA1_96</td>
-<td style="text-align:center">XRC4_128</td>
+<td align="center">SHA1</td>
+<td align="center">SHA1_96</td>
+<td align="center">XRC4_128</td>
 </tr>
 <tr>
 <td>5</td>
-<td style="text-align:center">SHA1</td>
-<td style="text-align:center">SHA1_96</td>
-<td style="text-align:center">XRC4_40</td>
+<td align="center">SHA1</td>
+<td align="center">SHA1_96</td>
+<td align="center">XRC4_40</td>
 </tr>
 <tr>
 <td>6</td>
-<td style="text-align:center">MD5</td>
-<td style="text-align:center">NONE</td>
-<td style="text-align:center">NONE</td>
+<td align="center">MD5</td>
+<td align="center">NONE</td>
+<td align="center">NONE</td>
 </tr>
 <tr>
 <td>7</td>
-<td style="text-align:center">MD5</td>
-<td style="text-align:center">MD5_128</td>
-<td style="text-align:center">NONE</td>
+<td align="center">MD5</td>
+<td align="center">MD5_128</td>
+<td align="center">NONE</td>
 </tr>
 <tr>
 <td>8</td>
-<td style="text-align:center">MD5</td>
-<td style="text-align:center">MD5_128</td>
-<td style="text-align:center">AES_CBC128</td>
+<td align="center">MD5</td>
+<td align="center">MD5_128</td>
+<td align="center">AES_CBC128</td>
 </tr>
 <tr>
 <td>9</td>
-<td style="text-align:center">MD5</td>
-<td style="text-align:center">MD5_128</td>
-<td style="text-align:center">XRC4_128</td>
+<td align="center">MD5</td>
+<td align="center">MD5_128</td>
+<td align="center">XRC4_128</td>
 </tr>
 <tr>
 <td>10</td>
-<td style="text-align:center">MD5</td>
-<td style="text-align:center">MD5_128</td>
-<td style="text-align:center">XRC4_40</td>
+<td align="center">MD5</td>
+<td align="center">MD5_128</td>
+<td align="center">XRC4_40</td>
 </tr>
 <tr>
 <td>11</td>
-<td style="text-align:center">MD5</td>
-<td style="text-align:center">MD5_128</td>
-<td style="text-align:center">NONE</td>
+<td align="center">MD5</td>
+<td align="center">MD5_128</td>
+<td align="center">NONE</td>
 </tr>
 <tr>
 <td>12</td>
-<td style="text-align:center">MD5</td>
-<td style="text-align:center">MD5_128</td>
-<td style="text-align:center">AES_CBC128</td>
+<td align="center">MD5</td>
+<td align="center">MD5_128</td>
+<td align="center">AES_CBC128</td>
 </tr>
 <tr>
 <td>13</td>
-<td style="text-align:center">MD5</td>
-<td style="text-align:center">MD5_128</td>
-<td style="text-align:center">XRC4_128</td>
+<td align="center">MD5</td>
+<td align="center">MD5_128</td>
+<td align="center">XRC4_128</td>
 </tr>
 <tr>
 <td>14</td>
-<td style="text-align:center">MD5</td>
-<td style="text-align:center">MD5_128</td>
-<td style="text-align:center">XRC4_40</td>
+<td align="center">MD5</td>
+<td align="center">MD5_128</td>
+<td align="center">XRC4_40</td>
 </tr>
-</tbody>
-</table>
-<h3 id="命令输出结果举例">命令输出结果举例</h3><pre><code>ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C 3 -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> sensor list  <span class="comment">##这个命令能够获取传感器列表</span>
-
- CPU1 Temp        |<span class="string"> 0.000      </span>|<span class="string"> unspecified </span>|<span class="string"> ok    </span>|<span class="string"> 0.000     </span>|<span class="string"> na        </span>|<span class="string"> 0.000     </span>|<span class="string"> 0.000     </span>|<span class="string"> na        </span>|<span class="string"> na        
- CPU2 Temp        </span>|<span class="string"> 0.000      </span>|<span class="string"> unspecified </span>|<span class="string"> ok    </span>|<span class="string"> 0.000     </span>|<span class="string"> na        </span>|<span class="string"> 0.000     </span>|<span class="string"> 0.000     </span>|<span class="string"> na        </span>|<span class="string"> na        
- System Temp      </span>|<span class="string"> 39.000     </span>|<span class="string"> degrees C  </span>|<span class="string"> ok    </span>|<span class="string"> 0.000     </span>|<span class="string"> 0.000     </span>|<span class="string"> 0.000     </span>|<span class="string"> 81.000    </span>|<span class="string"> 82.000    </span>|<span class="string"> 
- CPU1DIMM         </span>|<span class="string"> 1.544      </span>|<span class="string"> Volts      </span>|<span class="string"> ok    </span>|<span class="string"> 1.320     </span>|<span class="string"> 1.328     </span>|<span class="string"> 1.336     </span>|<span class="string"> 1.656     </span>|<span class="string"> 1.664     </span>|<span class="string"> 1.672     
- CPU2DIMM         </span>|<span class="string"> 1.544      </span>|<span class="string"> Volts      </span>|<span class="string"> ok    </span>|<span class="string"> 1.320     </span>|<span class="string"> 1.328     </span>|<span class="string"> 1.336     </span>|<span class="string"> 1.656     </span>|<span class="string"> 1.664     </span>|<span class="string"> 1.672     
- +1.5V            </span>|<span class="string"> 1.512      </span>|<span class="string"> Volts      </span>|<span class="string"> ok    </span>|<span class="string"> 1.320     </span>|<span class="string"> 1.328     </span>|<span class="string"> 1.336     </span>|<span class="string"> 1.656     </span>|<span class="string"> 1.664     </span>|<span class="string"> 1.672     
- +3.3V            </span>|<span class="string"> 3.240      </span>|<span class="string"> Volts      </span>|<span class="string"> ok    </span>|<span class="string"> 2.880     </span>|<span class="string"> 2.904     </span>|<span class="string"> 2.928     </span>|<span class="string"> 3.648     </span>|<span class="string"> 3.672     </span>|<span class="string"> 3.696     
- +3.3VSB          </span>|<span class="string"> 3.336      </span>|<span class="string"> Volts      </span>|<span class="string"> ok    </span>|<span class="string"> 2.880     </span>|<span class="string"> 2.904     </span>|<span class="string"> 2.928     </span>|<span class="string"> 3.648     </span>|<span class="string"> 3.672     </span>|<span class="string"> 3.696     
- VBAT             </span>|<span class="string"> 3.336      </span>|<span class="string"> Volts      </span>|<span class="string"> ok    </span>|<span class="string"> 2.880     </span>|<span class="string"> 2.904     </span>|<span class="string"> 2.928     </span>|<span class="string"> 3.648     </span>|<span class="string"> 3.672     </span>|<span class="string"> 3.696     
- Fan1             </span>|<span class="string"> 7072.000   </span>|<span class="string"> RPM        </span>|<span class="string"> ok    </span>|<span class="string"> 340.000   </span>|<span class="string"> 408.000   </span>|<span class="string"> 476.000   </span>|<span class="string"> 17204.000 </span>|<span class="string"> 17272.000 </span>|<span class="string"> 17340.000 
- Fan2             </span>|<span class="string"> 7072.000   </span>|<span class="string"> RPM        </span>|<span class="string"> ok    </span>|<span class="string"> 340.000   </span>|<span class="string"> 408.000   </span>|<span class="string"> 476.000   </span>|<span class="string"> 17204.000 </span>|<span class="string"> 17272.000 </span>|<span class="string"> 17340.000 
- Fan3             </span>|<span class="string"> na         </span>|<span class="string"> RPM        </span>|<span class="string"> na    </span>|<span class="string"> 340.000   </span>|<span class="string"> 408.000   </span>|<span class="string"> 476.000   </span>|<span class="string"> 17204.000 </span>|<span class="string"> 17272.000 </span>|<span class="string"> 17340.000 
- PS Status        </span>|<span class="string"> 0.000      </span>|<span class="string"> unspecified </span>|<span class="string"> ok    </span>|<span class="string"> 0.000     </span>|<span class="string"> na        </span>|<span class="string"> 0.000     </span>|<span class="string"> 0.000     </span>|<span class="string"> na        </span>|<span class="string"> na
-
-ipmitool -I lanplus -H &lt;ip&gt; -p &lt;port&gt; -C 3 -U &lt;user&gt; -P &lt;password&gt; sensor get "CPU1 Temp"  ##能够获取ID为CPU1 Temp监测值，CPU1 Temp是sensor的ID，服务器不同，ID表示也不同。
- Locating sensor record...
- Sensor ID              : CPU1 Temp (0x1)
- Entity ID             : 7.1
- Sensor Type (Analog)  : Unknown (0xC0)
- Sensor Reading        : 0 (+/- 0) unspecified
- Status                : ok
- Lower Non-Recoverable : 0.000
- Lower Critical        : na
- Lower Non-Critical    : 0.000
- Upper Non-Critical    : 0.000
- Upper Critical        : na
- Upper Non-Recoverable : na
- Assertion Events      : 
- Assertions Enabled    : lcr- 
- Deassertions Enabled  : lcr-</span>
-</code></pre><h3 id="配置本地BMC的IP和用户名">配置本地BMC的IP和用户名</h3><p>注意这是如何配置本机的IPMI给远程主机连接使用的IP和用户名，所以需要在当前服务器的操作系统上进行配置。有些厂商的服务如HP会提供界面操作。</p>
-<pre><code>ipmitool -I <span class="built_in">open</span> lan print <span class="number">1</span>                           <span class="comment">## 显示BMC通道的信息，如果不知道BMC使用的是哪个通道，请使用下面的命令确认：</span>
-ipmitool -I <span class="built_in">open</span> channel info <span class="number">1</span>
-ipmitool -I <span class="built_in">open</span> lan <span class="built_in">set</span> <span class="number">1</span> ipsrc static                <span class="comment">## 设置本地BMC地址为静态，才能设置IP</span>
-ipmitool -I <span class="built_in">open</span> lan <span class="built_in">set</span> <span class="number">1</span> ipaddr <span class="number">10.53</span>.11.113         <span class="comment">## 设置本地BMC的IP地址</span>
-ipmitool -I <span class="built_in">open</span> lan <span class="built_in">set</span> <span class="number">1</span> netmask <span class="number">255.255</span>.255.0       <span class="comment">## 子网掩码，别忘了设</span>
-ipmitool -I <span class="built_in">open</span> lan <span class="built_in">set</span> <span class="number">1</span> defgw ipaddr <span class="number">10.53</span>.11.254   <span class="comment">## 网关，可设可不设</span>
-ipmitool user list <span class="number">1</span>                                    <span class="comment">## 查看BMC的用户列表</span>
-ipmitool user <span class="built_in">set</span> name <span class="number">1</span> username                        <span class="comment">## 对BMC的1号用户设置用户名username</span>
-ipmitool user <span class="built_in">set</span> password <span class="number">1</span> <span class="number">123456</span>                    <span class="comment">## 对BMC的1号用户设置密码123456</span>
-</code></pre><h3 id="个别IPMITool命令列举">个别IPMITool命令列举</h3><pre><code>ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> sensor thresh   <span class="comment"># 配置ID值等于id的监测项的各种限制值。</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> chassis status  <span class="comment"># 查看主板状态，其中包括了主板电源信息，主板工作状态等</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> chassis restart_cause  <span class="comment"># 查看上次系统重启的原因</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> chassis policy list  <span class="comment"># 查看支持的底盘电源相关策略。</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> chassis power <span class="keyword">on</span> <span class="comment"># 启动底盘，用此命令能够远程开机</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> chassis power off <span class="comment"># 关闭底盘，用此命令能够远程关机</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> chassis power reset <span class="comment">#实现硬重启，用此命令能够远程重启</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> mc reset <span class="comment"># 使BMC重新硬启动</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> mc info <span class="comment"># 查看BMC硬件信息</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> mc setenables =[<span class="keyword">on</span>|off] <span class="comment">#配置bmc相应的允许/禁止选项。</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> mc getenables <span class="comment"># 列出BMC任何允许的选项</span>
-ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="variable">&lt;port&gt;</span> -C <span class="number">3</span> -U <span class="variable">&lt;user&gt;</span> -P <span class="variable">&lt;password&gt;</span> lan print <span class="number">1</span> <span class="comment"># 打印channel 1的信息</span>
-</code></pre>  
+<tr>
+<td></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<h3 id="命令输出结果举例"><a href="#命令输出结果举例" class="headerlink" title="命令输出结果举例"></a>命令输出结果举例</h3><p>ipmitool -I lanplus -H <ip> -p <port> -C 3 -U <user> -P <password> sensor list  ##这个命令能够获取传感器列表</p>
+<p> CPU1 Temp        | 0.000      | unspecified | ok    | 0.000     | na        | 0.000     | 0.000     | na        | na<br> CPU2 Temp        | 0.000      | unspecified | ok    | 0.000     | na        | 0.000     | 0.000     | na        | na<br> System Temp      | 39.000     | degrees C  | ok    | 0.000     | 0.000     | 0.000     | 81.000    | 82.000    |<br> CPU1DIMM         | 1.544      | Volts      | ok    | 1.320     | 1.328     | 1.336     | 1.656     | 1.664     | 1.672<br> CPU2DIMM         | 1.544      | Volts      | ok    | 1.320     | 1.328     | 1.336     | 1.656     | 1.664     | 1.672<br> +1.5V            | 1.512      | Volts      | ok    | 1.320     | 1.328     | 1.336     | 1.656     | 1.664     | 1.672<br> +3.3V            | 3.240      | Volts      | ok    | 2.880     | 2.904     | 2.928     | 3.648     | 3.672     | 3.696<br> +3.3VSB          | 3.336      | Volts      | ok    | 2.880     | 2.904     | 2.928     | 3.648     | 3.672     | 3.696<br> VBAT             | 3.336      | Volts      | ok    | 2.880     | 2.904     | 2.928     | 3.648     | 3.672     | 3.696<br> Fan1             | 7072.000   | RPM        | ok    | 340.000   | 408.000   | 476.000   | 17204.000 | 17272.000 | 17340.000<br> Fan2             | 7072.000   | RPM        | ok    | 340.000   | 408.000   | 476.000   | 17204.000 | 17272.000 | 17340.000<br> Fan3             | na         | RPM        | na    | 340.000   | 408.000   | 476.000   | 17204.000 | 17272.000 | 17340.000<br> PS Status        | 0.000      | unspecified | ok    | 0.000     | na        | 0.000     | 0.000     | na        | na</p>
+<p>ipmitool -I lanplus -H <ip> -p <port> -C 3 -U <user> -P <password> sensor get “CPU1 Temp”  ##能够获取ID为CPU1 Temp监测值，CPU1 Temp是sensor的ID，服务器不同，ID表示也不同。<br> Locating sensor record…<br> Sensor ID              : CPU1 Temp (0x1)<br> Entity ID             : 7.1<br> Sensor Type (Analog)  : Unknown (0xC0)<br> Sensor Reading        : 0 (+/- 0) unspecified<br> Status                : ok<br> Lower Non-Recoverable : 0.000<br> Lower Critical        : na<br> Lower Non-Critical    : 0.000<br> Upper Non-Critical    : 0.000<br> Upper Critical        : na<br> Upper Non-Recoverable : na<br> Assertion Events      :<br> Assertions Enabled    : lcr-<br> Deassertions Enabled  : lcr-</p>
+<h3 id="配置本地BMC的IP和用户名"><a href="#配置本地BMC的IP和用户名" class="headerlink" title="配置本地BMC的IP和用户名"></a>配置本地BMC的IP和用户名</h3><p>注意这是如何配置本机的IPMI给远程主机连接使用的IP和用户名，所以需要在当前服务器的操作系统上进行配置。有些厂商的服务如HP会提供界面操作。</p>
+<p>ipmitool -I open lan print 1                           ## 显示BMC通道的信息，如果不知道BMC使用的是哪个通道，请使用下面的命令确认：<br>ipmitool -I open channel info 1<br>ipmitool -I open lan set 1 ipsrc static                ## 设置本地BMC地址为静态，才能设置IP<br>ipmitool -I open lan set 1 ipaddr 10.53.11.113         ## 设置本地BMC的IP地址<br>ipmitool -I open lan set 1 netmask 255.255.255.0       ## 子网掩码，别忘了设<br>ipmitool -I open lan set 1 defgw ipaddr 10.53.11.254   ## 网关，可设可不设<br>ipmitool user list 1         ## 查看BMC的用户列表<br>ipmitool user set name 1 username     ## 对BMC的1号用户设置用户名username<br>ipmitool user set password 1 123456                    ## 对BMC的1号用户设置密码123456</p>
+<h3 id="个别IPMITool命令列举"><a href="#个别IPMITool命令列举" class="headerlink" title="个别IPMITool命令列举"></a>个别IPMITool命令列举</h3><p>ipmitool -I lanplus -H <ip> -p <port> -C 3 -U <user> -P <password> sensor thresh   # 配置ID值等于id的监测项的各种限制值。<br>ipmitool -I lanplus -H <ip> -p <port> -C 3 -U <user> -P <password> chassis status  # 查看主板状态，其中包括了主板电源信息，主板工作状态等<br>ipmitool -I lanplus -H <ip> -p <port> -C 3 -U <user> -P <password> chassis restart_cause  # 查看上次系统重启的原因<br>ipmitool -I lanplus -H <ip> -p <port> -C 3 -U <user> -P <password> chassis policy list  # 查看支持的底盘电源相关策略。<br>ipmitool -I lanplus -H <ip> -p <port> -C 3 -U <user> -P <password> chassis power on # 启动底盘，用此命令能够远程开机<br>ipmitool -I lanplus -H <ip> -p <port> -C 3 -U <user> -P <password> chassis power off # 关闭底盘，用此命令能够远程关机<br>ipmitool -I lanplus -H <ip> -p <port> -C 3 -U <user> -P <password> chassis power reset #实现硬重启，用此命令能够远程重启<br>ipmitool -I lanplus -H <ip> -p <port> -C 3 -U <user> -P <password> mc reset # 使BMC重新硬启动<br>ipmitool -I lanplus -H <ip> -p <port> -C 3 -U <user> -P <password> mc info # 查看BMC硬件信息<br>ipmitool -I lanplus -H <ip> -p <port> -C 3 -U <user> -P <password> mc setenables =[on|off] #配置bmc相应的允许/禁止选项。<br>ipmitool -I lanplus -H <ip> -p <port> -C 3 -U <user> -P <password> mc getenables # 列出BMC任何允许的选项<br>ipmitool -I lanplus -H <ip> -p <port> -C 3 -U <user> -P <password> lan print 1 # 打印channel 1的信息</p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程-网络协议/">编程-网络协议</a>
+  <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B-%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">编程-网络协议</a>
 </div>
 
 
@@ -304,7 +262,7 @@ ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://luoyuan800.github.io/2015/07/01/IPMI/" data-title="IPMI | Yuan" data-tsina="null" class="share clearfix">
+	  <div data-url="http://luoyuan800.github.io/2015/07/01/ipmi/" data-title="IPMI | Yuan" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -318,7 +276,7 @@ ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/07/01/linux-filesystem-types/" title="Linux 文件系统类型">
+ <a href="/2015/07/01/linux-filesystem/" title="Linux 文件系统类型">
   <strong>上一篇：</strong><br/>
   <span>
   Linux 文件系统类型</span>
@@ -327,7 +285,7 @@ ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="
 
 
 <div class="next">
-<a href="/2015/06/30/Log4j-N-MDC/"  title="Log4j中的NDC和MDC">
+<a href="/2015/06/30/log4j-ndc-mdc/"  title="Log4j中的NDC和MDC">
  <strong>下一篇：</strong><br/> 
  <span>Log4j中的NDC和MDC
 </span>
@@ -337,50 +295,45 @@ ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="
 </nav>
 
 	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/07/01/IPMI/" data-title="IPMI" data-url="http://luoyuan800.github.io/2015/07/01/IPMI/"></div>
-</section>
+
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
+  <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#IPMI平台"><span class="toc-number">1.</span> <span class="toc-text">IPMI平台</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#服务器对IPMI的硬件支持"><span class="toc-number">1.1.</span> <span class="toc-text">服务器对IPMI的硬件支持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用IPMI管理系统的条件"><span class="toc-number">1.2.</span> <span class="toc-text">使用IPMI管理系统的条件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IPMI_管理工具"><span class="toc-number">2.</span> <span class="toc-text">IPMI 管理工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IPMI命令范例"><span class="toc-number">3.</span> <span class="toc-text">IPMI命令范例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IPMITool命令格式"><span class="toc-number">3.1.</span> <span class="toc-text">IPMITool命令格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令输出结果举例"><span class="toc-number">3.2.</span> <span class="toc-text">命令输出结果举例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置本地BMC的IP和用户名"><span class="toc-number">3.3.</span> <span class="toc-text">配置本地BMC的IP和用户名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#个别IPMITool命令列举"><span class="toc-number">3.4.</span> <span class="toc-text">个别IPMITool命令列举</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#IPMI%E5%B9%B3%E5%8F%B0"><span class="toc-number">1.</span> <span class="toc-text">IPMI平台</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AF%B9IPMI%E7%9A%84%E7%A1%AC%E4%BB%B6%E6%94%AF%E6%8C%81"><span class="toc-number">1.1.</span> <span class="toc-text">服务器对IPMI的硬件支持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8IPMI%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.2.</span> <span class="toc-text">使用IPMI管理系统的条件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IPMI-%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7"><span class="toc-number">2.</span> <span class="toc-text">IPMI 管理工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IPMI%E5%91%BD%E4%BB%A4%E8%8C%83%E4%BE%8B"><span class="toc-number">3.</span> <span class="toc-text">IPMI命令范例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IPMITool%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="toc-number">3.1.</span> <span class="toc-text">IPMITool命令格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C%E4%B8%BE%E4%BE%8B"><span class="toc-number">3.2.</span> <span class="toc-text">命令输出结果举例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%9C%AC%E5%9C%B0BMC%E7%9A%84IP%E5%92%8C%E7%94%A8%E6%88%B7%E5%90%8D"><span class="toc-number">3.3.</span> <span class="toc-text">配置本地BMC的IP和用户名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AA%E5%88%ABIPMITool%E5%91%BD%E4%BB%A4%E5%88%97%E4%B8%BE"><span class="toc-number">3.4.</span> <span class="toc-text">个别IPMITool命令列举</span></a></li></ol></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
+
+
+  
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
-			<li><a href="/categories/杂物/" title="杂物">杂物<sup>1</sup></a></li>
+			<li><a href="/categories/杂物-医学/" title="杂物-医学">杂物-医学<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/杂物-病理/" title="杂物-病理">杂物-病理<sup>1</sup></a></li>
+			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>10</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/编程-Android/" title="编程-Android">编程-Android<sup>3</sup></a></li>
+			<li><a href="/categories/编程-Linux/" title="编程-Linux">编程-Linux<sup>3</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>12</sup></a></li>
-		  
-		
-		  
-		
-		  
-			<li><a href="/categories/编程-Linux-Unix/" title="编程-Linux/Unix">编程-Linux/Unix<sup>8</sup></a></li>
+			<li><a href="/categories/编程-Linux-Unix/" title="编程-Linux/Unix">编程-Linux/Unix<sup>1</sup></a></li>
 		  
 		
 		  
@@ -388,7 +341,7 @@ ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="
 		  
 		
 		  
-			<li><a href="/categories/编程-网络协议/" title="编程-网络协议">编程-网络协议<sup>2</sup></a></li>
+			<li><a href="/categories/编程-网络协议/" title="编程-网络协议">编程-网络协议<sup>1</sup></a></li>
 		  
 		
 		  
@@ -406,7 +359,7 @@ ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="
   
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
         
           <li>
@@ -428,8 +381,14 @@ ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="
 
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
 </div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=&verifier=&dpc=1"></iframe>
+</div>
+
 
 </aside>
 </div>
@@ -458,14 +417,12 @@ ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="
 		
 		
 		
-		<a href="mailto:luoyuan800@163.com" target="_blank" class="icon-email" title="Email Me"></a>
-		
 	</div>
 			
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2021 
 		
 		<a href="/about" target="_blank" title="Luo Yuan">Luo Yuan</a>
 		
@@ -476,6 +433,7 @@ ipmitool -I lanplus -H <span class="variable">&lt;ip&gt;</span> -p <span class="
     <script src="/js/jquery-2.0.3.min.js"></script>
 <script src="/js/jquery.imagesloaded.min.js"></script>
 <script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function(){ 
@@ -560,8 +518,8 @@ $(document).ready(function(){
       tsina = $this.attr('data-tsina'),
       description = $this.attr('description');
   var html = [
-  '<a href="#" class="overlay" id="qrcode"></a>',
-  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
   '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
   '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
   '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
@@ -570,29 +528,39 @@ $(document).ready(function(){
   '<span title="Share to"></span>'
   ].join('');
   $this.append(html);
-  $('.article-share-qrcode').click(function(){
-    var imgSrc = $('#qrcode-pic').attr('data-src');
-    $('#qrcode-pic').attr('src', imgSrc);
-    $('#qrcode-pic').load(function(){
-        $('.qrcode strong').text(' ');
-    });
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
   });
-});     
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
 </script>
 
 
 
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"luoyuan800"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
+
 
 
 
@@ -627,9 +595,14 @@ $(document).ready(function(){
 
 
 
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F5529f030def9614f4dc83cc68b307ced' type='text/javascript'%3E%3C/script%3E"));
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
 </script>
 
 
@@ -639,7 +612,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
@@ -652,23 +625,6 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- MathJax End -->
 
 <!-- Tiny_search Begin -->
-
-<script>
-var option = {
-  engineKey: '32f8205e3ec577a3f6d4'
-};
-(function(w,d,t,u,n,s,e){
-  s = d.createElement(t);
-  s.src = u;
-  s.async = 1;
-  w[n] = function(r){
-    w[n].opts = r;
-  };
-  e = d.getElementsByTagName(t)[0];
-  e.parentNode.insertBefore(s, e);
-})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
-_ts(option);
-</script>
 
 <!-- Tiny_search End -->
 

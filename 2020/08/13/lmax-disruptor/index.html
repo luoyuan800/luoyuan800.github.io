@@ -1,0 +1,536 @@
+
+ <!DOCTYPE HTML>
+<html lang="ch">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>什么是LMAX Disruptor | Yuan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Luo Yuan">
+    
+
+    
+    <meta name="description" content="本篇文章目的在于介绍 LMAX Disruptor，探讨它是如何帮助我们实现软件低延迟、高并发特性。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="什么是LMAX Disruptor">
+<meta property="og:url" content="http://luoyuan800.github.io/2020/08/13/lmax-disruptor/index.html">
+<meta property="og:site_name" content="Yuan">
+<meta property="og:description" content="本篇文章目的在于介绍 LMAX Disruptor，探讨它是如何帮助我们实现软件低延迟、高并发特性。">
+<meta property="og:locale">
+<meta property="og:image" content="https://www.baeldung.com/wp-content/uploads/2017/01/RingBuffer-1.jpg">
+<meta property="article:published_time" content="2020-08-13T00:53:00.000Z">
+<meta property="article:modified_time" content="2021-04-22T08:18:28.590Z">
+<meta property="article:author" content="Luo Yuan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.baeldung.com/wp-content/uploads/2017/01/RingBuffer-1.jpg">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/%02.css">
+<link rel="stylesheet" href="/.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Yuan" title="Yuan"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Yuan">Yuan</a></h1>
+				<h2 class="blog-motto">一点一滴，积累技术</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:luoyuan800.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2020/08/13/lmax-disruptor/" title="什么是LMAX Disruptor" itemprop="url">什么是LMAX Disruptor</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
+		
+  <p class="article-time">
+    <time datetime="2020-08-13T00:53:00.000Z" itemprop="datePublished"> Published 2020-08-13</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Disruptor-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">Disruptor 是什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%BA%E6%A2%B0%E5%92%8C%E8%B0%90%EF%BC%88%E6%88%96%E8%80%85%E7%BF%BB%E8%AF%91%E4%B8%BA%E6%83%85%E6%80%80%E3%80%81%E5%90%8C%E6%83%85%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">机械和谐（或者翻译为情怀、同情）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%94%A8%E9%98%9F%E5%88%97"><span class="toc-number">1.2.</span> <span class="toc-text">为什么不用队列</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>本篇文章目的在于介绍 LMAX Disruptor，探讨它是如何帮助我们实现软件低延迟、高并发特性。<span id="more"></span></p>
+<h1 id="Disruptor-是什么？"><a href="#Disruptor-是什么？" class="headerlink" title="Disruptor 是什么？"></a>Disruptor 是什么？</h1><p>Disruptor 是个基于Java的开源并发编程框架，由 LMAX 编写。通过更高效的利用底层硬件的设计实现，能够高效的优化性能。它能处理大量事务，而且低延迟(然而并不会像常规并发代码那样复杂)。</p>
+<h2 id="机械和谐（或者翻译为情怀、同情）"><a href="#机械和谐（或者翻译为情怀、同情）" class="headerlink" title="机械和谐（或者翻译为情怀、同情）"></a>机械和谐（或者翻译为情怀、同情）</h2><p>让我们从机械和谐的核心概念开始 - 这就是了解底层硬件的工作方式和编程方式，从而以最适合该硬件的方式做自己的工作。</p>
+<p>反正不明嚼栗。比如让我们看看CPU和内存组织能够如何影响软件性能。我们都知道CPU与主内存之间具有多层缓存，当CPU执行操作时，它首先在L1中查找数据，然后在L2中查找，然后在L3中查找，最后在主存储器中查找。 缓存级别越低，操作所需的时间就越长（参考下表）。如果对一条数据多次执行相同的操作（例如，循环计数器），则将数据加载到非常靠近CPU的位置就很有意义（减少时间）。</p>
+<table>
+<thead>
+<tr>
+<th>距离CPU的位置</th>
+<th>CPU时钟</th>
+<th>耗时</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主内存</td>
+<td>Multiple（多个）</td>
+<td>~60-80 ns</td>
+</tr>
+<tr>
+<td>L3缓存</td>
+<td>~40-45 时间片</td>
+<td>~15 ns</td>
+</tr>
+<tr>
+<td>L2缓存</td>
+<td>~10 时间片</td>
+<td>~3 ns</td>
+</tr>
+<tr>
+<td>L1缓存</td>
+<td>~3-4 时间片</td>
+<td>~1 ns</td>
+</tr>
+<tr>
+<td>寄存器</td>
+<td>1 时间片</td>
+<td>非常非常快</td>
+</tr>
+</tbody></table>
+<h2 id="为什么不用队列"><a href="#为什么不用队列" class="headerlink" title="为什么不用队列"></a>为什么不用队列</h2><p>队列实现倾向于在head，tail和size变量上进行写争用，由于消费者和生产者之间的速度存在差异，队列通常总是接近满（生产者快）或接近空（消费者快）。队列的中间生产率和消费率平均匹配，但这需要保持生产者和消费者的平衡，这是极少能实现的。为了处理读写，队列通常会使用锁，这可能导致内核级别的上下文切换，这个时候所涉及的处理器可能会丢失其缓存中的数据。所以为了获得最佳的缓存行为，就要设计应只有一个内核级别的缓存操作（读取可以有多个）。队列无法遵循“单写者”原则。如果两个单独的线程正在写入两个不同的值，则每个操作都会使另一个的缓存行无效。即使两个线程正在写两个不同的变量，这也是两个线程之间的写竞争。这被称为不正当的共享，因为每次访问头部时，尾部也会被访问，反之亦然。</p>
+<p>2.3. Disruptor是如何工作的？<br><img src="https://www.baeldung.com/wp-content/uploads/2017/01/RingBuffer-1.jpg" alt="image"><br>Disruptor 有一个基于数组的循环数据结构(环装缓冲区)。这个循环数据结构，它是个拥有下个可用元素引用的数组。预先分配了对象内存空间。生产者与消费者通过这个循环数据在不加锁或者竞争的情况下进行读写操作。</p>
+<p>在Disruptor 中，所有事件(events)以组播的方式被发布给所有消费者，以便下游队列通过并行的方式进行消费。因为消费者是并行处理的，所以需要协调他们之间的依赖关系(依赖性图）。</p>
+<p>生产者和消费者都有个序列计数器，用于指示缓冲区中当前正在被它所处理的元素。所有生产者或消费者都只可以修改它自己的序列计数器，但可以读取其他的序列计数器。生产组和消费者读取计数器的时候要确保写入不会被锁住。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B-Java/">编程-Java</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://luoyuan800.github.io/2020/08/13/lmax-disruptor/" data-title="什么是LMAX Disruptor | Yuan" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2020/08/24/java-learning/" title="什么是LMAX Disruptor">
+  <strong>上一篇：</strong><br/>
+  <span>
+  什么是LMAX Disruptor</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2020/01/03/lucene/"  title="Lucene：关键字检索">
+ <strong>下一篇：</strong><br/> 
+ <span>Lucene：关键字检索
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Disruptor-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">Disruptor 是什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%BA%E6%A2%B0%E5%92%8C%E8%B0%90%EF%BC%88%E6%88%96%E8%80%85%E7%BF%BB%E8%AF%91%E4%B8%BA%E6%83%85%E6%80%80%E3%80%81%E5%90%8C%E6%83%85%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">机械和谐（或者翻译为情怀、同情）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%94%A8%E9%98%9F%E5%88%97"><span class="toc-number">1.2.</span> <span class="toc-text">为什么不用队列</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/杂物-医学/" title="杂物-医学">杂物-医学<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Linux/" title="编程-Linux">编程-Linux<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Linux-Unix/" title="编程-Linux/Unix">编程-Linux/Unix<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-工具/" title="编程-工具">编程-工具<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-网络协议/" title="编程-网络协议">编程-网络协议<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-工具/" title="网站-工具">网站-工具<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-语言/" title="网站-语言">网站-语言<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Luo Yuan in Zhuhai. <br/>
+			Here is my place for knowledge accumulation.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2021 
+		
+		<a href="/about" target="_blank" title="Luo Yuan">Luo Yuan</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

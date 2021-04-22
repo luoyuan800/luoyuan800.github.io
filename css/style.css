@@ -123,6 +123,21 @@ body {
   font-size: 100%;
   color: #817c7c;
   line-height: 1.5;
+  min-height: 100vh;
+  display: -webkit-flex;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-flex-direction: column;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -o-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
 }
 iframe {
   margin-top: 10px;
@@ -568,6 +583,7 @@ header nav ul li a:hover {
 }
 /* index layout */
 #container {
+  -webkit-flex: 1;
   width: 95%;
   margin: 0 auto;
   overflow: hidden;
@@ -666,7 +682,6 @@ header nav ul li a:hover {
   display: inline-block;
   line-height: 1em;
   padding: 6px 15px;
-  -webkit-border-radius: 15px;
   border-radius: 15px;
   background: #ddd;
   color: #817c7c;
@@ -944,7 +959,6 @@ article .article-content .kb {
   color: #8f8f8f;
   -webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.2), 0 0 0 2px #fff inset;
   box-shadow: 0 1px 0 rgba(0,0,0,0.2), 0 0 0 2px #fff inset;
-  -webkit-border-radius: 3px;
   border-radius: 3px;
   display: inline-block;
   margin: 0 0.1em;
@@ -1058,7 +1072,6 @@ article .article-content table td>code {
   font-size: 90%;
   white-space: nowrap;
   text-shadow: 0 1px #fff;
-  -webkit-border-radius: 0.25em;
   -webkit-border-radius: 0.25em;
   border-radius: 0.25em;
 }
@@ -1279,82 +1292,15 @@ footer.article-footer {
   background: #762c54;
   text-shadow: 0 1px #5e2343;
 }
-.qrcode {
-  width: 15em;
-  height: 15em;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-top: -7.5em;
-  margin-left: -7.5em;
+.hoverqrcode {
   background: #fff;
-  border: 2px solid #ccc;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
+  border: 3px solid #2ca6cb;
+  border-radius: 10px;
   display: inline-block;
-  opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  filter: alpha(opacity=0);
-  position: fixed;
-  text-align: center;
-  visibility: hidden;
-  z-index: 10;
-  -webkit-transition: opacity 0.5s;
-  -moz-transition: opacity 0.5s;
-  -o-transition: opacity 0.5s;
-  -ms-transition: opacity 0.5s;
-  transition: opacity 0.5s;
-}
-@media only screen and (min-width: 1024px) {
-  .qrcode {
-    width: 20em;
-    height: 20em;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -10em;
-    margin-left: -10em;
-    position: fixed;
-  }
-}
-.qrcode span {
-  display: block;
-  width: 80%;
-  height: 1.5em;
-  font-size: 80%;
-  float: left;
-}
-.qrcode span:before {
-  content: none;
-}
-.qrcode a {
-  display: block;
-  width: 16%;
-  height: 1.5em;
-  float: left;
-}
-.qrcode img {
-  width: 90%;
-  height: 90%;
-}
-.qrclose:before {
-  font-family: "FontAwesome";
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  content: "\f057";
-  color: #ccc;
-}
-.qrclose:hover:before {
-  color: #2ca6cb !important;
+  position: absolute;
 }
 .overlay {
   display: none !important;
-}
-.overlay:target+.qrcode {
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
-  visibility: visible;
 }
 .comments-count {
   color: #d6d6d6;
@@ -1535,7 +1481,6 @@ section.comment {
   margin: 1.6em 0 0 2em;
   padding: 1em;
   -webkit-border-radius: 4px;
-  -webkit-border-radius: 4px;
   border-radius: 4px;
   border: 1px solid #ddd;
 }
@@ -1627,7 +1572,6 @@ section.comment {
   display: block;
   color: #fff;
   border: 1px solid #fff;
-  -webkit-border-radius: 5px;
   border-radius: 5px;
   background: #2ca6cb;
   padding: 0.2em 0.55em;
@@ -1930,6 +1874,26 @@ section.comment {
 .doubanshow div {
   padding: 0.5em 0;
 }
+.github-card {
+  margin-top: 1.5em;
+}
+@media only screen and (min-width: 768px) {
+  .github-card {
+    width: 45%;
+    float: left;
+    margin: 0 5% 0 0;
+  }
+}
+@media only screen and (min-width: 1024px) {
+  .github-card {
+    width: 100%;
+    float: none;
+    margin: 1em 0 0;
+  }
+}
+.github-card div {
+  padding: 0.5em 0;
+}
 footer {
   margin-top: 1em;
   background: #1f1f1f;
@@ -1975,7 +1939,6 @@ footer {
   -webkit-background-size: 6.875em 6.875em;
   -moz-background-size: 6.875em 6.875em;
   background-size: 6.875em 6.875em;
-  -webkit-border-radius: 3.4375em;
   border-radius: 3.4375em;
   -webkit-transition: -webkit-transform 2s ease-out;
   -moz-transition: -moz-transform 2s ease-out;
@@ -2146,7 +2109,6 @@ footer {
   line-height: 1.5;
   font-size: 0.8em;
   -webkit-border-radius: 0.35em;
-  -webkit-border-radius: 0.35em;
   border-radius: 0.35em;
   word-wrap: break-word;
 }
@@ -2225,7 +2187,6 @@ footer {
   margin: 0.5em 0;
   background: #eee;
   padding: 1em 2%;
-  -webkit-border-radius: 0.35em;
   -webkit-border-radius: 0.35em;
   border-radius: 0.35em;
 }

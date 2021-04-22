@@ -1,6 +1,6 @@
 
  <!DOCTYPE HTML>
-<html lang="zh-CN">
+<html lang="ch">
 <head>
   <meta charset="UTF-8">
   
@@ -11,15 +11,13 @@
     
 
     
-    <meta name="description" content="一点一滴，积累技术">
-<meta property="og:type" content="website">
+    <meta property="og:type" content="website">
 <meta property="og:title" content="Yuan">
 <meta property="og:url" content="http://luoyuan800.github.io/page/2/index.html">
 <meta property="og:site_name" content="Yuan">
-<meta property="og:description" content="一点一滴，积累技术">
+<meta property="og:locale">
+<meta property="article:author" content="Luo Yuan">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Yuan">
-<meta name="twitter:description" content="一点一滴，积累技术">
 
     
     <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
@@ -31,8 +29,12 @@
     <link rel="apple-touch-icon" href="/img/jacman.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
-</head>
+    
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/%02.css">
+<link rel="stylesheet" href="/.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
 
   <body>
     <header>
@@ -45,9 +47,9 @@
 			
 			<div id="textlogo">
 				<h1 class="site-name"><a href="/" title="Yuan">Yuan</a></h1>
-				<h2 class="blog-motto">一点一滴，技术积累</h2>
+				<h2 class="blog-motto">一点一滴，积累技术</h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -61,10 +63,11 @@
 					
 					<li>
  					
-						<form class="search">
-							<label>Search</label>
-						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
-						</form>
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:luoyuan800.github.io">
+					</form>
 					
 					</li>
 				</ul>
@@ -80,25 +83,25 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/09/26/groovy_unique_performance/" title="Groovy中unique方法性能分析" itemprop="url">Groovy中unique方法性能分析</a>
+      <a href="/2015/07/23/jvm-gc/" title="JVM 垃圾回收器" itemprop="url">JVM 垃圾回收器</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2016-09-26T02:59:21.000Z" itemprop="datePublished"> 发表于 2016-09-26</time>
+    <time datetime="2015-07-23T08:57:43.000Z" itemprop="datePublished"> Published 2015-07-23</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <p>最近发现使用Groovy中的集合去重unique方法似乎会导致运行时间变长。身为一个java程序员一直比较习惯用HashSet去过滤重复的数据，看到groovy中有这么一个去重复的方法，觉得挺方便，所以就很开心的用上了。但是测试以后发现，这个方法性能真的是很差劲的……
+        <p>简单列举了JVM中使用的集中垃圾收集器
         
         
         <p class="article-more-link">
           
-            <a href="/2016/09/26/groovy_unique_performance/#more">Read More</a>
+            <a href="/2015/07/23/jvm-gc/#more">Read More</a>
           
        </p>
     </div>
@@ -107,7 +110,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程-Java/">编程-Java</a>
+  <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B-Java/">编程-Java</a>
 </div>
 
 
@@ -117,9 +120,6 @@
 
 
 <div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/09/26/groovy_unique_performance/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/09/26/groovy_unique_performance/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -139,25 +139,25 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/07/22/unix-shell/" title="Unix系统中的SHELL" itemprop="url">Unix系统中的SHELL</a>
+      <a href="/2015/07/22/encode-java/" title="使用Java进行文本加密" itemprop="url">使用Java进行文本加密</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2016-07-22T01:44:14.000Z" itemprop="datePublished"> 发表于 2016-07-22</time>
+    <time datetime="2015-07-22T07:58:00.000Z" itemprop="datePublished"> Published 2015-07-22</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <p>关于各个版本shell的介绍
+        <p>通用的加密模式可以分为对称加密、不对称加密、单向加密（不可逆加密）。偶然想要查询下如何在java中进行文本加密，网上搜索到的都是大篇幅介绍加密原理，如何使用却都是一句话带过，真真是看着就烦。所以本文不涉及加密原理和概念，只是列举了如何使用java进行三种方式加密的例子，作为参考使用。
         
         
         <p class="article-more-link">
           
-            <a href="/2016/07/22/unix-shell/#more">Read More</a>
+            <a href="/2015/07/22/encode-java/#more">Read More</a>
           
        </p>
     </div>
@@ -166,7 +166,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程-Linux-Unix/">编程-Linux/Unix</a>
+  <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B-Java/">编程-Java</a>
 </div>
 
 
@@ -176,9 +176,6 @@
 
 
 <div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/07/22/unix-shell/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/07/22/unix-shell/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -198,25 +195,25 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/01/31/android_ListView/" title="Android ListView" itemprop="url">Android ListView</a>
+      <a href="/2015/07/15/regex-java/" title="正则表达式进阶" itemprop="url">正则表达式进阶</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2016-01-31T03:39:21.000Z" itemprop="datePublished"> 发表于 2016-01-31</time>
+    <time datetime="2015-07-15T08:19:43.000Z" itemprop="datePublished"> Published 2015-07-15</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <p>简单记录下ListView的使用方式。<br>
+        <p>正则表达式的作用在我看来是：匹配、查找、替换三种。使用正则表达式也算是粗粗入门了，至少已经可以写一些简单的表达式来进行字符串的匹配了，而且也会从网络上拷贝别人的一些比较复杂的表达式……那么就学习一些进阶的东西吧。包括 捕获组和非捕获组，匹配模式解析。
         
         
         <p class="article-more-link">
           
-            <a href="/2016/01/31/android_ListView/#more">Read More</a>
+            <a href="/2015/07/15/regex-java/#more">Read More</a>
           
        </p>
     </div>
@@ -225,7 +222,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程-Android/">编程-Android</a>
+  <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B-Java/">编程-Java</a>
 </div>
 
 
@@ -235,9 +232,6 @@
 
 
 <div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/01/31/android_ListView/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/31/android_ListView/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -257,25 +251,80 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/25/ubuntu/" title="Linux学习积累" itemprop="url">Linux学习积累</a>
+      <a href="/2015/07/10/linux-partition/" title="Linux的分区" itemprop="url">Linux的分区</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-25T01:44:14.000Z" itemprop="datePublished"> 发表于 2015-11-25</time>
+    <time datetime="2015-07-10T08:47:16.000Z" itemprop="datePublished"> Published 2015-07-10</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <p>自己用到过和遇见过得命令和异常陈列，基本是Ubuntu之类的界面和操作系统。
+        <h2 id="设备管理"><a href="#设备管理" class="headerlink" title="设备管理"></a>设备管理</h2><p>在 Linux 中，每一个硬件设备都映射到一个系统的文件，对于硬盘、光驱等 IDE 或 SCSI 设备也不例外。Linux把各种 IDE 设备分配了一个由 hd 前缀组成的文件；而对于各种 SCSI 设备，则分配了一个由 sd 前缀组成的文件。<br>对于ide硬盘，驱动器标识符为“hdx<del>”,其中“hd”表明分区所在设备的类型，这里是指ide硬盘了。“x”为盘号（a为基本盘，b为基本从属盘，c为辅助主盘，d为辅助从属盘）,“</del>”代表分区，前四个分区用数字1到4表示，它们是主分区或扩展分区，从5开始就是逻辑分区。例，hda3表示为第一个ide硬盘上的第三个主分区或扩展分区,hdb2表示为第二个ide硬盘上的第二个主分区或扩展分区。对于scsi硬盘则标识为“sdx~”，scsi硬盘是用“sd”来表示分区所在设备的类型的，其余则和ide硬盘的表示方法一样，不在多说。<br>例如，第一个 IDE 设备，Linux 就定义为 hda；第二个 IDE 设备就定义为 hdb；下面以此类推。而 SCSI 设备就应该是 sda、sdb、sdc 等。</p>
+<h2 id="分区编号"><a href="#分区编号" class="headerlink" title="分区编号"></a>分区编号</h2><p>要进行分区就必须针对每一个硬件设备进行操作，这就有可能是一块IDE硬盘或是一块SCSI硬盘。对于每一个硬盘（IDE 或 SCSI）设备，Linux 分配了一个 1 到 16 的序列号码，这就代表了这块硬盘上面的分区号码。</p>
+<ul>
+<li>例如，第一个 IDE 硬盘的第一个分区，在 Linux 下面映射的就是 hda1，第二个分区就称作是 hda2。</li>
+<li>对于SCSI 硬盘则是 sda1、sdb1 等。</li>
+</ul>
+<h2 id="分区的作用"><a href="#分区的作用" class="headerlink" title="分区的作用"></a>分区的作用</h2><p>在 Linux 中规定，每一个硬盘设备最多能有 4个主分区（其中包含扩展分区）构成，任何一个扩展分区都要占用一个主分区号码，也就是在一个硬盘中，主分区和扩展分区一共最多是 4 个。</p>
+<blockquote>
+<p>对于早期的 DOS 和 Windows（Windows 2000 以前的版本），系统只承认一个主分区，可以通过在扩展分区上增加逻辑盘符（逻辑分区&gt;&gt;的方法，进一步地细化分区。</p>
+</blockquote>
+<h3 id="主分区"><a href="#主分区" class="headerlink" title="主分区"></a>主分区</h3><p>主分区的作用就是计算机用来进行启动操作系统的，因此每一个操作系统的启动，或者称作是引导程序，都应该存放在主分区上。这就是主分区和扩展分区及逻辑分区的最大区别。我们在指定安装引导 Linux 的 bootloader 的时候，都要指定在主分区上，就是最好的例证。<br>Linux 规定了主分区（或者扩展分区）占用 1 至 16 号码中的前 4 个号码。以第一个 IDE 硬盘为例说明，主分区（或者扩展分区）占用了 hda1、hda2、hda3、hda4，而逻辑分区占用了 hda5 到 hda16 等 12 个号码。因此，Linux 下面每一个硬盘总共最多有 16 个分区。</p>
+<p>###扩展分区<br>除了主分区占用的空间，余下的空间划分出来的分区都被称为扩展分区。</p>
+<h3 id="逻辑分区"><a href="#逻辑分区" class="headerlink" title="逻辑分区"></a>逻辑分区</h3><p>对于逻辑分区，Linux 规定它们必须建立在扩展分区上（在 DOS 和 Windows 系统上也是如此规定），而不是主分区上。因此，我们可以看到扩展分区能够提供更加灵活的分区模式，但不能用来作为 操作系统 的引导。 除去上面这些各种分区的差别，我们就可以简单地把它们一视同仁了。</p>
+<p>##分区指标　　<br>对于每一个 Linux 分区来讲，分区的大小和分区的类型是最主要的指标。分区的类型规定了这个分区上面的文件系统的格式。<br>Linux 支持多种的文件系统格式，其中包含了我们熟悉的FAT32、FAT16、NTFS、HP-UX，以及各种 Linux 特有的 Linux Native和 Linux Swap分区类型。在 Linux 系统中，可以通过分区类型号码来区别这些不同类型的分区。可以参考我的另外一篇博文来了解Linux分区的类型（也可以称为文件系统类型）<a href="/2015/07/01/linux-filesystem-types/" title="Linux文件系统类型">Linux文件系统类型</a>。</p>
+<p>##常用分区介绍</p>
+<ul>
+<li>/boot分区，它包含了操作系统的内核和在启动系统过程中所要用到的文件，建这个 分区是有必要的，因为目前大多数的pc机要受到bios的限制,况且如果有了一个单独的/boot启动分区，即使主要的根分区出现了问题，计算机依然能够 启动。这个分区的大小约在50mb—100mb之间。但是如果想用lilo启动red hat linux系统的话，含有/boot的分区必须完全在柱面1023以下。又由于8gb后的数据lilo不能读取，所以red hat - linux要安装在8gb的区域以内。</li>
+<li>/usr分区，是red hat linux系统存放软件的地方，如有可能应将最大空间分给它。</li>
+<li>/home分区，是用户的home目录所在地，这个分区的大小取决于有多少用户。如 果是多用户共同使用一台电脑的话，这个分区是完全有必要的，况且根用户也可以很好地控制普通用户使用计算机，如对用户或者用户组实行硬盘限量使用，限制普 通用户访问哪些文件等。其实单用户也有建立这个分区的必要，因为没这个分区的话，那么你只能以根用户的身份登陆系统，这样做是危险的，因为根用户对系统有 绝对的使用权，可一旦你对系统进行了误操作，麻烦也就来了。</li>
+<li>/var/log分区，是系统日志记录分区，如果设立了这一单独的分区，这样即使系统的日志文件出现了问题，它们也不会影响到操作系统的主分区。</li>
+<li>/tmp分区，用来存放临时文件。这对于多用户系统或者网络服务器来说是有必要的。 这样即使程序运行时生成大量的临时文件，或者用户对系统进行了错误的操作，文件系统的其它部分仍然是安全的。因为文件系统的这一部分仍然还承受着读写操 作，所以它通常会比其它的部分更快地发生问题。</li>
+<li>/bin分区，存放标准系统实用程序。</li>
+<li>/dev分区，存放设备文件。</li>
+<li>/opt分区，存放可选的安装的软件。</li>
+<li>/sbin分区，存放标准系统管理文件。</li>
+</ul>
+<p>上面介绍了几个常用的分区，一般来说我们需要一个swap分区，一个/boot分区，一个/usr分区，一个/home 分区，一个/var/log分区。当然这没有什么规定，完全是依照你个人来定的。但记住至少要有两个分区，一个swap分区，一个/分区。</p>
+<h2 id="查看分区的常用命令"><a href="#查看分区的常用命令" class="headerlink" title="查看分区的常用命令"></a>查看分区的常用命令</h2><h3 id="mount"><a href="#mount" class="headerlink" title="mount"></a>mount</h3><p>mount命令用来查看那些已经分配了mountpoint的文件系统</p>
+<pre><code>:~$ mount
+/dev/sda1 on / type ext4 (rw,errors=remount-ro,user_xattr)
+proc on /proc type proc (rw,noexec,nosuid,nodev)
+none on /sys type sysfs (rw,noexec,nosuid,nodev)
+none on /sys/fs/fuse/connections type fusectl (rw)
+none on /sys/kernel/debugtype debugfs (rw)
+none on /sys/kernel/security type securityfs (rw)
+none on /dev type devtmpfs (rw,mode=0755)
+none on /dev/pts type devpts (rw,noexec,nosuid,gid=5,mode=0620)
+none on /dev/shm type tmpfs (rw,nosuid,nodev)
+none on /var/runtype tmpfs (rw,nosuid,mode=0755)
+none on /var/lock type tmpfs (rw,noexec,nosuid,nodev)
+none on /lib/init/rw type tmpfs (rw,nosuid,mode=0755)
+none on /var/lib/ureadahead/debugfs type debugfs (rw,relatime)
+none on /proc/fs/vmblock/mountPoint type vmblock (rw)
+binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,noexec,nosuid,nodev)
+gvfs-fuse-daemon on /home/kysnail/.gvfs type fuse.gvfs-fuse-daemon (rw,nosuid,nodev,user=kysnail)
+</code></pre>
+<h3 id="df"><a href="#df" class="headerlink" title="df"></a>df</h3><p>df命令可以查看文件系统的分区大小， 使用-l参数可以只参看本地文件系统。</p>
+<pre><code>:~$ df -lhT
+文件系统      类型    容量  已用 可用 已用% 挂载点
+/dev/sda1     ext4     19G   11G  7.8G  57% /
+none      devtmpfs    498M  248K  497M   1% /dev
+none         tmpfs    502M  252K  501M   1% /dev/shm
+none         tmpfs    502M   96K  502M   1% /var/run
+none         tmpfs    502M     0  502M   0% /var/lock
+none         tmpfs    502M     0  502M   0% /lib/init/rw
+none       debugfs     19G   11G  7.8G  57% /var/lib/ureadahead/debugfs
+</code></pre>
+
         
         
         <p class="article-more-link">
-          
-            <a href="/2015/11/25/ubuntu/#more">Read More</a>
           
        </p>
     </div>
@@ -284,7 +333,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程-Linux-Unix/">编程-Linux/Unix</a>
+  <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B-Linux/">编程-Linux</a>
 </div>
 
 
@@ -294,9 +343,6 @@
 
 
 <div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/11/25/ubuntu/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/25/ubuntu/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -316,25 +362,25 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/10/28/android_auto_update/" title="Android自动更新推送的实现" itemprop="url">Android自动更新推送的实现</a>
+      <a href="/2015/07/07/markdown/" title="Markdown 语法说明" itemprop="url">Markdown 语法说明</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-10-28T03:39:21.000Z" itemprop="datePublished"> 发表于 2015-10-28</time>
+    <time datetime="2015-07-07T02:51:34.000Z" itemprop="datePublished"> Published 2015-07-07</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <p>当发布了一个Android app之后，我们最需要使用的功能就是如何实现当有更新的是推送给用户。<br>
+        <p>Markdown是一种标记语言，主要用于网页上文本格式设置。它的使得我们可以使用普通的文本编辑器编辑网页文本。在页面显示用Markdown语法的文本，需要先转换为HTML格式再进行显示。Markdown使得普通文本和网页文本通过一种简单的格式关联了起来，文本编辑者不在需要了解复杂的HTML标签。同时，你也可以在Markdown格式的文本中使用HTML标签，这样可以补全一些Markdown语法不具备的功能，比如文字的显示颜色。<br>本文中不会对Markdown语法转换原理和转换后的HTML标签进行说明，只会列举Markdown的格式显示效果。</p>
         
         
         <p class="article-more-link">
           
-            <a href="/2015/10/28/android_auto_update/#more">Read More</a>
+            <a href="/2015/07/07/markdown/#more">Read More</a>
           
        </p>
     </div>
@@ -343,7 +389,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程-Android/">编程-Android</a>
+  <a class="article-category-link" href="/categories/%E7%BD%91%E7%AB%99-%E8%AF%AD%E8%A8%80/">网站-语言</a>
 </div>
 
 
@@ -353,9 +399,6 @@
 
 
 <div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/28/android_auto_update/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/28/android_auto_update/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -375,25 +418,25 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/10/28/start_android/" title="初识Android" itemprop="url">初识Android</a>
+      <a href="/2015/07/06/log4j-extend/" title="Log4J中的继承关系" itemprop="url">Log4J中的继承关系</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-10-28T00:39:21.000Z" itemprop="datePublished"> 发表于 2015-10-28</time>
+    <time datetime="2015-07-06T01:06:35.000Z" itemprop="datePublished"> Published 2015-07-06</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <p>以下是一些零散初级的Android相关知识。<br>
+        <p>Java代码中可以通过继承关系来扩展类的功能，在Log4J也有类似的机制。</p>
         
         
         <p class="article-more-link">
           
-            <a href="/2015/10/28/start_android/#more">Read More</a>
+            <a href="/2015/07/06/log4j-extend/#more">Read More</a>
           
        </p>
     </div>
@@ -402,7 +445,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程-Android/">编程-Android</a>
+  <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B-Java/">编程-Java</a>
 </div>
 
 
@@ -413,8 +456,224 @@
 
 <div class="comments-count">
 	
-	  	<span></span>
-		<a href="/2015/10/28/start_android/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/28/start_android/" data-count-type="comments">&nbsp;</a>
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/01/linux-filesystem/" title="Linux 文件系统类型" itemprop="url">Linux 文件系统类型</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-01T07:38:50.000Z" itemprop="datePublished"> Published 2015-07-01</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Linux操作系统下可用的各种文件系统类型注解
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/07/01/linux-filesystem/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B-Linux/">编程-Linux</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/01/ipmi/" title="IPMI" itemprop="url">IPMI</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-01T00:39:21.000Z" itemprop="datePublished"> Published 2015-07-01</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>智能平台管理界面（IPMI，Intelligent Platform Management Interface）是管理基于 Intel结构的企业级系统中所使用的外围设备采用的一种工业标准，用户能够利用IPMI监控服务器的物理健康特征，如温度、电压、风扇工作状态、电源状 态等。该标准由美国英特尔、惠普（Hewlett-Packard）、NEC、美国戴尔电脑和SuperMicro等公司定制。新的版本是 IPMI2.0（<a target="_blank" rel="noopener" href="http://www.intel.com/design/servers/ipmi/%EF%BC%89%E3%80%82">http://www.intel.com/design/servers/ipmi/）。</a>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/07/01/ipmi/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B-%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">编程-网络协议</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/30/log4j-ndc-mdc/" title="Log4j中的NDC和MDC" itemprop="url">Log4j中的NDC和MDC</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-30T04:08:35.000Z" itemprop="datePublished"> Published 2015-06-30</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Log4j中的NDC和MDC两个功能类似，都是用于存储上下文的信息。
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/06/30/log4j-ndc-mdc/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/30/cron/" title="Cron 表达式入门" itemprop="url">Cron 表达式入门</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-30T01:28:52.000Z" itemprop="datePublished"> Published 2015-06-30</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>关于cron表达式的基本概念介绍。
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/06/30/cron/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B-Linux/">编程-Linux</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
 	
 </div>
 
@@ -430,41 +689,38 @@
 
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
+    <a class="extend prev" rel="prev" href="/">&lt;span&gt;&lt;&#x2F;span&gt;Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next&lt;span&gt;&lt;&#x2F;span&gt;</a>
   </nav>
 
 </div>
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
+
+
+  
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
-			<li><a href="/categories/杂物/" title="杂物">杂物<sup>1</sup></a></li>
+			<li><a href="/categories/杂物-医学/" title="杂物-医学">杂物-医学<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/杂物-病理/" title="杂物-病理">杂物-病理<sup>1</sup></a></li>
+			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>10</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/编程-Android/" title="编程-Android">编程-Android<sup>3</sup></a></li>
+			<li><a href="/categories/编程-Linux/" title="编程-Linux">编程-Linux<sup>3</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>12</sup></a></li>
-		  
-		
-		  
-		
-		  
-			<li><a href="/categories/编程-Linux-Unix/" title="编程-Linux/Unix">编程-Linux/Unix<sup>8</sup></a></li>
+			<li><a href="/categories/编程-Linux-Unix/" title="编程-Linux/Unix">编程-Linux/Unix<sup>1</sup></a></li>
 		  
 		
 		  
@@ -472,7 +728,7 @@
 		  
 		
 		  
-			<li><a href="/categories/编程-网络协议/" title="编程-网络协议">编程-网络协议<sup>2</sup></a></li>
+			<li><a href="/categories/编程-网络协议/" title="编程-网络协议">编程-网络协议<sup>1</sup></a></li>
 		  
 		
 		  
@@ -490,7 +746,7 @@
   
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
         
           <li>
@@ -512,8 +768,14 @@
 
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
 </div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=&verifier=&dpc=1"></iframe>
+</div>
+
 
 </aside>
 </div>
@@ -542,14 +804,12 @@
 		
 		
 		
-		<a href="mailto:luoyuan800@163.com" target="_blank" class="icon-email" title="Email Me"></a>
-		
 	</div>
 			
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2021 
 		
 		<a href="/about" target="_blank" title="Luo Yuan">Luo Yuan</a>
 		
@@ -560,6 +820,7 @@
     <script src="/js/jquery-2.0.3.min.js"></script>
 <script src="/js/jquery.imagesloaded.min.js"></script>
 <script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function(){ 
@@ -609,17 +870,7 @@ $(document).ready(function(){
 
 
 
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"luoyuan800"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
+
 
 
 
@@ -654,9 +905,14 @@ $(document).ready(function(){
 
 
 
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F5529f030def9614f4dc83cc68b307ced' type='text/javascript'%3E%3C/script%3E"));
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
 </script>
 
 
@@ -666,7 +922,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
@@ -679,23 +935,6 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- MathJax End -->
 
 <!-- Tiny_search Begin -->
-
-<script>
-var option = {
-  engineKey: '32f8205e3ec577a3f6d4'
-};
-(function(w,d,t,u,n,s,e){
-  s = d.createElement(t);
-  s.src = u;
-  s.async = 1;
-  w[n] = function(r){
-    w[n].opts = r;
-  };
-  e = d.getElementsByTagName(t)[0];
-  e.parentNode.insertBefore(s, e);
-})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
-_ts(option);
-</script>
 
 <!-- Tiny_search End -->
 

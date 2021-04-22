@@ -1,0 +1,541 @@
+
+ <!DOCTYPE HTML>
+<html lang="ch">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>JDK14的新特性 | Yuan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Luo Yuan">
+    
+
+    
+    <meta name="description" content="本文介绍JDK14新加的几个特性。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JDK14的新特性">
+<meta property="og:url" content="http://luoyuan800.github.io/2020/09/28/jdk14/index.html">
+<meta property="og:site_name" content="Yuan">
+<meta property="og:description" content="本文介绍JDK14新加的几个特性。">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-09-28T08:57:43.000Z">
+<meta property="article:modified_time" content="2021-04-22T08:51:58.143Z">
+<meta property="article:author" content="Luo Yuan">
+<meta name="twitter:card" content="summary">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/%02.css">
+<link rel="stylesheet" href="/.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Yuan" title="Yuan"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Yuan">Yuan</a></h1>
+				<h2 class="blog-motto">一点一滴，积累技术</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:luoyuan800.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2020/09/28/jdk14/" title="JDK14的新特性" itemprop="url">JDK14的新特性</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
+		
+  <p class="article-time">
+    <time datetime="2020-09-28T08:57:43.000Z" itemprop="datePublished"> Published 2020-09-28</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B9%E8%BF%9Binstanceof%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">改进instanceof的使用方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B9%E8%BF%9B%E7%9A%84%E7%A9%BA%E6%8C%87%E9%92%88%E5%BC%82%E5%B8%B8"><span class="toc-number">2.</span> <span class="toc-text">改进的空指针异常</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B9%E8%BF%9Bswitch%E8%AF%AD%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">改进switch语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B0%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">新的字符串使用方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E9%99%A4CMS%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8"><span class="toc-number">5.</span> <span class="toc-text">移除CMS垃圾收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#G1%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8A%E4%BD%BF%E7%94%A8NUMA"><span class="toc-number">6.</span> <span class="toc-text">G1垃圾收集器上使用NUMA</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFNUMA%EF%BC%9F"><span class="toc-number">6.1.</span> <span class="toc-text">什么是NUMA？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFG1%EF%BC%9F"><span class="toc-number">6.2.</span> <span class="toc-text">什么是G1？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87%E6%B5%81%E5%A4%84%E7%90%86%E7%9A%84%E6%96%B9%E5%BC%8F%E8%AF%BB%E5%8F%96JFR-Event"><span class="toc-number">7.</span> <span class="toc-text">可以通过流处理的方式读取JFR Event</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%AF%E6%8C%81%E5%9C%A8MacOS%E4%B8%8A%E4%BD%BF%E7%94%A8ZGC"><span class="toc-number">8.</span> <span class="toc-text">支持在MacOS上使用ZGC</span></a></li></ol>
+		
+		</div>
+		
+		<p>本文介绍JDK14新加的几个特性。<span id="more"></span></p>
+<h2 id="改进instanceof的使用方式"><a href="#改进instanceof的使用方式" class="headerlink" title="改进instanceof的使用方式"></a>改进instanceof的使用方式</h2><p>JEP 305: Pattern Matching for instanceof (Preview)</p>
+<p>这里的Preview指的是预览版本，就是说在下一个版本可能会有进行优化或者修改甚至会有取消的可能。所以暂时还不要全面的使用它，尝鲜即可。</p>
+<p>传统的instanceof的使用需要先判断后进行强制类型转换：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">A c &#x3D; new C();</span><br><span class="line">if(c instanceof C)&#123;</span><br><span class="line">   C castC &#x3D; (C) c; &#x2F;&#x2F; 显示强转后才能使用C类定义的方法</span><br><span class="line">   castC.callCMethods();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在JDK14中我们可以尝试这样写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">A c &#x3D; new C();</span><br><span class="line">if(c instanceof C castC )&#123;</span><br><span class="line">&#x2F;&#x2F;可以省掉一行代码</span><br><span class="line">   castC.callCMethods();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="改进的空指针异常"><a href="#改进的空指针异常" class="headerlink" title="改进的空指针异常"></a>改进的空指针异常</h2><p>JEP 358: Helpful NullPointerExceptions</p>
+<p>空指针异常是Java中最让人头疼的异常之一，而且经常发现空指针异常抛出的时候并没有很确切的异常信息告诉我们那个对象的引用导致了空指针异常。JDK14加强了异常的记录机制，通过启用额外的调用记录，可以更加准确的捕获空指针异常抛出的位置：需要在java代码的运行中加上参数 -XX:+ShowCodeDetailsInExceptionMessages 启动这个额外的异常记录机制。比如下面的代码会导致空指针异常抛出（b对象的属性没有赋值）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C c &#x3D; new C();</span><br><span class="line">c.b.a.doA();</span><br></pre></td></tr></table></figure>
+<p>传统的空指针异常如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.NullPointerException</span><br><span class="line">at TestJDK14.main(TestJDK14.java:8)</span><br></pre></td></tr></table></figure>
+<p>只会告诉你第几行出现了空指针异常，但具体是哪一个对象就不明确了。而JDK14抛出的异常如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.NullPointerException: Cannot read field &quot;a&quot; because &quot;c.b&quot; is null</span><br><span class="line">at TestJDK14.main(TestJDK14.java:8)</span><br></pre></td></tr></table></figure>
+<p>会详细指出出错的位置是c对象的属性b为空。</p>
+<p>这个功能在数组的使用上也很实用，如果数组某一个元素为空的话，异常信息会告知哪一个index下的元素为空：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.NullPointerException: Cannot invoke &quot;TestJDK14$A.doA()&quot; because &quot;aa[0][1]&quot; is null</span><br><span class="line">at TestJDK14.main(TestJDK14.java:6)</span><br></pre></td></tr></table></figure>
+
+<h2 id="改进switch语法"><a href="#改进switch语法" class="headerlink" title="改进switch语法"></a>改进switch语法</h2><p>JEP 361: Switch Expressions (Standard)</p>
+<p>这里出现的Standard表示这个版本发布的语法改进是标准版本，经过了大量的测试和完善，基本上不会再有大的改动了，可以放心使用。</p>
+<p>Java中的switch语句用在多分支的场景下使用。传统的switch语句看起来是这样的，很长很长。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">switch (tag)&#123;</span><br><span class="line">  case &quot;A&quot;:</span><br><span class="line">    doA();</span><br><span class="line">    break;</span><br><span class="line">  case &quot;B&quot;:</span><br><span class="line">    doB();</span><br><span class="line">    break;</span><br><span class="line">  case &quot;C&quot;:</span><br><span class="line">    doC();</span><br><span class="line">    break;</span><br><span class="line">  case &quot;D&quot;:</span><br><span class="line">    doD();</span><br><span class="line">    break;</span><br><span class="line">  default:</span><br><span class="line">    doNothing();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么在JDK14中我们可以将switch改写为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">switch (tag) &#123;</span><br><span class="line">  case &quot;A&quot; -&gt; doA();</span><br><span class="line">  case &quot;B&quot; -&gt; doB();</span><br><span class="line">  case &quot;C&quot; -&gt; doC();</span><br><span class="line">  case &quot;D&quot; -&gt; doD();</span><br><span class="line">  default -&gt; doNothing();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>更加好玩的是，我们可以直接将switch赋值给变量或者作为方法的返回结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">return switch (tag) &#123;</span><br><span class="line">  case &quot;A&quot; -&gt; doA();</span><br><span class="line">  case &quot;B&quot; -&gt; doB();</span><br><span class="line">  case &quot;C&quot; -&gt; doC();</span><br><span class="line">  case &quot;D&quot; -&gt; doD();</span><br><span class="line">  default -&gt; doNothing();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="新的字符串使用方式"><a href="#新的字符串使用方式" class="headerlink" title="新的字符串使用方式"></a>新的字符串使用方式</h2><p>JEP 368: Text Blocks (Second Preview)</p>
+<p>这个特性标准为Second Preview指的是前一个版本它已经作为预览版本发布了，现在这个这个版本有所改动，还是作为预览版本发布。这个功能主要是针对字符串输出排版的增强。比如我们想要输入一段文本，包括换行，传统的方法是用\n， 并且用+来格式化代码的显示。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(&quot;请关注\n&quot; </span><br><span class="line">       + &quot;某鸟碎碎&quot;);</span><br></pre></td></tr></table></figure>
+<p>而在新版本中（应该是从JDK13开始）， 下面这个代码也可以输出相同的文本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(&quot;&quot;&quot;</span><br><span class="line">        请关注</span><br><span class="line">        某鸟碎碎</span><br><span class="line">      &quot;&quot;&quot;);</span><br></pre></td></tr></table></figure>
+<p>这个特性还包含了一些对特殊字符的处理，就不在此处赘述了。</p>
+<p>JDK从11开始就一直在对字符串处理进行增强。比如增加了灵活选择是去除尾部还是头部空格或者全部空格的strip**系列的方法；比如可以对文本统计行数的String.lines()方法。</p>
+<h2 id="移除CMS垃圾收集器"><a href="#移除CMS垃圾收集器" class="headerlink" title="移除CMS垃圾收集器"></a>移除CMS垃圾收集器</h2><p>JEP 363: Remove the CMS Garbage Collector</p>
+<p>CMS是年老代收集器，基于标记-清除算法实现，是一种以获取最短回收停顿时间为目标的收集器。由于收集完成后会产生碎片，所以可能会在在Full GC之后，进行一次碎片整理，这个整理会导致无法执行并发的工作。在JDK14中你无法使用CMS收集器，即使你强行设定了参数-XX:+UseConcMarkSweepGC， JVM也会自动退回默认的垃圾回收器。</p>
+<h2 id="G1垃圾收集器上使用NUMA"><a href="#G1垃圾收集器上使用NUMA" class="headerlink" title="G1垃圾收集器上使用NUMA"></a>G1垃圾收集器上使用NUMA</h2><p>JEP 345: NUMA-Aware Memory Allocation for G1</p>
+<h3 id="什么是NUMA？"><a href="#什么是NUMA？" class="headerlink" title="什么是NUMA？"></a>什么是NUMA？</h3><p>非统一内存访问架构。是为了拥有多个处理器的电脑设计的内存架构，目的就是提高内存的访问速度。而关于NUMA的具体内容，我可能会另开一篇文章（挖坑）。通过使用NUMA，能够改进G1垃圾收集器在大型机（服务器）上的性能。需要添加jvm参数 +XX:+UseNUMA 来启用它。</p>
+<h3 id="什么是G1？"><a href="#什么是G1？" class="headerlink" title="什么是G1？"></a>什么是G1？</h3><p>G1垃圾回收算法可以说是用来替换CMS的，它是基于标记-整理算法（重点）来实现的，机制是将整个JAVA堆（包括新生代、老年代）划分为多个固定大小的独立区域，并跟踪垃圾堆积程度，在后台维护一个优先列表，每次根据允许的收集时间，有限回收垃圾最多的区域。</p>
+<p>将 ParallelScavenge + SerialOld 的垃圾回收组合标记为Deprecate</p>
+<p>JEP 366: Deprecate the ParallelScavenge + SerialOld GC Combination</p>
+<p>Deprecate在java中表示该功能不建议使用，并且在未来的版本会移除。官方的解释是这种GC组合很少被使用，并且它们需要繁琐的代码控制。这种GC组合是有其他更优化的可替代方案，所以不再使用他们是没啥影响的。</p>
+<p>ParallelScavenge是一种并行的多线程，用于新生代的收集器。</p>
+<p>SerialOld是年老代收集器，基于单线程和标记-整理算法。主要是面向客户端单处理器模式。</p>
+<h2 id="可以通过流处理的方式读取JFR-Event"><a href="#可以通过流处理的方式读取JFR-Event" class="headerlink" title="可以通过流处理的方式读取JFR Event"></a>可以通过流处理的方式读取JFR Event</h2><p>JEP 349: JFR Event Streaming</p>
+<p>什么是JFR？JFR全名JDK Flight Recorder，是对JVM运行数据的记录模块。它包含了超过500项的JVM数据，当然也包括headdump之类传统的分析数据。JFR特性在早前的版本就已经提供，就像我们想获取threaddump或者headdump那样，通过开启JFR，可以得到一个jfr文件，然后再使用jmc相关的工具来分析这个文件。JDK14是增加了一种流处理模式，可以直接在代码中使用RecordingStream这个类直接读取相关JFR记录，实时获取JVM监控信息。好不好用就仁者见仁了。</p>
+<h2 id="支持在MacOS上使用ZGC"><a href="#支持在MacOS上使用ZGC" class="headerlink" title="支持在MacOS上使用ZGC"></a>支持在MacOS上使用ZGC</h2><p>EP 364: ZGC on macOS</p>
+<p>ZGC是什么？是JDK 11中推出的一款低延迟垃圾回收器。它设计的停顿时间不超过10ms并且停顿时间不会随着堆的大小、活跃对象的大小而增加。所以他可以在超大容量的推上使用（目前支持8MB0 - 4TB）。所以在MacOS上运行Java程序的开发者终于可以用上这个看起来很厉害的家伙了，但是我很怀疑，在MacOS真的会有程序运行需要4TB这么多堆内存么？</p>
+<p>JDK14 并不是一个长期支持的版本，它应该很快会迭代直到下一个长期支持的版本：JDK17。所以在产品中使用它的话得谨慎考虑，毕竟没有客户想每年都升级一个大版本JDK，然后遇见各种莫名其妙的问题。个人学习玩耍的话可以大胆的使用，毕竟一些新特性自己不主动去学习的话，万一公司要从JDK8升级到JDK17，那需要花费的时间代价可是很大。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B-%E5%B7%A5%E5%85%B7/">编程-工具</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://luoyuan800.github.io/2020/09/28/jdk14/" data-title="JDK14的新特性 | Yuan" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2020/12/28/powershell/" title="PowerShell入门">
+  <strong>上一篇：</strong><br/>
+  <span>
+  PowerShell入门</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2020/08/24/java-learning/"  title="什么是LMAX Disruptor">
+ <strong>下一篇：</strong><br/> 
+ <span>什么是LMAX Disruptor
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B9%E8%BF%9Binstanceof%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">改进instanceof的使用方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B9%E8%BF%9B%E7%9A%84%E7%A9%BA%E6%8C%87%E9%92%88%E5%BC%82%E5%B8%B8"><span class="toc-number">2.</span> <span class="toc-text">改进的空指针异常</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B9%E8%BF%9Bswitch%E8%AF%AD%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">改进switch语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B0%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">新的字符串使用方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E9%99%A4CMS%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8"><span class="toc-number">5.</span> <span class="toc-text">移除CMS垃圾收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#G1%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8A%E4%BD%BF%E7%94%A8NUMA"><span class="toc-number">6.</span> <span class="toc-text">G1垃圾收集器上使用NUMA</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFNUMA%EF%BC%9F"><span class="toc-number">6.1.</span> <span class="toc-text">什么是NUMA？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFG1%EF%BC%9F"><span class="toc-number">6.2.</span> <span class="toc-text">什么是G1？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87%E6%B5%81%E5%A4%84%E7%90%86%E7%9A%84%E6%96%B9%E5%BC%8F%E8%AF%BB%E5%8F%96JFR-Event"><span class="toc-number">7.</span> <span class="toc-text">可以通过流处理的方式读取JFR Event</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%AF%E6%8C%81%E5%9C%A8MacOS%E4%B8%8A%E4%BD%BF%E7%94%A8ZGC"><span class="toc-number">8.</span> <span class="toc-text">支持在MacOS上使用ZGC</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/杂物-医学/" title="杂物-医学">杂物-医学<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Linux/" title="编程-Linux">编程-Linux<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Linux-Unix/" title="编程-Linux/Unix">编程-Linux/Unix<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-工具/" title="编程-工具">编程-工具<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-网络协议/" title="编程-网络协议">编程-网络协议<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-工具/" title="网站-工具">网站-工具<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-语言/" title="网站-语言">网站-语言<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Luo Yuan in Zhuhai. <br/>
+			Here is my place for knowledge accumulation.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2021 
+		
+		<a href="/about" target="_blank" title="Luo Yuan">Luo Yuan</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

@@ -1,6 +1,6 @@
 
  <!DOCTYPE HTML>
-<html lang="zh-CN">
+<html lang="ch">
 <head>
   <meta charset="UTF-8">
   
@@ -17,12 +17,14 @@
 <meta property="og:url" content="http://luoyuan800.github.io/2015/07/23/jvm-gc/index.html">
 <meta property="og:site_name" content="Yuan">
 <meta property="og:description" content="简单列举了JVM中使用的集中垃圾收集器">
+<meta property="og:locale">
 <meta property="og:image" content="http://7xk7ce.com1.z0.glb.clouddn.com/cms.png">
 <meta property="og:image" content="http://7xk7ce.com1.z0.glb.clouddn.com/relationship.png">
-<meta property="og:updated_time" content="2015-07-23T08:58:31.538Z">
+<meta property="article:published_time" content="2015-07-23T08:57:43.000Z">
+<meta property="article:modified_time" content="2021-04-22T08:06:38.849Z">
+<meta property="article:author" content="Luo Yuan">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JVM 垃圾回收器">
-<meta name="twitter:description" content="简单列举了JVM中使用的集中垃圾收集器">
+<meta name="twitter:image" content="http://7xk7ce.com1.z0.glb.clouddn.com/cms.png">
 
     
     <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
@@ -34,8 +36,12 @@
     <link rel="apple-touch-icon" href="/img/jacman.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
-</head>
+    
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/%02.css">
+<link rel="stylesheet" href="/.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
 
   <body>
     <header>
@@ -48,9 +54,9 @@
 			
 			<div id="textlogo">
 				<h1 class="site-name"><a href="/" title="Yuan">Yuan</a></h1>
-				<h2 class="blog-motto">一点一滴，技术积累</h2>
+				<h2 class="blog-motto">一点一滴，积累技术</h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -64,10 +70,11 @@
 					
 					<li>
  					
-						<form class="search">
-							<label>Search</label>
-						<input type="text" id="ts-search-input" name="q" size="30" placeholder="搜索"><br>
-						</form>
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:luoyuan800.github.io">
+					</form>
 					
 					</li>
 				</ul>
@@ -88,27 +95,27 @@
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-23T08:57:43.000Z" itemprop="datePublished"> 发表于 2015-07-23</time>
+    <time datetime="2015-07-23T08:57:43.000Z" itemprop="datePublished"> Published 2015-07-23</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
+			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#新生代收集器"><span class="toc-number">1.</span> <span class="toc-text">新生代收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Serial"><span class="toc-number">1.1.</span> <span class="toc-text">Serial</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ParNew"><span class="toc-number">1.2.</span> <span class="toc-text">ParNew</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parallel_Scavenger"><span class="toc-number">1.3.</span> <span class="toc-text">Parallel Scavenger</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#年老代收集器"><span class="toc-number">2.</span> <span class="toc-text">年老代收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Serial_Old"><span class="toc-number">2.1.</span> <span class="toc-text">Serial Old</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parallel_Old"><span class="toc-number">2.2.</span> <span class="toc-text">Parallel Old</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CMS（Current_Mark_Sweep)"><span class="toc-number">2.3.</span> <span class="toc-text">CMS（Current Mark Sweep)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CMS的运作阶段"><span class="toc-number">2.3.1.</span> <span class="toc-text">CMS的运作阶段</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#G1(Garbage_First)"><span class="toc-number">2.4.</span> <span class="toc-text">G1(Garbage First)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#各个收集器的可用组合"><span class="toc-number">3.</span> <span class="toc-text">各个收集器的可用组合</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B0%E7%94%9F%E4%BB%A3%E6%94%B6%E9%9B%86%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">新生代收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Serial"><span class="toc-number">1.1.</span> <span class="toc-text">Serial</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ParNew"><span class="toc-number">1.2.</span> <span class="toc-text">ParNew</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parallel-Scavenger"><span class="toc-number">1.3.</span> <span class="toc-text">Parallel Scavenger</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%B4%E8%80%81%E4%BB%A3%E6%94%B6%E9%9B%86%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text">年老代收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Serial-Old"><span class="toc-number">2.1.</span> <span class="toc-text">Serial Old</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parallel-Old"><span class="toc-number">2.2.</span> <span class="toc-text">Parallel Old</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CMS%EF%BC%88Current-Mark-Sweep"><span class="toc-number">2.3.</span> <span class="toc-text">CMS（Current Mark Sweep)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CMS%E7%9A%84%E8%BF%90%E4%BD%9C%E9%98%B6%E6%AE%B5"><span class="toc-number">2.3.1.</span> <span class="toc-text">CMS的运作阶段</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#G1-Garbage-First"><span class="toc-number">2.4.</span> <span class="toc-text">G1(Garbage First)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%84%E4%B8%AA%E6%94%B6%E9%9B%86%E5%99%A8%E7%9A%84%E5%8F%AF%E7%94%A8%E7%BB%84%E5%90%88"><span class="toc-number">3.</span> <span class="toc-text">各个收集器的可用组合</span></a></li></ol>
 		
 		</div>
 		
-		<p>简单列举了JVM中使用的集中垃圾收集器<a id="more"></a></p>
-<h2 id="新生代收集器">新生代收集器</h2><h3 id="Serial">Serial</h3><p>Serial收集器的机制被称为“Stop the word”。它属于单线程收集器，进行垃圾收集GC的时候会暂停所有的用户线程，采用复制算法进行GC。<br>这个收集器适用于Client端，因为它对于小内存的收集来说尤为高效，停顿时间也比较短。</p>
-<h3 id="ParNew">ParNew</h3><p>ParNew收集器同样是使用“Stop the word”机制。但是它是多线程的。如果是运行在多cpu的服务器上的时候，首选这种收集器。</p>
-<h3 id="Parallel_Scavenger">Parallel Scavenger</h3><p>这是一个吞吐量优先的垃圾收集器，采用多线程机制。</p>
-<h2 id="年老代收集器">年老代收集器</h2><h3 id="Serial_Old">Serial Old</h3><p>和Serial相对应，是年老代收集器，使用单线程的和标记-整理算法进行垃圾回收。</p>
-<h3 id="Parallel_Old">Parallel Old</h3><p>是Parallel Scavenge收集器的年老代版本。使用多线程和标记-整理算法，主要是服务端模式下和Parallel Scavenge收集器组合使用。</p>
-<h3 id="CMS（Current_Mark_Sweep)">CMS（Current Mark Sweep)</h3><p>CMS是对年老带的进行对象回收，这是一个额外的回收管理机制，基于标记-清除算法实现。它的特点是JVM的停顿时间较短（普通的年老代回收机制就有较长时间的JVM响应停顿），因此CMS主要可以应用于对响应时间有较高要求的服务器上。由于收集完成后会产生碎片，所以要开启 <code>-XXUseCMSCompactAtFullCollection</code>开关参数，表示在Full GC之后，要进行一次碎片整理。开启CMS需要使用额外的参数启用它 ：在启动JVM参数加上<code>-XX:+UseConcMarkSweepGC</code>。</p>
-<h4 id="CMS的运作阶段">CMS的运作阶段</h4><p><img src="http://7xk7ce.com1.z0.glb.clouddn.com/cms.png" alt=""></p>
+		<p>简单列举了JVM中使用的集中垃圾收集器<span id="more"></span></p>
+<h2 id="新生代收集器"><a href="#新生代收集器" class="headerlink" title="新生代收集器"></a>新生代收集器</h2><h3 id="Serial"><a href="#Serial" class="headerlink" title="Serial"></a>Serial</h3><p>Serial收集器的机制被称为“Stop the word”。它属于单线程收集器，进行垃圾收集GC的时候会暂停所有的用户线程，采用复制算法进行GC。<br>这个收集器适用于Client端，因为它对于小内存的收集来说尤为高效，停顿时间也比较短。</p>
+<h3 id="ParNew"><a href="#ParNew" class="headerlink" title="ParNew"></a>ParNew</h3><p>ParNew收集器同样是使用“Stop the word”机制。但是它是多线程的。如果是运行在多cpu的服务器上的时候，首选这种收集器。</p>
+<h3 id="Parallel-Scavenger"><a href="#Parallel-Scavenger" class="headerlink" title="Parallel Scavenger"></a>Parallel Scavenger</h3><p>这是一个吞吐量优先的垃圾收集器，采用多线程机制。</p>
+<h2 id="年老代收集器"><a href="#年老代收集器" class="headerlink" title="年老代收集器"></a>年老代收集器</h2><h3 id="Serial-Old"><a href="#Serial-Old" class="headerlink" title="Serial Old"></a>Serial Old</h3><p>和Serial相对应，是年老代收集器，使用单线程的和标记-整理算法进行垃圾回收。</p>
+<h3 id="Parallel-Old"><a href="#Parallel-Old" class="headerlink" title="Parallel Old"></a>Parallel Old</h3><p>是Parallel Scavenge收集器的年老代版本。使用多线程和标记-整理算法，主要是服务端模式下和Parallel Scavenge收集器组合使用。</p>
+<h3 id="CMS（Current-Mark-Sweep"><a href="#CMS（Current-Mark-Sweep" class="headerlink" title="CMS（Current Mark Sweep)"></a>CMS（Current Mark Sweep)</h3><p>CMS是对年老带的进行对象回收，这是一个额外的回收管理机制，基于标记-清除算法实现。它的特点是JVM的停顿时间较短（普通的年老代回收机制就有较长时间的JVM响应停顿），因此CMS主要可以应用于对响应时间有较高要求的服务器上。由于收集完成后会产生碎片，所以要开启 <code>-XXUseCMSCompactAtFullCollection</code>开关参数，表示在Full GC之后，要进行一次碎片整理。开启CMS需要使用额外的参数启用它 ：在启动JVM参数加上<code>-XX:+UseConcMarkSweepGC</code>。</p>
+<h4 id="CMS的运作阶段"><a href="#CMS的运作阶段" class="headerlink" title="CMS的运作阶段"></a>CMS的运作阶段</h4><p><img src="http://7xk7ce.com1.z0.glb.clouddn.com/cms.png"></p>
 <ul>
 <li>初始标记 ：在这个阶段，需要虚拟机停顿正在执行的任务，Stop The Word。这个过程从垃圾回收的”根对象”开始，只扫描到能够和”根对象”直接关联的对象，并作标记。所以这个过程虽然暂停了整个JVM，但是很快就完成了。</li>
 <li>并发标记 ：这个阶段紧随初始标记阶段，在初始标记的基础上继续向下追溯标记。并发标记阶段，应用程序的线程和并发标记的线程并发执行，所以用户不会感受到停顿。</li>
@@ -117,8 +124,8 @@
 <li>并发清理 ：清理垃圾对象，这个阶段收集器线程和应用程序线程并发执行。</li>
 <li>并发重置 ：这个阶段，重置CMS收集器的数据结构，等待下一次垃圾回收。</li>
 </ul>
-<h3 id="G1(Garbage_First)">G1(Garbage First)</h3><p>G1将整个JAVA堆（包括新生代、老年代）划分为多个固定大小的独立区域，并跟踪垃圾堆积程度，在后台维护一个优先列表，每次根据允许的收集时间，有限回收垃圾最多的区域。 它是基于标记-整理算法实现的，并且具有非常准确的控制停顿。</p>
-<h2 id="各个收集器的可用组合">各个收集器的可用组合</h2><p>图例表示了各个收集器组合可能性，如果两个收集器之间存在连线，表明他们可以一起组合使用。<br><img src="http://7xk7ce.com1.z0.glb.clouddn.com/relationship.png" alt=""></p>
+<h3 id="G1-Garbage-First"><a href="#G1-Garbage-First" class="headerlink" title="G1(Garbage First)"></a>G1(Garbage First)</h3><p>G1将整个JAVA堆（包括新生代、老年代）划分为多个固定大小的独立区域，并跟踪垃圾堆积程度，在后台维护一个优先列表，每次根据允许的收集时间，有限回收垃圾最多的区域。 它是基于标记-整理算法实现的，并且具有非常准确的控制停顿。</p>
+<h2 id="各个收集器的可用组合"><a href="#各个收集器的可用组合" class="headerlink" title="各个收集器的可用组合"></a>各个收集器的可用组合</h2><p>图例表示了各个收集器组合可能性，如果两个收集器之间存在连线，表明他们可以一起组合使用。<br><img src="http://7xk7ce.com1.z0.glb.clouddn.com/relationship.png"></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -126,7 +133,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/编程-Java/">编程-Java</a>
+  <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B-Java/">编程-Java</a>
 </div>
 
 
@@ -136,7 +143,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://luoyuan800.github.io/2015/07/23/jvm-gc/" data-title="JVM 垃圾回收器 | Yuan" data-tsina="null" class="share clearfix">
+	  <div data-url="http://luoyuan800.github.io/2015/07/23/jvm-gc/" data-title="JVM 垃圾回收器 | Yuan" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -150,16 +157,16 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/07/24/jvm-argument/" title="JVM 启动参数设置">
+ <a href="/2016/10/30/piped-java/" title="PipedOutputStream和PipedInputStream">
   <strong>上一篇：</strong><br/>
   <span>
-  JVM 启动参数设置</span>
+  PipedOutputStream和PipedInputStream</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/07/22/java-encode/"  title="使用Java进行文本加密">
+<a href="/2015/07/22/encode-java/"  title="使用Java进行文本加密">
  <strong>下一篇：</strong><br/> 
  <span>使用Java进行文本加密
 </span>
@@ -169,50 +176,45 @@
 </nav>
 
 	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/07/23/jvm-gc/" data-title="JVM 垃圾回收器" data-url="http://luoyuan800.github.io/2015/07/23/jvm-gc/"></div>
-</section>
+
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
+  <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#新生代收集器"><span class="toc-number">1.</span> <span class="toc-text">新生代收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Serial"><span class="toc-number">1.1.</span> <span class="toc-text">Serial</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ParNew"><span class="toc-number">1.2.</span> <span class="toc-text">ParNew</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parallel_Scavenger"><span class="toc-number">1.3.</span> <span class="toc-text">Parallel Scavenger</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#年老代收集器"><span class="toc-number">2.</span> <span class="toc-text">年老代收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Serial_Old"><span class="toc-number">2.1.</span> <span class="toc-text">Serial Old</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parallel_Old"><span class="toc-number">2.2.</span> <span class="toc-text">Parallel Old</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CMS（Current_Mark_Sweep)"><span class="toc-number">2.3.</span> <span class="toc-text">CMS（Current Mark Sweep)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CMS的运作阶段"><span class="toc-number">2.3.1.</span> <span class="toc-text">CMS的运作阶段</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#G1(Garbage_First)"><span class="toc-number">2.4.</span> <span class="toc-text">G1(Garbage First)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#各个收集器的可用组合"><span class="toc-number">3.</span> <span class="toc-text">各个收集器的可用组合</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B0%E7%94%9F%E4%BB%A3%E6%94%B6%E9%9B%86%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">新生代收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Serial"><span class="toc-number">1.1.</span> <span class="toc-text">Serial</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ParNew"><span class="toc-number">1.2.</span> <span class="toc-text">ParNew</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parallel-Scavenger"><span class="toc-number">1.3.</span> <span class="toc-text">Parallel Scavenger</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%B4%E8%80%81%E4%BB%A3%E6%94%B6%E9%9B%86%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text">年老代收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Serial-Old"><span class="toc-number">2.1.</span> <span class="toc-text">Serial Old</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parallel-Old"><span class="toc-number">2.2.</span> <span class="toc-text">Parallel Old</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CMS%EF%BC%88Current-Mark-Sweep"><span class="toc-number">2.3.</span> <span class="toc-text">CMS（Current Mark Sweep)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CMS%E7%9A%84%E8%BF%90%E4%BD%9C%E9%98%B6%E6%AE%B5"><span class="toc-number">2.3.1.</span> <span class="toc-text">CMS的运作阶段</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#G1-Garbage-First"><span class="toc-number">2.4.</span> <span class="toc-text">G1(Garbage First)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%84%E4%B8%AA%E6%94%B6%E9%9B%86%E5%99%A8%E7%9A%84%E5%8F%AF%E7%94%A8%E7%BB%84%E5%90%88"><span class="toc-number">3.</span> <span class="toc-text">各个收集器的可用组合</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
+
+
+  
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
-			<li><a href="/categories/杂物/" title="杂物">杂物<sup>1</sup></a></li>
+			<li><a href="/categories/杂物-医学/" title="杂物-医学">杂物-医学<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/杂物-病理/" title="杂物-病理">杂物-病理<sup>1</sup></a></li>
+			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>10</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/编程-Android/" title="编程-Android">编程-Android<sup>3</sup></a></li>
+			<li><a href="/categories/编程-Linux/" title="编程-Linux">编程-Linux<sup>3</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>12</sup></a></li>
-		  
-		
-		  
-		
-		  
-			<li><a href="/categories/编程-Linux-Unix/" title="编程-Linux/Unix">编程-Linux/Unix<sup>8</sup></a></li>
+			<li><a href="/categories/编程-Linux-Unix/" title="编程-Linux/Unix">编程-Linux/Unix<sup>1</sup></a></li>
 		  
 		
 		  
@@ -220,7 +222,7 @@
 		  
 		
 		  
-			<li><a href="/categories/编程-网络协议/" title="编程-网络协议">编程-网络协议<sup>2</sup></a></li>
+			<li><a href="/categories/编程-网络协议/" title="编程-网络协议">编程-网络协议<sup>1</sup></a></li>
 		  
 		
 		  
@@ -238,7 +240,7 @@
   
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
         
           <li>
@@ -260,8 +262,14 @@
 
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
 </div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=&verifier=&dpc=1"></iframe>
+</div>
+
 
 </aside>
 </div>
@@ -290,14 +298,12 @@
 		
 		
 		
-		<a href="mailto:luoyuan800@163.com" target="_blank" class="icon-email" title="Email Me"></a>
-		
 	</div>
 			
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2021 
 		
 		<a href="/about" target="_blank" title="Luo Yuan">Luo Yuan</a>
 		
@@ -308,6 +314,7 @@
     <script src="/js/jquery-2.0.3.min.js"></script>
 <script src="/js/jquery.imagesloaded.min.js"></script>
 <script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function(){ 
@@ -392,8 +399,8 @@ $(document).ready(function(){
       tsina = $this.attr('data-tsina'),
       description = $this.attr('description');
   var html = [
-  '<a href="#" class="overlay" id="qrcode"></a>',
-  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
   '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
   '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
   '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
@@ -402,29 +409,39 @@ $(document).ready(function(){
   '<span title="Share to"></span>'
   ].join('');
   $this.append(html);
-  $('.article-share-qrcode').click(function(){
-    var imgSrc = $('#qrcode-pic').attr('data-src');
-    $('#qrcode-pic').attr('src', imgSrc);
-    $('#qrcode-pic').load(function(){
-        $('.qrcode strong').text(' ');
-    });
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
   });
-});     
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
 </script>
 
 
 
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"luoyuan800"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
+
 
 
 
@@ -459,9 +476,14 @@ $(document).ready(function(){
 
 
 
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F5529f030def9614f4dc83cc68b307ced' type='text/javascript'%3E%3C/script%3E"));
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
 </script>
 
 
@@ -471,7 +493,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
@@ -484,23 +506,6 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- MathJax End -->
 
 <!-- Tiny_search Begin -->
-
-<script>
-var option = {
-  engineKey: '32f8205e3ec577a3f6d4'
-};
-(function(w,d,t,u,n,s,e){
-  s = d.createElement(t);
-  s.src = u;
-  s.async = 1;
-  w[n] = function(r){
-    w[n].opts = r;
-  };
-  e = d.getElementsByTagName(t)[0];
-  e.parentNode.insertBefore(s, e);
-})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
-_ts(option);
-</script>
 
 <!-- Tiny_search End -->
 
