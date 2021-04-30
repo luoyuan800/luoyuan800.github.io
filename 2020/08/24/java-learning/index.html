@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>什么是LMAX Disruptor | Yuan</title>
+    <title>Java入门 | Yuan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Luo Yuan">
@@ -13,13 +13,13 @@
     
     <meta name="description" content="这次我们来聊聊Java吧。自诞生以来，在年度最热门语言的排行榜上，Java不是第一就是第二，互联网行业上Java的工作岗位数量也一直不会少。所以Java程序员都以为自己永远不会失业，永远可以拿到高工资，然而层出不穷的新框架，什么mina、Zookeeper、Hadoop、Hbase、redis…… Java程序员们像孔乙己一样口中碎碎念着什么大数据，什么云计算，什么高并发，什么可用性健壮性……岗位">
 <meta property="og:type" content="article">
-<meta property="og:title" content="什么是LMAX Disruptor">
+<meta property="og:title" content="Java入门">
 <meta property="og:url" content="http://luoyuan800.github.io/2020/08/24/java-learning/index.html">
 <meta property="og:site_name" content="Yuan">
 <meta property="og:description" content="这次我们来聊聊Java吧。自诞生以来，在年度最热门语言的排行榜上，Java不是第一就是第二，互联网行业上Java的工作岗位数量也一直不会少。所以Java程序员都以为自己永远不会失业，永远可以拿到高工资，然而层出不穷的新框架，什么mina、Zookeeper、Hadoop、Hbase、redis…… Java程序员们像孔乙己一样口中碎碎念着什么大数据，什么云计算，什么高并发，什么可用性健壮性……岗位">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-08-24T00:53:00.000Z">
-<meta property="article:modified_time" content="2021-04-22T08:21:31.288Z">
+<meta property="article:modified_time" content="2021-04-30T09:23:27.638Z">
 <meta property="article:author" content="Luo Yuan">
 <meta name="twitter:card" content="summary">
 
@@ -85,7 +85,7 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2020/08/24/java-learning/" title="什么是LMAX Disruptor" itemprop="url">什么是LMAX Disruptor</a>
+      <a href="/2020/08/24/java-learning/" title="Java入门" itemprop="url">Java入门</a>
   </h1>
   <p class="article-author">By
        
@@ -123,21 +123,11 @@
 <li>保存修改后退出文本编辑，执行source命令使修改生效。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
 <h3 id="Windows-安装"><a href="#Windows-安装" class="headerlink" title="Windows 安装"></a>Windows 安装</h3></li>
 <li>下载Windows平台对应的jdk</li>
-</ol>
-<p>图片</p>
-<ol start="2">
 <li>解压到指定目录，比如D:\java\jdk-14.0.2</li>
 <li>打开系统配置配置系统环境变量</li>
-</ol>
-<p>图片</p>
-<ol start="4">
 <li>添加变量JAVA_HOME和CLASSPATH</li>
-</ol>
-<p>图片</p>
-<ol start="5">
 <li>修复PATH变量，增加JDK、JRE的bin目录</li>
 </ol>
-<p>图片</p>
 <h3 id="校验安装是否成功"><a href="#校验安装是否成功" class="headerlink" title="校验安装是否成功"></a>校验安装是否成功</h3><ol>
 <li>安装配置成功后，执行<code>java -version</code> 可以看到java的版本相关信息。</li>
 <li>打开文本编辑器写一个简单的<code>HelloJava</code>代码并且保存为<code>HelloJava.java</code>来测试下能否编译。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloJava</span></span>&#123;</span><br><span class="line">    <span class="comment">//main 方法是java程序执行的入口，格式是固定的哦</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String...args)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Hello JAVA&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -167,9 +157,6 @@
 <h3 id="对象（引用类型）"><a href="#对象（引用类型）" class="headerlink" title="对象（引用类型）"></a>对象（引用类型）</h3><p>Java有 5种对象类型（引用类型）：类 接口 数组 枚举 注解。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">InterfaceType</span></span>&#123;</span><br><span class="line">      <span class="comment">//接口是一个抽象类型，是抽象方法的集合，规定了一组必须要实现后才能使用的方法。</span></span><br><span class="line">      <span class="function"><span class="keyword">void</span> <span class="title">said</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassType</span> <span class="keyword">implements</span> <span class="title">InterfaceType</span></span>&#123;</span><br><span class="line">     <span class="comment">//类通过继承接口的方式，从而来实现接口的抽象方法的具体逻辑。</span></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">said</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;某鸟碎碎&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">enum</span> <span class="title">EnumType</span></span>&#123;</span><br><span class="line">   <span class="comment">//枚举类是一种特殊的类，它和普通的类一样，有自己的成员变量、成员方法、构造器 (只能使用 private)，特殊的地方在于它的对象数量是固定的。</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> AnnotationType&#123;</span><br><span class="line">  <span class="comment">//注解是一种标识，用来标记特殊内容或对象。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>对象是Java中最基本也是最复杂的，具体内容不会在本文展开，后续会在公众号《某鸟碎碎》更新Java进阶内容，希望你能持续关注。</p>
-<hr>
-<p>如果对这篇文章有疑惑或者问题，可以在下面留言，我会尽量回复的。谢谢你关注 《某鸟碎碎》 ，还请点个在看再离开吧。</p>
 <p>现在你已经了解Java编程的基础，如果你对Java有兴趣想要更进一步，还有更多的东西可以学习，比如引用、封装对象、继承、多态、泛型、线程、同步、垃圾回收等等。入门后要自己编写程序，比如给自己几个简单的需求：用Java计算一堆数字、写一个java聊天程序、用java读取网页等等，相关的技术可以尝试通过网络查找关键字。要更进一步了解和提升Java编程技术，就需要自己去阅读书籍（推荐阅读《Java编程思想》（Thinking in Java）这本书）、多看别人写的代码、多写自己的代码。</p>
   
 	</div>
@@ -188,7 +175,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://luoyuan800.github.io/2020/08/24/java-learning/" data-title="什么是LMAX Disruptor | Yuan" data-tsina="" class="share clearfix">
+	  <div data-url="http://luoyuan800.github.io/2020/08/24/java-learning/" data-title="Java入门 | Yuan" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -251,7 +238,7 @@
 		  
 		
 		  
-			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>10</sup></a></li>
+			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>11</sup></a></li>
 		  
 		
 		  
@@ -259,11 +246,11 @@
 		  
 		
 		  
-			<li><a href="/categories/编程-Linux-Unix/" title="编程-Linux/Unix">编程-Linux/Unix<sup>1</sup></a></li>
+			<li><a href="/categories/编程-Linux-Unix/" title="编程-Linux/Unix">编程-Linux/Unix<sup>2</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/编程-工具/" title="编程-工具">编程-工具<sup>2</sup></a></li>
+			<li><a href="/categories/编程-工具/" title="编程-工具">编程-工具<sup>4</sup></a></li>
 		  
 		
 		  

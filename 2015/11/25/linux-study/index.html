@@ -1,0 +1,607 @@
+
+ <!DOCTYPE HTML>
+<html lang="ch">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Linux学习积累 | Yuan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Luo Yuan">
+    
+
+    
+    <meta name="description" content="自己用到过和遇见过得命令和异常陈列，基本是Ubuntu之类的界面和操作系统。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux学习积累">
+<meta property="og:url" content="http://luoyuan800.github.io/2015/11/25/linux-study/index.html">
+<meta property="og:site_name" content="Yuan">
+<meta property="og:description" content="自己用到过和遇见过得命令和异常陈列，基本是Ubuntu之类的界面和操作系统。">
+<meta property="og:locale">
+<meta property="article:published_time" content="2015-11-25T01:44:14.000Z">
+<meta property="article:modified_time" content="2021-04-30T08:35:16.590Z">
+<meta property="article:author" content="Luo Yuan">
+<meta name="twitter:card" content="summary">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/%02.css">
+<link rel="stylesheet" href="/.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Yuan" title="Yuan"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Yuan">Yuan</a></h1>
+				<h2 class="blog-motto">一点一滴，积累技术</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:luoyuan800.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/25/linux-study/" title="Linux学习积累" itemprop="url">Linux学习积累</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-25T01:44:14.000Z" itemprop="datePublished"> Published 2015-11-25</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Permission-denied"><span class="toc-number">1.</span> <span class="toc-text">Permission denied</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%96%B0%E7%94%A8%E6%88%B7"><span class="toc-number">2.</span> <span class="toc-text">创建新用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81"><span class="toc-number">3.</span> <span class="toc-text">修改用户密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%87%E6%8D%A2%E7%94%A8%E6%88%B7"><span class="toc-number">4.</span> <span class="toc-text">切换用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4root%E7%94%A8%E6%88%B7%E7%9A%84%E5%AF%86%E7%A0%81"><span class="toc-number">5.</span> <span class="toc-text">修改默认root用户的密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E7%89%B9%E5%AE%9A%E7%94%A8%E6%88%B7%E6%B7%BB%E5%8A%A0sudo%E5%91%BD%E4%BB%A4%E6%9D%83%E9%99%90"><span class="toc-number">6.</span> <span class="toc-text">为特定用户添加sudo命令权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%82%E8%BD%BD%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F-mount-remote-filesystem-NFS"><span class="toc-number">7.</span> <span class="toc-text">挂载远程文件系统(mount remote filesystem NFS)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%9F%BA%E6%9C%AC%E7%9A%84%E5%91%BD%E4%BB%A4%E6%8F%90%E7%A4%BA%E2%80%98command-not-found%E2%80%99"><span class="toc-number">8.</span> <span class="toc-text">一些基本的命令提示‘command not found’</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#error-while-loading-shared-libraries"><span class="toc-number">9.</span> <span class="toc-text">error while loading shared libraries</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux%E5%BC%80%E5%90%AFssh%E6%9C%8D%E5%8A%A1"><span class="toc-number">10.</span> <span class="toc-text">Linux开启ssh服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9ssh%E7%9A%84%E6%9C%80%E5%A4%A7%E8%BF%9E%E6%8E%A5%E5%B9%B6%E5%8F%91%E6%95%B0"><span class="toc-number">11.</span> <span class="toc-text">修改ssh的最大连接并发数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux-%E8%A7%A3%E5%8E%8B"><span class="toc-number">12.</span> <span class="toc-text">Linux 解压</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux%E4%B8%AD%E7%9A%84%E5%A4%8D%E5%88%B6%E5%91%BD%E4%BB%A4"><span class="toc-number">13.</span> <span class="toc-text">Linux中的复制命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BLinux%E5%86%85%E6%A0%B8%E7%89%88%E6%9C%AC%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="toc-number">14.</span> <span class="toc-text">查看Linux内核版本的命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%A6%E6%88%AATCP%E6%95%B0%E6%8D%AE%E5%8C%85"><span class="toc-number">15.</span> <span class="toc-text">拦截TCP数据包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE"><span class="toc-number">16.</span> <span class="toc-text">查看内存数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%90%E5%88%B6%E8%BF%9B%E7%A8%8B%EF%BC%88process%EF%BC%89%E8%83%BD%E5%A4%9F%E6%89%93%E5%BC%80%E7%9A%84%E6%9C%80%E5%A4%A7%E6%96%87%E4%BB%B6%E6%95%B0"><span class="toc-number">17.</span> <span class="toc-text">限制进程（process）能够打开的最大文件数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#root-Login"><span class="toc-number">18.</span> <span class="toc-text">root Login</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E8%BF%9B%E7%A8%8B%E5%90%8D%E5%AD%97%E6%9D%80%E8%BF%9B%E7%A8%8B"><span class="toc-number">19.</span> <span class="toc-text">根据进程名字杀进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9yum%E7%9A%84%E4%BB%93%E5%BA%93"><span class="toc-number">20.</span> <span class="toc-text">修改yum的仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#yum%E8%A2%AB%E5%85%B6%E4%BB%96%E8%BF%9B%E7%A8%8B%E5%8D%A0%E7%94%A8"><span class="toc-number">21.</span> <span class="toc-text">yum被其他进程占用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85deb%E6%96%87%E4%BB%B6"><span class="toc-number">22.</span> <span class="toc-text">安装deb文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85RPM%E6%96%87%E4%BB%B6"><span class="toc-number">23.</span> <span class="toc-text">安装RPM文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%86deb%E6%96%87%E4%BB%B6%E8%A3%85%E6%8D%A2%E6%88%90rpm"><span class="toc-number">24.</span> <span class="toc-text">将deb文件装换成rpm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E9%9D%9E%E7%A9%BA%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-number">25.</span> <span class="toc-text">删除非空文件夹</span></a></li></ol>
+		
+		</div>
+		
+		<p>自己用到过和遇见过得命令和异常陈列，基本是Ubuntu之类的界面和操作系统。<span id="more"></span></p>
+<h2 id="Permission-denied"><a href="#Permission-denied" class="headerlink" title="Permission denied"></a>Permission denied</h2><p><code>sudo chmod -R 777 dell</code></p>
+<p>此命令设置所有用户都有权限访问这个文件夹，其中<code>777=111111111</code>。</p>
+<p>##如何安装bin文件</p>
+<p><code>sudo chmod u+x name.bin</code></p>
+<p>这个命令给予这个bin文件读写的权限</p>
+<p><code>sudo name.bin</code></p>
+<p>这个命令执行安装</p>
+<h2 id="创建新用户"><a href="#创建新用户" class="headerlink" title="创建新用户"></a>创建新用户</h2><p><code>sudo adduser &lt;username&gt;</code></p>
+<h2 id="修改用户密码"><a href="#修改用户密码" class="headerlink" title="修改用户密码"></a>修改用户密码</h2><p><code>sudo password &lt;username&gt;</code><br>或者<br><code>sudo passwd &lt;username&gt;</code></p>
+<h2 id="切换用户"><a href="#切换用户" class="headerlink" title="切换用户"></a>切换用户</h2><p><code>su &lt;username&gt;</code></p>
+<p>输入密码后就切换到对应的user了</p>
+<p><code>su - &lt;username&gt;</code></p>
+<p>这个命令会把当前设置的环境变量也带过去</p>
+<h2 id="修改默认root用户的密码"><a href="#修改默认root用户的密码" class="headerlink" title="修改默认root用户的密码"></a>修改默认root用户的密码</h2><p>如果安装时候直接设置了自己的用户名，那么root用户的密码就会是随机的（Ubuntu默认不开放root用户)。</p>
+<p><code>sudo passwd</code></p>
+<p>之后按照提示输入密码就可以修改root用户的密码了</p>
+<h2 id="为特定用户添加sudo命令权限"><a href="#为特定用户添加sudo命令权限" class="headerlink" title="为特定用户添加sudo命令权限"></a>为特定用户添加sudo命令权限</h2><p>有些用户没有运行sudo的权限，执行sudo的话会提示<code>username is not in the sudoers file</code><br>修改sudoers文件可以解决这个问题</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ su -root <span class="comment">## 切换root用户`</span></span><br><span class="line">$ chmod u+w /etc/sudoers <span class="comment"># 添加写权限</span></span><br><span class="line">$  /etc/sudoers </span><br><span class="line">$ <span class="comment"># 在打开的文本编辑器中，找到r**oot ALL=(ALL) ALL在下面添加一行 username ALL=(ALL) ALL</span></span><br><span class="line">$ <span class="comment"># 保存后记得关闭sudoers的写权限</span></span><br><span class="line">$ chmod u-w /etc/sudoers</span><br></pre></td></tr></table></figure>
+
+<h2 id="挂载远程文件系统-mount-remote-filesystem-NFS"><a href="#挂载远程文件系统-mount-remote-filesystem-NFS" class="headerlink" title="挂载远程文件系统(mount remote filesystem NFS)"></a>挂载远程文件系统(mount remote filesystem NFS)</h2><ol>
+<li>实现本机的文件系统可以被别的机器挂载</li>
+</ol>
+<p>1.1. 安装nfs服务器</p>
+<p><code>sudo apt-get install nfs-kernel-server</code></p>
+<p>1.2. 修改权限配置文件</p>
+<p><code>vi /etc/exports</code></p>
+<p>根据其中的范例添加你想要共享出去的文件目录（mount point）</p>
+<p>1.3. 重启服务使得配置生效</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$sudo</span> /etc/init.d/portmap restart</span><br><span class="line"><span class="variable">$sudo</span> /etc/init.d/nfs-kernel-server restart</span><br></pre></td></tr></table></figure>
+
+<p>1.4. 你可以使用 <code>showmount -e</code> 命令查看共享成功的文件系统</p>
+<ol start="2">
+<li>挂载命令</li>
+</ol>
+<p><code>sudo mount -t nfs localhost:/home /mnt</code></p>
+<p>其中-t nfs 可以省略，会使用默认支持的nfs文件类型挂载。</p>
+<h2 id="一些基本的命令提示‘command-not-found’"><a href="#一些基本的命令提示‘command-not-found’" class="headerlink" title="一些基本的命令提示‘command not found’"></a>一些基本的命令提示‘command not found’</h2><p>（这个问题一般会出现在redhat 红帽系统中）<br>例如输入命令：<code>ifconfig</code><br>显示<code>bash: ifconfig: command not found</code><br>可能是路径问题，如果然后输入<br><code>/sbin/ifconfig</code>  就会显示IP地址等信息。<br>那么解决办法是<br>执行<code>cat ~/.bash_profile</code> 看自己的PATH，然后再执行：<br><code>gedit /etc/profile</code> 在最后一行后面添加：<br>PATH=$PATH:sbin<br>export PATH=$PATH:/sbin<br>保存退出。<br>然后在初始化一下：<code>source /etc/profile</code> 你再直接输入：<code>ifconfig</code> 就会直接显示IP等信息了</p>
+<h2 id="error-while-loading-shared-libraries"><a href="#error-while-loading-shared-libraries" class="headerlink" title="error while loading shared libraries"></a>error while loading shared libraries</h2><p>error while loading shared libraries：****** ：cannot restore segment prot after reloc: Permission denied。<br>网上查了一下，原因是selinux的问题，selinux的设置太过严格导致的。解决的办法是在root用户下，修改/etc/selinux/config 文件<br>把SELINUX=enforcing 改成 SELINUX=disabled。<br>然后，保存关闭，重启机器就可以了。</p>
+<h2 id="Linux开启ssh服务"><a href="#Linux开启ssh服务" class="headerlink" title="Linux开启ssh服务"></a>Linux开启ssh服务</h2><ul>
+<li>开启服务执行 /etc/init.d/sshd start</li>
+<li>如果还是不能连接，尝试关闭防火墙<ul>
+<li>输入 setup</li>
+<li>在弹出界面选择firewall</li>
+<li>选择 no firewall。</li>
+</ul>
+</li>
+</ul>
+<h2 id="修改ssh的最大连接并发数"><a href="#修改ssh的最大连接并发数" class="headerlink" title="修改ssh的最大连接并发数"></a>修改ssh的最大连接并发数</h2><ul>
+<li>打开文件进行编辑 ： vi /etc.ssh/sshd_config</li>
+<li>找到 MazStartups 去掉注释，并且修改大最小和最大的数值。</li>
+<li>重启ssh服务，可以尝试以下命令（不同内核）<ul>
+<li>sudo systemctl restart sshd </li>
+<li>/etc/rc.d/init.d/sshd restart </li>
+<li>service sshd restart</li>
+</ul>
+</li>
+</ul>
+<h2 id="Linux-解压"><a href="#Linux-解压" class="headerlink" title="Linux 解压"></a>Linux 解压</h2><ul>
+<li>tar<ul>
+<li>解压： tar xvf fileName.tar</li>
+<li>打包： tar cvf vffileNametar dirName</li>
+</ul>
+</li>
+<li>.gz<ul>
+<li>解压： gunzip FileName.gz</li>
+<li>解压： gzip -d FileName.gz</li>
+<li>打包： gzip FileName dirName</li>
+</ul>
+</li>
+<li>.tar.gz 和 .tgz<ul>
+<li>解压： tar zxvf FileName.tar.gz</li>
+<li>打包： tar zcvf FileName.tar.gz DirName</li>
+</ul>
+</li>
+<li>.xz<ul>
+<li>解压 <code>xz -d</code></li>
+<li>解压 <code>tar -xvJf</code></li>
+<li>打包 <code>xz -z</code></li>
+</ul>
+</li>
+<li>.war<ul>
+<li>解压 <code>unzip file.war</code></li>
+<li>解压 <code>jar -xvf file.war</code></li>
+<li>打包 <code>zip</code></li>
+<li>打包 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">jar -cvfM0 game.war .&#x2F;</span><br><span class="line"></span><br><span class="line">-c   创建war包</span><br><span class="line"></span><br><span class="line">-v   显示过程信息</span><br><span class="line"></span><br><span class="line">-f</span><br><span class="line"></span><br><span class="line">-M</span><br><span class="line"></span><br><span class="line">-0   这个是阿拉伯数字，只打包不压缩的意思</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h2 id="Linux中的复制命令"><a href="#Linux中的复制命令" class="headerlink" title="Linux中的复制命令"></a>Linux中的复制命令</h2><p>cp -rf source_dir target_dir</p>
+<h2 id="查看Linux内核版本的命令"><a href="#查看Linux内核版本的命令" class="headerlink" title="查看Linux内核版本的命令"></a>查看Linux内核版本的命令</h2><ul>
+<li>命令： uname -a, 查看系统内核版本号及系统名称</li>
+<li>命令： cat /proc/version, 查看目录”/proc”下version的信息，也可以得到当前系统的内核版本号及系统名称 </li>
+</ul>
+<h2 id="拦截TCP数据包"><a href="#拦截TCP数据包" class="headerlink" title="拦截TCP数据包"></a>拦截TCP数据包</h2><p><code>tcpdump -i &lt;interface&gt; host &lt;monitoredhost&gt; -c 300 -w tcpdump.log</code></p>
+<p>拦截指定interface和host的通讯，300个数据包后停止，并且会把拦截到的数据包存储到tcpdump.log里面。使用wireshark可以打开输出的文本进行分析。</p>
+<h2 id="查看内存数据"><a href="#查看内存数据" class="headerlink" title="查看内存数据"></a>查看内存数据</h2><p><code>$ cat /proc/meminfo</code></p>
+<h2 id="限制进程（process）能够打开的最大文件数"><a href="#限制进程（process）能够打开的最大文件数" class="headerlink" title="限制进程（process）能够打开的最大文件数"></a>限制进程（process）能够打开的最大文件数</h2><p><code>ulimit -n 1024</code></p>
+<p>Linux 系统默认是1024，这个数值并不是一个对系统性能影响很大的数值。所以你大可以放心的去调节这个参数，而无需考虑太多的性能问题。之所以存在，是为了提供一个方法限制一个程序打开文件的数量，可能更多的考虑是在于安全性和限制权限。当你的程序遇到这个上限的时候，可以使用<code>ulimit -n</code> 命令去提高上限。提高多少，你只需要根据你的程序需求去判断。如果不是内存很紧张的系统，你可以尽量的提高这个上限值。</p>
+<p>当然额外的还需要注意这个上限不是无限的，你可能还会受系统内核的限制。</p>
+<h2 id="root-Login"><a href="#root-Login" class="headerlink" title="root Login"></a>root Login</h2><p>由于安全原因，部分系统禁止root用户直接使用ssh远程登陆。可以先用非root的帐户，登陆到ssh后，su成为root。如果想直接用root登陆，则修改如下配置文件<code>vi /etc/ssh/sshd_config</code>找到其中的如下一行，将前边的#符号去掉，并修改no为yes<br><code>#PermitRootLogin no</code> </p>
+<h2 id="根据进程名字杀进程"><a href="#根据进程名字杀进程" class="headerlink" title="根据进程名字杀进程"></a>根据进程名字杀进程</h2><p>kill -9 $(pidof 进程名关键字)</p>
+<h2 id="修改yum的仓库"><a href="#修改yum的仓库" class="headerlink" title="修改yum的仓库"></a>修改yum的仓库</h2><p>在<code>/etc/yum.repos.d/</code> 目录下增加一个<code>name.repo</code> 文件:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[centos]</span><br><span class="line">name&#x3D;CentOS-7</span><br><span class="line">baseurl&#x3D;http:&#x2F;&#x2F;ftp.heanet.ie&#x2F;pub&#x2F;centos&#x2F;7&#x2F;os&#x2F;x86_64&#x2F;</span><br><span class="line">enabled&#x3D;1</span><br><span class="line">gpgcheck&#x3D;1</span><br><span class="line">gpgkey&#x3D;http:&#x2F;&#x2F;ftp.heanet.ie&#x2F;pub&#x2F;centos&#x2F;7&#x2F;os&#x2F;x86_64&#x2F;RPM-GPG-KEY-CentOS-7</span><br></pre></td></tr></table></figure>
+<p>之后运行</p>
+<pre><code>yum repolist
+</code></pre>
+<h2 id="yum被其他进程占用"><a href="#yum被其他进程占用" class="headerlink" title="yum被其他进程占用"></a>yum被其他进程占用</h2><p><a target="_blank" rel="noopener" href="https://www.thegeekdiary.com/yum-command-fails-with-another-app-is-currently-holding-the-yum-lock-in-centos-rhel-7/">https://www.thegeekdiary.com/yum-command-fails-with-another-app-is-currently-holding-the-yum-lock-in-centos-rhel-7/</a></p>
+<h2 id="安装deb文件"><a href="#安装deb文件" class="headerlink" title="安装deb文件"></a>安装deb文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg -i name.deb</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装RPM文件"><a href="#安装RPM文件" class="headerlink" title="安装RPM文件"></a>安装RPM文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -ivh name.rpm</span><br></pre></td></tr></table></figure>
+
+<h2 id="将deb文件装换成rpm"><a href="#将deb文件装换成rpm" class="headerlink" title="将deb文件装换成rpm"></a>将deb文件装换成rpm</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install alien</span><br><span class="line">alien -r name.deb</span><br></pre></td></tr></table></figure>
+
+<h2 id="删除非空文件夹"><a href="#删除非空文件夹" class="headerlink" title="删除非空文件夹"></a>删除非空文件夹</h2><p><code>rm -r folder</code></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B-Linux-Unix/">编程-Linux/Unix</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://luoyuan800.github.io/2015/11/25/linux-study/" data-title="Linux学习积累 | Yuan" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/10/30/piped-java/" title="PipedOutputStream和PipedInputStream">
+  <strong>上一篇：</strong><br/>
+  <span>
+  PipedOutputStream和PipedInputStream</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/07/23/jvm-gc/"  title="JVM 垃圾回收器">
+ <strong>下一篇：</strong><br/> 
+ <span>JVM 垃圾回收器
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Permission-denied"><span class="toc-number">1.</span> <span class="toc-text">Permission denied</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%96%B0%E7%94%A8%E6%88%B7"><span class="toc-number">2.</span> <span class="toc-text">创建新用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81"><span class="toc-number">3.</span> <span class="toc-text">修改用户密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%87%E6%8D%A2%E7%94%A8%E6%88%B7"><span class="toc-number">4.</span> <span class="toc-text">切换用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4root%E7%94%A8%E6%88%B7%E7%9A%84%E5%AF%86%E7%A0%81"><span class="toc-number">5.</span> <span class="toc-text">修改默认root用户的密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E7%89%B9%E5%AE%9A%E7%94%A8%E6%88%B7%E6%B7%BB%E5%8A%A0sudo%E5%91%BD%E4%BB%A4%E6%9D%83%E9%99%90"><span class="toc-number">6.</span> <span class="toc-text">为特定用户添加sudo命令权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%82%E8%BD%BD%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F-mount-remote-filesystem-NFS"><span class="toc-number">7.</span> <span class="toc-text">挂载远程文件系统(mount remote filesystem NFS)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%9F%BA%E6%9C%AC%E7%9A%84%E5%91%BD%E4%BB%A4%E6%8F%90%E7%A4%BA%E2%80%98command-not-found%E2%80%99"><span class="toc-number">8.</span> <span class="toc-text">一些基本的命令提示‘command not found’</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#error-while-loading-shared-libraries"><span class="toc-number">9.</span> <span class="toc-text">error while loading shared libraries</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux%E5%BC%80%E5%90%AFssh%E6%9C%8D%E5%8A%A1"><span class="toc-number">10.</span> <span class="toc-text">Linux开启ssh服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9ssh%E7%9A%84%E6%9C%80%E5%A4%A7%E8%BF%9E%E6%8E%A5%E5%B9%B6%E5%8F%91%E6%95%B0"><span class="toc-number">11.</span> <span class="toc-text">修改ssh的最大连接并发数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux-%E8%A7%A3%E5%8E%8B"><span class="toc-number">12.</span> <span class="toc-text">Linux 解压</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux%E4%B8%AD%E7%9A%84%E5%A4%8D%E5%88%B6%E5%91%BD%E4%BB%A4"><span class="toc-number">13.</span> <span class="toc-text">Linux中的复制命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BLinux%E5%86%85%E6%A0%B8%E7%89%88%E6%9C%AC%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="toc-number">14.</span> <span class="toc-text">查看Linux内核版本的命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%A6%E6%88%AATCP%E6%95%B0%E6%8D%AE%E5%8C%85"><span class="toc-number">15.</span> <span class="toc-text">拦截TCP数据包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE"><span class="toc-number">16.</span> <span class="toc-text">查看内存数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%90%E5%88%B6%E8%BF%9B%E7%A8%8B%EF%BC%88process%EF%BC%89%E8%83%BD%E5%A4%9F%E6%89%93%E5%BC%80%E7%9A%84%E6%9C%80%E5%A4%A7%E6%96%87%E4%BB%B6%E6%95%B0"><span class="toc-number">17.</span> <span class="toc-text">限制进程（process）能够打开的最大文件数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#root-Login"><span class="toc-number">18.</span> <span class="toc-text">root Login</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E8%BF%9B%E7%A8%8B%E5%90%8D%E5%AD%97%E6%9D%80%E8%BF%9B%E7%A8%8B"><span class="toc-number">19.</span> <span class="toc-text">根据进程名字杀进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9yum%E7%9A%84%E4%BB%93%E5%BA%93"><span class="toc-number">20.</span> <span class="toc-text">修改yum的仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#yum%E8%A2%AB%E5%85%B6%E4%BB%96%E8%BF%9B%E7%A8%8B%E5%8D%A0%E7%94%A8"><span class="toc-number">21.</span> <span class="toc-text">yum被其他进程占用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85deb%E6%96%87%E4%BB%B6"><span class="toc-number">22.</span> <span class="toc-text">安装deb文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85RPM%E6%96%87%E4%BB%B6"><span class="toc-number">23.</span> <span class="toc-text">安装RPM文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%86deb%E6%96%87%E4%BB%B6%E8%A3%85%E6%8D%A2%E6%88%90rpm"><span class="toc-number">24.</span> <span class="toc-text">将deb文件装换成rpm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E9%9D%9E%E7%A9%BA%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-number">25.</span> <span class="toc-text">删除非空文件夹</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/杂物-医学/" title="杂物-医学">杂物-医学<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Linux/" title="编程-Linux">编程-Linux<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Linux-Unix/" title="编程-Linux/Unix">编程-Linux/Unix<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-工具/" title="编程-工具">编程-工具<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-网络协议/" title="编程-网络协议">编程-网络协议<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-工具/" title="网站-工具">网站-工具<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-语言/" title="网站-语言">网站-语言<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Luo Yuan in Zhuhai. <br/>
+			Here is my place for knowledge accumulation.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2021 
+		
+		<a href="/about" target="_blank" title="Luo Yuan">Luo Yuan</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

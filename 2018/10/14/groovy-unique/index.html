@@ -4,22 +4,22 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>斐波那契数列 | Yuan</title>
+    <title>Groovy Unique 方法性能测试 | Yuan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Luo Yuan">
     
 
     
-    <meta name="description" content="斐波那契数列是有一个传奇的数学家基于一对非常能生的兔子提出的（喜欢数学游戏的卖兔子的商人？）：一对兔子每个月能生出一对小兔子来。如果所有兔都不死，那么一年以后可以繁殖多少对兔子？每个月兔子数量最终构成了一个了一个神奇的数列，这数列中除了第零项和第一项，其他所有的项都等于前面两项之和：F(n) &#x3D; F(n-1) + F(n-2)">
+    <meta name="description" content="最近系统遇到一个问题就是一个调用一个groovy方法总是长时间卡住，研究发现这个方法中使用了unique方法。身为一个java程序员一直比较习惯用HashSet去过滤重复的数据，看到groovy中有这么一个去重复的方法，觉得挺方便，所以就大咧咧的使用了。但是测试以后发现，这个方法性能真的是很差劲的……">
 <meta property="og:type" content="article">
-<meta property="og:title" content="斐波那契数列">
-<meta property="og:url" content="http://luoyuan800.github.io/2017/01/03/fib-java/index.html">
+<meta property="og:title" content="Groovy Unique 方法性能测试">
+<meta property="og:url" content="http://luoyuan800.github.io/2018/10/14/groovy-unique/index.html">
 <meta property="og:site_name" content="Yuan">
-<meta property="og:description" content="斐波那契数列是有一个传奇的数学家基于一对非常能生的兔子提出的（喜欢数学游戏的卖兔子的商人？）：一对兔子每个月能生出一对小兔子来。如果所有兔都不死，那么一年以后可以繁殖多少对兔子？每个月兔子数量最终构成了一个了一个神奇的数列，这数列中除了第零项和第一项，其他所有的项都等于前面两项之和：F(n) &#x3D; F(n-1) + F(n-2)">
+<meta property="og:description" content="最近系统遇到一个问题就是一个调用一个groovy方法总是长时间卡住，研究发现这个方法中使用了unique方法。身为一个java程序员一直比较习惯用HashSet去过滤重复的数据，看到groovy中有这么一个去重复的方法，觉得挺方便，所以就大咧咧的使用了。但是测试以后发现，这个方法性能真的是很差劲的……">
 <meta property="og:locale">
-<meta property="article:published_time" content="2017-01-03T08:19:43.000Z">
-<meta property="article:modified_time" content="2021-04-22T08:03:37.214Z">
+<meta property="article:published_time" content="2018-10-14T02:53:00.000Z">
+<meta property="article:modified_time" content="2021-04-30T09:24:37.291Z">
 <meta property="article:author" content="Luo Yuan">
 <meta name="twitter:card" content="summary">
 
@@ -85,14 +85,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2017/01/03/fib-java/" title="斐波那契数列" itemprop="url">斐波那契数列</a>
+      <a href="/2018/10/14/groovy-unique/" title="Groovy Unique 方法性能测试" itemprop="url">Groovy Unique 方法性能测试</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
 		
   <p class="article-time">
-    <time datetime="2017-01-03T08:19:43.000Z" itemprop="datePublished"> Published 2017-01-03</time>
+    <time datetime="2018-10-14T02:53:00.000Z" itemprop="datePublished"> Published 2018-10-14</time>
     
   </p>
 </header>
@@ -101,84 +101,158 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
 		
-			
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E5%AD%97%E5%88%97%E8%A1%A8%E7%9A%84%E5%8E%BB%E9%87%8D"><span class="toc-number">1.</span> <span class="toc-text">数字列表的去重</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81"><span class="toc-number">1.1.</span> <span class="toc-text">测试代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C"><span class="toc-number">1.2.</span> <span class="toc-text">测试结果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%88%97%E8%A1%A8%E7%9A%84%E5%8E%BB%E9%87%8D"><span class="toc-number">2.</span> <span class="toc-text">字符串列表的去重</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81-1"><span class="toc-number">2.1.</span> <span class="toc-text">测试代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C-1"><span class="toc-number">2.2.</span> <span class="toc-text">测试结果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Groovy-unique%E6%96%B9%E6%B3%95%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">Groovy unique方法源码分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">4.</span> <span class="toc-text">结论</span></a></li></ol>
 		
 		</div>
 		
-		<p>斐波那契数列是有一个传奇的数学家基于一对非常能生的兔子提出的（喜欢数学游戏的卖兔子的商人？）：一对兔子每个月能生出一对小兔子来。如果所有兔都不死，那么一年以后可以繁殖多少对兔子？每个月兔子数量最终构成了一个了一个神奇的数列，这数列中除了第零项和第一项，其他所有的项都等于前面两项之和：<code>F(n) = F(n-1) + F(n-2)</code></p>
-<span id="more"></span>
-
-<p>这里我先不讨论斐波拉契数列的各种事神奇的特性，比如它和黄金分割的关系，比如自然界的花瓣或者树叶或者数字与斐波拉契数列的巧合，比如晶体原子排列和斐波拉契数列的关联，比如研究股票的某些坑神尝试使用斐波拉契数列去探索跌涨规律等等。总之，看到斐波拉契数列你就会怀疑我们的世界是不是就是某个更高级的文明根据一堆奇奇怪怪数学原理来设计的呢……<br>在这里我就简单研究下怎么使用java实现计算斐波拉契数列的第N个数。<br>首先斐波拉契数列的特性就是一种递归的实现，所以我们可以简单的使用递归的方式求解它。代码结构优雅简洁：</p>
-<pre><code>int calculateRecursion(int n)&#123;
-        if(n &lt; 2)&#123;
-            return n;
+		<p>最近系统遇到一个问题就是一个调用一个groovy方法总是长时间卡住，研究发现这个方法中使用了unique方法。身为一个java程序员一直比较习惯用HashSet去过滤重复的数据，看到groovy中有这么一个去重复的方法，觉得挺方便，所以就大咧咧的使用了。但是测试以后发现，这个方法性能真的是很差劲的…… <span id="more"></span></p>
+<h1 id="数字列表的去重"><a href="#数字列表的去重" class="headerlink" title="数字列表的去重"></a>数字列表的去重</h1><h2 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h2><p>首先是测试数值的比较，我以下代码分别测速list的大小为100， 10000， 1000000。</p>
+<pre><code>random = new Random();
+performanceReport(100)
+performanceReport(10000)
+performanceReport(10000000)
+def performanceReport(int size) &#123;
+    println(&quot;Report for list size $size&quot;)
+    def list = [];
+    (1..size).each &#123;
+        list.add(random.nextInt(1000))
+    &#125;
+    def start = System.currentTimeMillis();
+    list.unique();
+    def end = System.currentTimeMillis();
+    def dur = end - start;
+    dur /= 1000;
+    println(&quot;unique use time $dur s&quot;);
+    list.clear();
+    (1..size).each &#123;
+        list.add(random.nextInt(1000))
+    &#125;
+    start = System.currentTimeMillis();
+    def uSet = new HashSet(list.size());
+    for (e in list) &#123;
+        uSet.add(e);
+    &#125;
+    end = System.currentTimeMillis();
+    dur = end - start;
+    dur /= 1000;
+    println(&quot;hash set use time $dur s&quot;);
+    println(&#39;---------------------&#39;);
+&#125;
+</code></pre>
+<h2 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h2><pre><code>Report for list size 100
+unique use time 0.006 s
+hash set use time 0.006 s
+---------------------
+Report for list size 10000
+unique use time 0.127 s
+hash set use time 0.004 s
+---------------------
+Report for list size 10000000
+unique use time 49.479 s
+hash set use time 0.279 s
+</code></pre>
+<p>我重复运行了代码三遍，出来的结果都差不多，所以对比结果基本是确定的：</p>
+<ol>
+<li>List比较少元素的情况下，比如100以内，运行效率差不了多少</li>
+<li>当List元素较多的时候，差异非常明显，特别是大容量List的运行结果，使用unique就绝对是一个错误的选择！</li>
+</ol>
+<h1 id="字符串列表的去重"><a href="#字符串列表的去重" class="headerlink" title="字符串列表的去重"></a>字符串列表的去重</h1><h2 id="测试代码-1"><a href="#测试代码-1" class="headerlink" title="测试代码"></a>测试代码</h2><p>我使用随机生成的十位英文字符串（只包含a、b、c）进行测试比较。测试运行比较列表大小为100、1000、100000的结果。</p>
+<pre><code>random = new Random();
+strings = [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;];
+performanceReport(100)
+performanceReport(1000)
+performanceReport(100000)
+//生成随机字符串
+def genString()&#123;
+    def s = &#39;&#39;;
+    (1..4).each&#123;
+        def index = random.nextInt(strings.size());
+        s += strings[index];
+    &#125;
+    return s;
+&#125;
+def performanceReport(int size) &#123;
+    println(&quot;Report for list size $size&quot;)
+    def list = [];
+    (1..size).each &#123;
+        list.add(genString())
+    ｝
+    def start = System.currentTimeMillis();
+    list.unique();
+    def end = System.currentTimeMillis();
+    def dur = end - start;
+    dur /= 1000;
+    println(&quot;unique use time $dur s&quot;);
+    list.clear();
+    (1..size).each &#123;
+        list.add(genString())
+    &#125;
+    start = System.currentTimeMillis();
+    def uSet = new HashSet(list.size());
+    for (e in list) &#123;
+        uSet.add(e);
+    &#125;
+    end = System.currentTimeMillis();
+    dur = end - start;
+    dur /= 1000;
+    println(&quot;hash set use time $dur s&quot;);
+    println(&#39;---------------------&#39;);
+&#125;
+</code></pre>
+<h2 id="测试结果-1"><a href="#测试结果-1" class="headerlink" title="测试结果"></a>测试结果</h2><p>重复运行代码三遍，发现结果对比的差值都比较固定，所以可以取其中一个结果作为参考。</p>
+<pre><code>Report for list size 100
+unique use time 0.002 s
+hash set use time 0.005 s
+---------------------
+Report for list size 1000
+unique use time 0.049 s
+hash set use time 0.001 s
+---------------------
+Report for list size 100000
+unique use time 30.716 s
+hash set use time 0.019 s
+</code></pre>
+<ol>
+<li>列表容量较少的时候（100左右），groovy的unique方法性能还是有一点点优势的</li>
+<li>大容量的列表去重的时候，依旧比使用HashSet的速度慢了很多。所以如果大列表处理的时候，还是得选用HashSet。</li>
+</ol>
+<h1 id="Groovy-unique方法源码分析"><a href="#Groovy-unique方法源码分析" class="headerlink" title="Groovy unique方法源码分析"></a>Groovy unique方法源码分析</h1><p>unique方法的源码如下：</p>
+<pre><code>public static &lt;T&gt; Collection&lt;T&gt; unique(Collection&lt;T&gt; self, boolean mutate) &#123;
+    ArrayList answer = new ArrayList();
+    Iterator i$ = self.iterator();
+    //双重循环
+    while(i$.hasNext()) &#123;
+        Object t = i$.next();
+        boolean duplicated = false;
+        Iterator i$1 = answer.iterator();
+        //循环传进来的带重复元素的列表而不是循环已经去重的列表
+        while(i$1.hasNext()) &#123;
+            Object t2 = i$1.next();
+            if(coercedEquals(t, t2)) &#123;
+                duplicated = true;
+                break;
+            &#125;
         &#125;
-        return calculateRecursion(n -1) + calculateRecursion(n -2);
+
+        if(!duplicated) &#123;
+            answer.add(t);
+        &#125;
+    &#125;
+
+    if(mutate) &#123;
+        self.clear();
+        self.addAll(answer);
+    &#125;
+
+    return (Collection)(mutate?self:answer);
 &#125;
 </code></pre>
-<p>但是递归算法终究是会导致资源的浪费和堆栈占用的暴增，但计算数值一旦变大，最终会导致堆栈溢出。并且这个递归算法中对同样的位数的斐波那契数进行了重复计算和存储也导致了计算资源的浪费。<br>代码结构简洁并不一定代码代码效率好，那么我们尝试把递归计算过程的数字保存下来，当发现已经计算过的就直接使用：</p>
-<pre><code>Integer[] fibs = new Integer[n+1];
-int calculateRecursion(int n)&#123;
-    if(fib[n] == null &amp;&amp; n &lt; 2)&#123;
-        fibs[n] = n;
-    &#125;else if(fib[n] == null)&#123;
-        fibs[n] = calculateRecursion(n -1) + calculateRecursion(n -2);
-    &#125;
-    return fibs[n];
-&#125;
-</code></pre>
-<p>这样我们递归终于可以省掉一些额外的计算消耗了，但是代码好像看起来越来越臃肿了。那么我们尝试下不使用递归来实现另外一种求解斐波拉契数列的方式。</p>
-<pre><code>int calculateLinear(int n)&#123;
-    if(n &lt; 2)&#123;
-        return n;
-    &#125;
-    int f = new int[n + 1];
-    f[0] = 0; f[1] = 1;
-    for(int i = 2; i&lt; n; i++)&#123;
-        f[i]= f[i-1] + f[i-2];
-    &#125;
-    return f[n];
-&#125;
-</code></pre>
-<p>这个段代码我们还可以继续简化它的存储占用。因为斐波拉契数列第N个数只和它的前两个相邻数相关，所以在计算过程中，其实我们只需要存储相关两个数，就可以计算出第N个数了，完全没有必要存储每一位的数值。</p>
-<pre><code>int calculateLinear(int n)&#123;
-    //看，我们连数值界限判断都可以省掉了，真是太优雅了！
-    int f0 = 0, f1 = 1;
-    for(int i = 0; i&lt; n; i++)&#123;
-        f1 = f1 + f0;
-        f0 = f1 - f0;
-    &#125;
-    return f0;
-&#125;
-</code></pre>
-<p>嗯，这段代码实现也很简洁，并且成功的减少了内存堆栈的消耗。Good！<br>那么下一个问题来了，斐波拉契数列值是指数增长的，但是java中int类型的最大值是</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2^&#123;31&#125; -1 &#x3D; 2147483647</span><br></pre></td></tr></table></figure>
-<p>当使用上面实现的代码计算就可以发现计算到F[47]的时候就出现溢出了……那么我们换成long类型呢？</p>
-<pre><code>long calculateLinear(long n)&#123;
-    
-    long f0 = 0, f1 = 1;
-    for(long i = 0; i&lt; n; i++)&#123;
-        f1 = f1 + f0;
-        f0 = f1 - f0;
-    &#125;
-    return f0;
-&#125;
-</code></pre>
-<p>结果是只能计算到前92个……那只好用上BigInteger了：</p>
-<pre><code>BigInteger calculateLinear(BigInteger n)&#123;
-    BigInteger big1 = new BigInteger(&quot;1&quot;);
-    BigInteger f0 = new BigInteger(&quot;0&quot;), f1 = big1;
-    for(BigInteger i = new BigInteger(&quot;0&quot;); i.compareTo(n) == -1; i = i.add(big1))&#123;
-        f1 = f1.add(f0);
-        f0 = f1.subtract(f0);
-    &#125;
-    return f0;
-&#125;
-</code></pre>
-<p>这样我们就可以计算任意大小的斐波拉契数列的数值了么？<br>至少我跑了一晚上，计算到了182324，都没有出现什么错误，只不过是越到后面，计算消耗的时间越长就是了……</p>
-<pre><code>    fib(182324):    1297286608306366788170744137779958588200611866878942632507224818788883057962361182304458754935156188970882290447672
-    ……
-</code></pre>
+<p>可以发现，非常不幸的两个导致性能底下的代码实现</p>
+<ol>
+<li>双重循环</li>
+<li>在判断重复元素的时候，是去循环原始的List，而不是新构建的容量较小的List，这个也会增加代码执行时间。</li>
+</ol>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>一直以为这种框架性质的代码，一定是千锤百炼，写得优雅又高效的，不过事实就是：代码写得好看，性能并不一定好！<br>Groovy方法虽然便捷，但是使用内置的方法还是得谨慎，毕竟要处理超过100的列表是经常的事。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -196,7 +270,7 @@ int calculateRecursion(int n)&#123;
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://luoyuan800.github.io/2017/01/03/fib-java/" data-title="斐波那契数列 | Yuan" data-tsina="" class="share clearfix">
+	  <div data-url="http://luoyuan800.github.io/2018/10/14/groovy-unique/" data-title="Groovy Unique 方法性能测试 | Yuan" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -210,18 +284,18 @@ int calculateRecursion(int n)&#123;
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2017/01/03/coin-java/" title="假币问题">
+ <a href="/2019/07/03/git-tip/" title="Git使用细节">
   <strong>上一篇：</strong><br/>
   <span>
-  假币问题</span>
+  Git使用细节</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2016/10/30/piped-java/"  title="PipedOutputStream和PipedInputStream">
+<a href="/2017/02/16/Child-Disease/"  title="小儿常见病">
  <strong>下一篇：</strong><br/> 
- <span>PipedOutputStream和PipedInputStream
+ <span>小儿常见病
 </span>
 </a>
 </div>
@@ -238,7 +312,7 @@ int calculateRecursion(int n)&#123;
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
  
- 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E5%AD%97%E5%88%97%E8%A1%A8%E7%9A%84%E5%8E%BB%E9%87%8D"><span class="toc-number">1.</span> <span class="toc-text">数字列表的去重</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81"><span class="toc-number">1.1.</span> <span class="toc-text">测试代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C"><span class="toc-number">1.2.</span> <span class="toc-text">测试结果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%88%97%E8%A1%A8%E7%9A%84%E5%8E%BB%E9%87%8D"><span class="toc-number">2.</span> <span class="toc-text">字符串列表的去重</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81-1"><span class="toc-number">2.1.</span> <span class="toc-text">测试代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C-1"><span class="toc-number">2.2.</span> <span class="toc-text">测试结果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Groovy-unique%E6%96%B9%E6%B3%95%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">Groovy unique方法源码分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">4.</span> <span class="toc-text">结论</span></a></li></ol>
  
   </div>
 
