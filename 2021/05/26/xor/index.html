@@ -1,0 +1,519 @@
+
+ <!DOCTYPE HTML>
+<html lang="ch">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>异或运算 | Yuan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Luo Yuan">
+    
+
+    
+    <meta name="description" content="今天来聊一下二进制的异或运算。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="异或运算">
+<meta property="og:url" content="http://luoyuan800.github.io/2021/05/26/xor/index.html">
+<meta property="og:site_name" content="Yuan">
+<meta property="og:description" content="今天来聊一下二进制的异或运算。">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-05-26T09:17:14.000Z">
+<meta property="article:modified_time" content="2021-05-27T03:40:37.470Z">
+<meta property="article:author" content="Luo Yuan">
+<meta name="twitter:card" content="summary">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Yuan" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="Yuan" title="Yuan"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Yuan">Yuan</a></h1>
+				<h2 class="blog-motto">一点一滴，积累技术</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:luoyuan800.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2021/05/26/xor/" title="异或运算" itemprop="url">异或运算</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Luo Yuan" target="_blank" itemprop="author">Luo Yuan</a>
+		
+  <p class="article-time">
+    <time datetime="2021-05-26T09:17:14.000Z" itemprop="datePublished"> Published 2021-05-26</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E6%B3%95%E5%88%99"><span class="toc-number">1.</span> <span class="toc-text">运算法则</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%82%E6%88%96%E7%9A%84%E8%A7%84%E5%BE%8B"><span class="toc-number">2.</span> <span class="toc-text">异或的规律</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%82%E6%88%96%E7%9A%84%E7%94%A8%E9%80%94"><span class="toc-number">3.</span> <span class="toc-text">异或的用途</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%A4%E6%8D%A2%E5%8F%98%E9%87%8F%E7%9A%84%E5%80%BC"><span class="toc-number">3.1.</span> <span class="toc-text">交换变量的值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86"><span class="toc-number">3.2.</span> <span class="toc-text">加密解密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B1%82%E4%B8%8D%E9%87%8D%E5%A4%8D%E7%9A%84%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">求不重复的数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B1%82%E7%BC%BA%E5%A4%B1%E7%9A%84%E6%95%B0"><span class="toc-number">3.4.</span> <span class="toc-text">求缺失的数</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>今天来聊一下二进制的异或运算。<span id="more"></span></p>
+<h1 id="运算法则"><a href="#运算法则" class="headerlink" title="运算法则"></a>运算法则</h1><p>异或是一种神奇的位运算，运算符用^来表示，运算法则是二进制数值相同返回0，不同返回1：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1^1 &#x3D; 0</span><br><span class="line">1^0 &#x3D; 1</span><br><span class="line">0^0 &#x3D; 0</span><br></pre></td></tr></table></figure>
+<h1 id="异或的规律"><a href="#异或的规律" class="headerlink" title="异或的规律"></a>异或的规律</h1><p>异或运算有以下四种运算规律：</p>
+<ol>
+<li> 一个数值与自身异或，其结果是0。 例如 <code>1^1=0</code>，<code>2^2=0</code>，<code>12^12=0</code>。</li>
+<li> 数值与0进行异或，一定等于它自己。例如 <code>1^0=1</code>，<code>2^0=2</code>，<code>12^0=12</code>，<code>198^0=198</code>。</li>
+<li> 交换定律，也是计算顺序无关定律。例如 <code>1^2^3^4=1^4^3^2=2^1^4^3=3^1^4^2</code>。</li>
+<li> 自反律，这个其实第一个定律与第二个定律的组合。例如<code>125^12^12=125^(12^12)=125^0=125</code>。</li>
+</ol>
+<h1 id="异或的用途"><a href="#异或的用途" class="headerlink" title="异或的用途"></a>异或的用途</h1><p>根据异或运算规律，在计算机算法中会有很多的用途，如果我们去看一些公司的笔试或者面试的算法，会发现有很多和异或相关的算法题。</p>
+<h2 id="交换变量的值"><a href="#交换变量的值" class="headerlink" title="交换变量的值"></a>交换变量的值</h2><p>最常见的一个应用是使用异或的<code>自反律</code>可以不需要额外的空间实现两个变量的数值交换。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">int a &#x3D; 123;</span><br><span class="line">int b &#x3D; 234;</span><br><span class="line">a ^&#x3D; b; &#x2F;&#x2F;123 ^ 234</span><br><span class="line">b ^&#x3D; a; &#x2F;&#x2F; 234 ^ 123 ^ 234 &#x3D; 123 ^ 234 ^ 234 &#x3D; 123 ^ 0 &#x3D; 123</span><br><span class="line">a ^&#x3D; b; &#x2F;&#x2F;123 ^ 234 ^ 123 &#x3D; 234 ^ 123 ^ 123 &#x3D; 234 ^ 0 &#x3D; 234</span><br></pre></td></tr></table></figure>
+<h2 id="加密解密"><a href="#加密解密" class="headerlink" title="加密解密"></a>加密解密</h2><p>另一个常见的<code>自反律</code>的应用是对数值进行加密和解密：</p>
+<ol>
+<li>假设有一个原始数值是x</li>
+<li>设置一个加密的密钥，也是一个数值，设为y</li>
+<li>加密过程是<code>x^y = z</code>，输出的z是加密后的数值。</li>
+<li>解密过程是<code>z^y = x^y^y = x^0=x;</code></li>
+</ol>
+<p>有一个简单的的算法题：数组arr包含n个非负整数，经过异或加密后形成一个新的数组encoded，加密规则是<code>encoded[i]=arr[i] ^ arr[i+1]</code>。例如arr = [1,0,2,1]，加密后就变成了encoded=[1,2,3]。给出原始数组的第一位数，要求你通过加密后的数组反推出原始的数组。求解步骤如下：</p>
+<ol>
+<li>encoded[i] = arr[i] ^ arr[i+1]</li>
+<li>两边都和arr[i]异或得到encoded[i] ^ arr[i] = arr[i] ^ arr[i+1] ^ arr[i]</li>
+<li>通过异或定律计算 encoded[i] ^ arr[i] = arr[i+1] ^ arr[i] ^ arr[i] = arr[i+1]</li>
+<li>也就是arr[i+1] = encoded[i] ^ arr[i]， 也就是arr[i] = encoded[i-1] &amp; arr[i-1]</li>
+<li>我们已经知道了arr[0]，那么就可以依次计算出arr[1],arr[2]…</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public int[] decode(int[] encoded, int first) &#123;</span><br><span class="line">    int[] arr &#x3D; new int[encoded.length + 1];</span><br><span class="line">    arr[0] &#x3D; first;</span><br><span class="line">    for(int i &#x3D; 1; i&lt; encoded.length; i++)&#123;</span><br><span class="line">        arr[i] &#x3D; arr[i-1] ^ encoded[i-1];</span><br><span class="line">    &#125;</span><br><span class="line">    arr[arr.length - 1] &#x3D; arr[arr.length - 2] ^ encoded[encoded.length - 1];</span><br><span class="line">    return arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="求不重复的数"><a href="#求不重复的数" class="headerlink" title="求不重复的数"></a>求不重复的数</h2><p>一个简单的算法题，有一个数组，数组里面的元素出了n以外，都出现了两次 （只有n出现了一次），求出这个n。这是一个典型的异或算法题，把数组里面的数值做异或，出现两次的会因为<code>异或规律1</code>而被约掉，那么最后剩下的那个数值就是只出现了一次的数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">int[] input &#x3D; &#123;1,4,2,3,1,4,3&#125;;</span><br><span class="line">int rs &#x3D; input[0];</span><br><span class="line">for(int i &#x3D; 1; i&lt; input.length; i++)&#123;</span><br><span class="line">    rs ^&#x3D; input[i];</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F; 1^4^2^3^1^4^3 &#x3D; 1^1^2^3^3^4^4&#x3D;0^2^0^0&#x3D;2</span><br><span class="line">return rs;</span><br></pre></td></tr></table></figure>
+
+<h2 id="求缺失的数"><a href="#求缺失的数" class="headerlink" title="求缺失的数"></a>求缺失的数</h2><p>一个数组的长度是n-1，其中的元素是1到n的不<strong>重复</strong>整数但是缺少一个，求缺少的数字。这个算法题目和上面的类似，为了求缺少的数，我们需要把存在的数通过<code>异或定律</code>约掉。例如，给出的数组是<code>&#123;1，3，4，5&#125;</code>，先求所有的元素的异或<code>1^3^4^5</code>，然后再和完整的<code>1^2^3^4^5</code>进行异或，剩下的数就是缺少的数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1^3^4^5 ^ 1^2^3^4^5 &#x3D; 1^1 ^ 2 ^ 3^3 ^ 4^4 ^ 5^5 &#x3D; 0^2^0^0^0 &#x3D; 2</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">int fun(int[] input)&#123;</span><br><span class="line">    int rs &#x3D; 0;</span><br><span class="line">    for(int i : input)&#123;</span><br><span class="line">        rs ^&#x3D; i;</span><br><span class="line">    &#125;</span><br><span class="line">    for(int i &#x3D; 1; i &lt;&#x3D; n; i++)&#123;</span><br><span class="line">        rs ^&#x3D; i;</span><br><span class="line">    &#125;</span><br><span class="line">    return rs;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个算法有另外一个版本，就是数组长度为 n+1， 其中的仅有一个数值重复，需要求出这个数值。做法和上面的一样。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B-Java/">编程-Java</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://luoyuan800.github.io/2021/05/26/xor/" data-title="异或运算 | Yuan" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2021/01/30/tensorflow/"  title="浅尝TensorFlow">
+ <strong>下一篇：</strong><br/> 
+ <span>浅尝TensorFlow
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E6%B3%95%E5%88%99"><span class="toc-number">1.</span> <span class="toc-text">运算法则</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%82%E6%88%96%E7%9A%84%E8%A7%84%E5%BE%8B"><span class="toc-number">2.</span> <span class="toc-text">异或的规律</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%82%E6%88%96%E7%9A%84%E7%94%A8%E9%80%94"><span class="toc-number">3.</span> <span class="toc-text">异或的用途</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%A4%E6%8D%A2%E5%8F%98%E9%87%8F%E7%9A%84%E5%80%BC"><span class="toc-number">3.1.</span> <span class="toc-text">交换变量的值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86"><span class="toc-number">3.2.</span> <span class="toc-text">加密解密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B1%82%E4%B8%8D%E9%87%8D%E5%A4%8D%E7%9A%84%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">求不重复的数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B1%82%E7%BC%BA%E5%A4%B1%E7%9A%84%E6%95%B0"><span class="toc-number">3.4.</span> <span class="toc-text">求缺失的数</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/杂物-医学/" title="杂物-医学">杂物-医学<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Java/" title="编程-Java">编程-Java<sup>12</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Linux/" title="编程-Linux">编程-Linux<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-Linux-Unix/" title="编程-Linux/Unix">编程-Linux/Unix<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-工具/" title="编程-工具">编程-工具<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程-网络协议/" title="编程-网络协议">编程-网络协议<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-工具/" title="网站-工具">网站-工具<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网站-语言/" title="网站-语言">网站-语言<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m Luo Yuan in Zhuhai. <br/>
+			Here is my place for knowledge accumulation.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2021 
+		
+		<a href="/about" target="_blank" title="Luo Yuan">Luo Yuan</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
